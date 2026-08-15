@@ -57,6 +57,11 @@
   padding:8px 11px; font-size:12.5px; color:var(--ink-2); line-height:1.5;
 }
 .fact b{display:block; font-family:var(--font-mono); font-size:16px; color:var(--ink); font-weight:700}
+.what{
+  font-size:13.5px; color:var(--ink-2); background:var(--paper-3);
+  padding:9px 12px; border-radius:3px; margin:0 0 14px; line-height:1.65;
+}
+.what b{color:var(--ink); font-weight:700}
 .read h3{font-size:17px; margin-bottom:8px}
 .read h3 + p{margin-top:0}
 .read p{color:var(--ink-2); font-size:14.5px; margin:0 0 16px; line-height:1.75}
@@ -156,8 +161,8 @@
 <header>
   <div class="eyebrow">Claude 技能</div>
   <h1>自己做一個 Claude 技能</h1>
-  <p class="sub">你裝的那些外掛——imagegen、財務分析、claude-video——<b>拆開來大部分不是程式，是說明書</b>。<br>
-  一個資料夾，加一個 Markdown 檔（純文字筆記檔，副檔名 <code style="font-family:var(--font-mono);font-size:13.5px">.md</code>），就是一個技能。</p>
+  <p class="sub">你有沒有跟 AI 重複交代過同一件事三次以上？「不要用 emoji」「先問我再動手」——<b>這種話可以只講一次</b>。<br>
+  方法是幫它寫一份「技能」。技能不是程式，<b>是一個純文字檔，用記事本就能寫</b>。</p>
 </header>
 
 <section>
@@ -201,7 +206,7 @@
 
 <section>
   <div class="sec-head"><span class="sec-num">02</span><h2>拆三個真的來看</h2></div>
-  <p class="sec-lede">這三個都是<b>你電腦裡真的裝著的東西</b>，下面的檔案數量和行數都是實際數出來的。它們剛好代表三種完全不同的做法。</p>
+  <p class="sec-lede">下面三個是網路上抓得到的現成技能，任何人都能裝。<b>我把資料夾打開數過——檔案數和行數都是真的。</b>它們剛好代表三種完全不同的做法。</p>
 
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" data-t="a" aria-selected="true">imagegen<small>純規則型</small></button>
@@ -223,6 +228,7 @@
         </div>
       </div>
       <div class="read">
+        <p class="what"><b>這是什麼：</b>叫 AI 畫網頁設計稿的技能。你說「幫我做一個賣咖啡的網站」，它就照規矩產出一張張設計圖。</p>
         <h3>它其實沒有「做」任何事，它只是規定</h3>
         <p>987 行裡面<b>一行程式都沒有</b>。全部是寫給 Claude 看的硬規則，而且寫得很兇。真的內容長這樣：</p>
         <div class="pre">一個 section（網頁的一個區塊）就出一張圖。
@@ -260,6 +266,7 @@
         </div>
       </div>
       <div class="read">
+        <p class="what"><b>這是什麼：</b>Anthropic 自己出的財務分析工具包。你說「幫我估 Nvidia 值多少錢」，它會抓財報、找同業比較、做出一份 Excel 估值報告。</p>
         <h3>command 當總機，skill 當專業</h3>
         <p>打 <code>/dcf</code> 的時候，那個檔案自己<b>不做任何計算</b>。它做的事是排流程，然後把工作丟給別的 skill：</p>
         <div class="pre">第 2 步 → 先叫 comps-analysis 這個 skill，
@@ -299,6 +306,7 @@
         </div>
       </div>
       <div class="read">
+        <p class="what"><b>這是什麼：</b>讓 AI「看」影片的技能。你丟一個 YouTube 網址給它，它就能回答影片裡講了什麼、第幾分鐘在做什麼。</p>
         <h3>程式做苦工，SKILL.md 只寫「怎麼用這些程式」</h3>
         <p>Claude 本身看不到影片。這個外掛是用 Python 程式把影片下載、切成一張張圖片、把聲音轉成文字，<b>再把成果交給 Claude 看</b>。</p>
         <p>所以 268 行的 SKILL.md 幾乎全部在寫操作手冊，例如：「先跑檢查程式，<b>回傳 2 代表工具沒裝、3 代表沒設金鑰、4 代表兩個都缺</b>，各自要做什麼」。<b>真正的活是程式在幹，SKILL.md 只負責看懂回傳值然後決定下一步。</b></p>
@@ -621,7 +629,7 @@ const PARTS = {
       ["長什麼樣", "一個資料夾 + SKILL.md。可以再加 references/（查得到的資料）、scripts/（要跑的程式）、assets/（範本圖檔）。"],
       ["放在哪", "個人用：~/.claude/skills/名字/SKILL.md。只給某個專案用：那個專案的 .claude/skills/ 底下。"],
       ["怎麼被叫到", "Claude 平常只看得到 name 和 description 兩行。覺得符合才把本文讀進去。description 寫壞 = 永遠不會被叫到。"],
-      ["你在用的例子", "imagegen（設計規則）、ponytail（叫 Claude 不要寫太複雜）、i-have-adhd（叫它講重點）。"]
+      ["現成的例子", "imagegen（叫它照設計規矩畫網頁）、ponytail（叫它不要把程式寫得太複雜）、i-have-adhd（叫它只講重點）。"]
     ]
   },
   cmd: {
@@ -631,7 +639,7 @@ const PARTS = {
       ["長什麼樣", "commands/ 資料夾裡一個 .md 檔。dcf.md 就是 /dcf。內容是寫給 Claude 看的步驟表。"],
       ["放在哪", "外掛的 commands/ 底下，或你自己的 ~/.claude/commands/。"],
       ["跟 skill 差在哪", "skill 是知識（它自己想起來），command 是按鈕（你按才動）。複雜的 command 常常只負責排流程，真正的活丟給 skill 做。"],
-      ["你在用的例子", "/watch（看影片）、/dcf（估值）、/code-review（審程式碼）。"]
+      ["現成的例子", "/watch（丟網址叫它看影片）、/dcf（估一家公司值多少錢）、/code-review（幫你檢查程式）。"]
     ]
   },
   agent: {
@@ -641,7 +649,7 @@ const PARTS = {
       ["長什麼樣", "agents/ 底下一個 .md 檔。前面幾行寫「什麼時候派它出去」「它能用哪些工具」，後面是給它的工作說明。"],
       ["為什麼要用", "省記憶體。要翻 50 個檔案才能回答的問題，派分身去翻，你只會看到那句答案。"],
       ["可以限制它", "tools 那行可以指定它只能讀不能寫，或只能用某幾個工具。不寫就是全部都能用。"],
-      ["你在用的例子", "你自己設的「林納斯」（寫程式）、「阿文」（寫文案）、Explore（大範圍搜檔案）。"]
+      ["現成的例子", "專門寫程式的、專門寫文案的、專門在一堆檔案裡找東西的分身。這些都可以自己設定，一個分身就是一個 .md 檔。"]
     ]
   },
   hook: {
@@ -651,7 +659,7 @@ const PARTS = {
       ["長什麼樣", "hooks/hooks.json 裡面寫「什麼時機」配「跑哪個檔案」。真正做事的通常是一支 .sh 或 .py。"],
       ["常見時機", "SessionStart（每次開新對話）、UserPromptSubmit（你送出訊息時）、工具執行前後。"],
       ["好 hook 的樣子", "沒問題就完全不出聲。claude-video 的 hook 每次開場檢查工具裝了沒，5 秒內跑完，一切正常就一個字都不印。"],
-      ["你在用的例子", "你開對話時看到的 ADHD MODE ACTIVE、PONYTAIL MODE ACTIVE 那幾行，就是 hook 印的。"]
+      ["現成的例子", "有些外掛會在你每次開新對話時印一行狀態（像是「工具都裝好了」），那一行就是 hook 印的。"]
     ]
   },
   mcp: {
@@ -661,7 +669,7 @@ const PARTS = {
       ["長什麼樣", "外掛根目錄一個 .mcp.json，裡面就是一串「服務名字 + 網址」。它自己沒有資料，只是寫下去哪裡拿。"],
       ["跟 skill 差在哪", "skill 是教 Claude 怎麼做事，MCP 是給 Claude 新的手腳。一個是知識，一個是通路。"],
       ["注意", "多數要登入或 API 金鑰。而且 JSON 格式很脆，逗號漏一個整份失效——官方外掛也發生過（見第 06 節）。"],
-      ["你在用的例子", "financial-analysis 接的 11 家金融資料商；你現在能用的 Notion、Figma、Canva、Google Drive。"]
+      ["現成的例子", "Notion、Figma、Google Drive 這些服務，都是靠 MCP 接進來的——接好之後你就能叫 AI 去讀你的 Notion 筆記。"]
     ]
   }
 };
