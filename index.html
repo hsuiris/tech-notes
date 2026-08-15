@@ -1,0 +1,128 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>tech-notes</title>
+<meta name="description" content="給非工程師的 IT 白話筆記：看懂架構圖、看懂錯誤訊息、看懂專案資料夾。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+header.home{border-bottom:none; padding:72px 0 8px}
+h1.home{font-size:clamp(38px,8vw,64px)}
+.cards{display:grid; grid-template-columns:1fr 1fr; gap:16px; padding:34px 0 0}
+@media (max-width:760px){.cards{grid-template-columns:1fr}}
+.card{
+  display:block; text-decoration:none; color:inherit;
+  border:1px solid var(--line); border-radius:5px; background:var(--paper-2);
+  padding:24px 24px 26px; transition:border-color .14s, transform .14s, box-shadow .14s;
+}
+.card:hover{border-color:var(--accent); transform:translateY(-2px); box-shadow:var(--shadow)}
+.card-n{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.16em;
+  color:var(--ink-3); margin-bottom:12px;
+}
+.card:hover .card-n{color:var(--accent)}
+.card h2{font-size:21px; margin-bottom:10px}
+.card .pain{
+  font-size:14px; color:var(--ink); background:var(--paper-3);
+  padding:8px 11px; border-radius:3px; margin:0 0 14px; line-height:1.65;
+}
+.card ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:5px}
+.card li{font-size:13.5px; color:var(--ink-2); padding-left:15px; position:relative}
+.card li::before{content:"—"; position:absolute; left:0; color:var(--ink-3)}
+.how{padding:54px 0 0; border-top:1px solid var(--line); margin-top:52px}
+.how h2{font-size:20px; margin-bottom:14px}
+.how p{color:var(--ink-2); font-size:15px; margin:0 0 10px}
+.how b{color:var(--ink)}
+.soon{
+  margin-top:16px; font-size:13.5px; color:var(--ink-3);
+  border:1px dashed var(--line); border-radius:4px; padding:14px 16px;
+}
+</style>
+
+<nav class="topnav"><div class="topnav-in">
+  <a class="brand" href="./">tech-notes</a>
+  <div class="navlinks">
+    <a href="architecture.html">架構圖</a>
+    <a href="errors.html">錯誤訊息</a>
+    <a href="request.html">按鈕之旅</a>
+    <a href="project.html">專案資料夾</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+
+<header class="home">
+  <div class="eyebrow">給看不懂術語的人</div>
+  <h1 class="home">tech-notes</h1>
+  <p class="sub">IT 的東西不是難，是<b>沒人用你聽得懂的話講過一次</b>。<br>
+  這裡每一頁只解決一個「我看不懂」的具體場面。</p>
+</header>
+
+<div class="cards">
+
+  <a class="card" href="architecture.html">
+    <div class="card-n">01</div>
+    <h2>看懂架構圖</h2>
+    <p class="pain">「看到方塊跟箭頭的圖就腦袋一片空白」</p>
+    <ul>
+      <li>技術之間只有六種關係</li>
+      <li>架構圖的五種符號</li>
+      <li>可以點的真實架構圖</li>
+      <li>90+ 名詞解碼器（縮寫附全名）</li>
+      <li>洋蔥圖：誰包住誰</li>
+    </ul>
+  </a>
+
+  <a class="card" href="errors.html">
+    <div class="card-n">02</div>
+    <h2>看懂錯誤訊息</h2>
+    <p class="pain">「畫面跳出一大串紅字，不知道要看哪一行」</p>
+    <ul>
+      <li>一段錯誤訊息只有兩行要看</li>
+      <li>16 個最常見錯誤的白話翻譯</li>
+      <li>問 AI 之前先自己試的三招</li>
+      <li>可以直接複製的提問模板</li>
+    </ul>
+  </a>
+
+  <a class="card" href="request.html">
+    <div class="card-n">03</div>
+    <h2>一個按鈕按下去發生什麼事</h2>
+    <p class="pain">「我知道有前端後端，但中間到底發生什麼？」</p>
+    <ul>
+      <li>從點擊到畫面更新的 11 站</li>
+      <li>每一站花多久、誰在做事</li>
+      <li>每一站壞掉會看到什麼症狀</li>
+      <li>把架構圖變成會動的故事</li>
+    </ul>
+  </a>
+
+  <a class="card" href="project.html">
+    <div class="card-n">04</div>
+    <h2>看懂一個專案資料夾</h2>
+    <p class="pain">「打開別人的 repo，滿滿的檔案完全不敢碰」</p>
+    <ul>
+      <li>可以點的專案檔案樹</li>
+      <li>三種檔案：你寫的／產生的／別人的</li>
+      <li>拿到陌生專案的五步驟</li>
+      <li>絕對不要動的五個東西</li>
+    </ul>
+  </a>
+
+</div>
+
+<div class="how">
+  <h2>這個站怎麼寫的</h2>
+  <p><b>規則一：術語第一次出現，後面用括號解釋一句。</b>縮寫一律補上英文全名跟中文意思。</p>
+  <p><b>規則二：不貼整段錯誤訊息。</b>只留關鍵那一行，並翻成中文。</p>
+  <p><b>規則三：能點就不要只用讀的。</b>圖上的每個方塊、每一層、每一站都可以點開看說明。</p>
+  <div class="soon">還想看什麼主題？開一個 issue 或直接跟我說。<br>
+  已經在排的：AI 工具名詞（token、context、MCP、agent、RAG）。</div>
+</div>
+
+<footer>
+  <p>字體：資源圓體 Resource Han Rounded TW（思源黑體的圓角繁中版，開源）<br>
+  已瘦身成只留站上用到的字，所以載入很快。</p>
+  <p class="cred"><a href="https://github.com/hsuiris/tech-notes">github.com/hsuiris/tech-notes</a></p>
+</footer>
+
+</div>

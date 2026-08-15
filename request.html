@@ -1,0 +1,298 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>按鈕之旅 · tech-notes</title>
+<meta name="description" content="從你按下按鈕，到畫面更新，中間經過 11 站。每一站在做什麼、花多久、壞掉會怎樣。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+/* ── 車站列表 ── */
+.line{display:flex; flex-direction:column; gap:0}
+.stop{
+  display:grid; grid-template-columns:26px 1fr; gap:14px;
+  border:0; background:none; padding:0; width:100%; text-align:left;
+  font-family:var(--font-cn); color:inherit; cursor:pointer;
+}
+.stop-rail{display:flex; flex-direction:column; align-items:center}
+.stop .dot{
+  width:14px; height:14px; border-radius:50%; background:var(--paper);
+  border:2.5px solid var(--who); flex:none; margin-top:11px; transition:all .13s;
+}
+.stop .bar{width:2px; flex:1; background:var(--line); min-height:10px}
+.stop:last-child .bar{display:none}
+.stop-body{
+  padding:9px 12px 11px; border-radius:4px; margin-bottom:4px;
+  border:1px solid transparent; transition:background .13s, border-color .13s;
+}
+.stop:hover .stop-body{background:var(--paper-2); border-color:var(--line-soft)}
+.stop.on .stop-body{background:var(--accent-soft); border-color:var(--accent)}
+.stop.on .dot{background:var(--accent); border-color:var(--accent); transform:scale(1.15)}
+.stop-hd{display:flex; align-items:baseline; gap:9px; flex-wrap:wrap}
+.stop-i{font-family:var(--font-mono); font-size:11px; color:var(--ink-3); letter-spacing:.05em}
+.stop-n{font-size:15px; font-weight:700; line-height:1.5}
+.stop-meta{display:flex; gap:7px; align-items:center; margin-top:4px; flex-wrap:wrap}
+.who{
+  font-size:10.5px; padding:1px 8px; border-radius:3px; white-space:nowrap;
+  color:var(--who); border:1px solid var(--who);
+}
+.ms{font-family:var(--font-mono); font-size:11px; color:var(--ink-3); letter-spacing:.03em}
+
+.total{
+  margin-top:18px; padding:14px 16px; border:1px dashed var(--line);
+  border-radius:4px; font-size:14px; color:var(--ink-2);
+}
+.total b{color:var(--ink); font-family:var(--font-mono)}
+
+.d-terms{display:flex; flex-wrap:wrap; gap:6px}
+.d-terms span{
+  font-family:var(--font-mono); font-size:12px; padding:2px 9px;
+  border-radius:3px; background:var(--paper-3); color:var(--ink-2);
+}
+
+/* ── 02 症狀對照 ── */
+.symp{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+@media (max-width:760px){.symp{grid-template-columns:1fr}}
+.sy{
+  border:1px solid var(--line); border-radius:4px;
+  background:var(--paper-2); padding:18px 20px;
+}
+.sy h3{font-size:16px; margin-bottom:4px}
+.sy .said{
+  font-size:14.5px; color:var(--ink); background:var(--paper-3);
+  padding:9px 12px; border-radius:3px; margin:0 0 13px; line-height:1.65;
+}
+.sy p{margin:0 0 8px; font-size:14px; color:var(--ink-2); line-height:1.72}
+.sy p:last-child{margin-bottom:0}
+.sy b{color:var(--ink); font-weight:700}
+.sy .at{
+  font-family:var(--font-mono); font-size:11.5px; color:var(--accent);
+  letter-spacing:.05em; display:block; margin-bottom:9px;
+}
+</style>
+
+<nav class="topnav"><div class="topnav-in">
+  <a class="brand" href="./">tech-notes</a>
+  <div class="navlinks">
+    <a href="architecture.html">架構圖</a>
+    <a href="errors.html">錯誤訊息</a>
+    <a href="request.html" aria-current="page">按鈕之旅</a>
+    <a href="project.html">專案資料夾</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">一趟 11 站的旅程</div>
+  <h1>一個按鈕按下去發生什麼事</h1>
+  <p class="sub">你按「儲存」，畫面轉了一下就好了。<br>
+  這中間<b>經過 11 站、跨越三台機器</b>，全部在 0.2 秒內完成。</p>
+</header>
+
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><h2>完整路線</h2></div>
+  <p class="sec-lede">場景：你在編輯一篇文章，按下「儲存」。<br>
+  <b>點任何一站</b>，右邊會說明那一站在做什麼、花多久、壞掉的話你會看到什麼症狀。</p>
+
+  <div class="split">
+    <div class="line" id="line"></div>
+    <div class="detail sticky" id="card">
+      <p class="placeholder">← 點左邊任何一站，這裡會說明那一站發生什麼事。</p>
+    </div>
+  </div>
+
+  <div class="total">
+    全程加起來大約 <b>100 ～ 300 毫秒</b>。你眨一次眼大概是 100 毫秒——所以你「感覺一下就好了」，
+    其實它跑遍了三台機器。<br>
+    超過 <b>1000 毫秒</b>（1 秒）人就會明顯感覺到卡；超過 <b>3000 毫秒</b>，多數人會直接離開。
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>「感覺怪怪的」通常是哪一站</h2></div>
+  <p class="sec-lede">你描述得出症狀，但講不出哪裡壞。這四個是最常見的——<b>對照一下，直接跳到那一站</b>。</p>
+
+  <div class="symp">
+    <div class="sy">
+      <span class="at">→ 第 9 站 或 第 11 站</span>
+      <h3>存好了，但畫面沒變</h3>
+      <p class="said">「我明明按了儲存，重新整理才看得到」</p>
+      <p><b>如果重新整理就對了</b>：問題在第 11 站。資料確實存進去了，只是前端沒被通知「該重畫了」。</p>
+      <p><b>如果重新整理還是舊的</b>：問題在第 9 站。舊快取沒清掉，你看到的是被記起來的過期答案。</p>
+    </div>
+
+    <div class="sy">
+      <span class="at">→ 第 6 站</span>
+      <h3>我改了程式，但網站還是舊版</h3>
+      <p class="said">「我明明部署了，別人打開還是看到舊的」</p>
+      <p>十之八九是 <b>CDN 快取</b>。你的新檔案已經上去了，但全世界的節點還握著舊版本不放。</p>
+      <p><b>先試：</b>無痕視窗開一次看看。無痕是新的就確定是快取問題，去 CDN 後台按「清除快取」。</p>
+    </div>
+
+    <div class="sy">
+      <span class="at">→ 第 7 站</span>
+      <h3>有時候可以，有時候說我沒登入</h3>
+      <p class="said">「一下正常一下叫我重新登入」</p>
+      <p>token（代表身分的那串密碼）<b>過期了</b>。它有時效，過了就不認得你。</p>
+      <p><b>先試：</b>登出再登入。如果一小時後又發生，就是 token 的有效期設太短。</p>
+    </div>
+
+    <div class="sy">
+      <span class="at">→ 第 8 站 或 第 10 站</span>
+      <h3>一直轉圈圈，最後跳錯誤</h3>
+      <p class="said">「按下去之後就卡住，等很久才失敗」</p>
+      <p>「等很久」是關鍵字——代表請求<b>送出去了但沒回來</b>，不是前端的問題。</p>
+      <p><b>先試：</b>看是不是資料庫查詢太慢（第 8 站），或後端根本掛了（第 10 站沒人回應）。錯誤訊息會是 timeout（逾時）或 500。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2>那個你一定會問的問題</h2></div>
+
+  <div class="callout" style="margin-bottom:22px">
+    <b>「第 2 站前端已經檢查過了，為什麼第 7 站後端還要再檢查一次？不是多此一舉嗎？」</b>
+  </div>
+
+  <p class="sec-lede" style="margin-bottom:18px">因為<b>前端的程式跑在使用者的電腦上</b>。</p>
+
+  <div class="pre">你寫的前端檢查  →  下載到使用者的瀏覽器  →  使用者想改就能改</div>
+
+  <p class="sec-lede" style="margin:22px 0">
+  任何人按 <code>F12</code> 打開開發者工具，就能把你的檢查整段刪掉，或是<b>完全不透過你的網頁</b>、直接送一包資料給你的後端。
+  他不需要很厲害，這是三分鐘就學得會的事。</p>
+
+  <div class="symp">
+    <div class="sy">
+      <span class="at">第 2 站 · 前端檢查</span>
+      <h3>是給好人的貼心</h3>
+      <p>目的是<b>體驗</b>：不用等網路來回，馬上告訴你「email 少了小老鼠」。</p>
+      <p>它<b>不是安全機制</b>，一秒鐘就能被繞過。</p>
+    </div>
+    <div class="sy">
+      <span class="at">第 7 站 · 後端檢查</span>
+      <h3>是真正的那道門</h3>
+      <p>跑在<b>你自己的伺服器</b>上，使用者碰不到、改不了。</p>
+      <p>所有「不能被作弊」的規則——價格、權限、額度——<b>只能寫在這裡</b>。</p>
+    </div>
+  </div>
+
+  <div class="callout warn" style="margin-top:22px">
+    <b>一句話帶走：</b>前端的檢查是<b>提示</b>，後端的檢查是<b>規則</b>。<br>
+    看到一個網站「只在前端檢查」，那不是省事，那是漏洞。
+  </div>
+</section>
+
+<footer>
+  <p><b>這頁的用法：</b>下次有人跟你說「怪怪的」，先問「重新整理會好嗎」「無痕視窗會好嗎」。<br>
+  這兩個問題就能把 11 站縮小到 2 站。</p>
+  <p class="cred"><a href="./">← 回目錄</a></p>
+</footer>
+
+</div>
+
+<script>
+const WHO = {
+  "瀏覽器":"var(--d3)",
+  "網路":"var(--ochre)",
+  "別人的機房":"var(--ochre)",
+  "你的伺服器":"var(--d1)",
+};
+
+const STOPS = [
+  { n:"你按下按鈕", who:"瀏覽器", ms:"不到 1 毫秒",
+    l:"瀏覽器偵測到滑鼠點擊，去查有沒有人「登記」要處理這個按鈕。你寫的 <code>onClick</code> 就是那個登記。",
+    broken:"按了完全沒反應、Console 也沒紅字。通常是函式沒接上去，或按鈕被一層看不見的東西蓋住了。",
+    terms:["event 事件","onClick","event listener 事件監聽器"] },
+
+  { n:"前端先檢查一遍", who:"瀏覽器", ms:"約 1 毫秒",
+    l:"有沒有必填沒填、email 有沒有小老鼠、字數有沒有超過。<b>這一關是給好人方便的，不是安全機制</b>——第 7 站還要再認真檢查一次。",
+    broken:"明明填對了卻說格式錯，通常是檢查規則寫太嚴（例如電話號碼不允許有空格）。",
+    terms:["validation 驗證","form 表單"] },
+
+  { n:"打包成一個請求", who:"瀏覽器", ms:"約 1 毫秒",
+    l:"把你填的東西轉成 JSON（一種前後端都看得懂的文字格式），加上 token（證明你是誰的那串密碼），寫好要送去哪個網址、用什麼方法。<code>POST</code> 的意思是「我要新增或修改東西」。",
+    broken:"回 401，多半是 token 忘了帶或格式寫錯（少了 <code>Bearer </code> 開頭）。",
+    terms:["JSON","POST / GET","header 表頭","token 權杖"] },
+
+  { n:"查地址：DNS", who:"網路", ms:"0 ～ 50 毫秒",
+    l:"網址是給人看的，機器要的是 IP（一串數字門牌）。DNS 就是那本電話簿。查過一次會被記住，所以第二次通常是 0 毫秒。",
+    broken:"整個網站連不上、但其他網站都正常，很可能是 DNS。換一個網路（例如切成手機熱點）試試就知道。",
+    terms:["DNS 網域名稱系統","IP 位址"] },
+
+  { n:"建立加密通道：HTTPS", who:"網路", ms:"0 ～ 100 毫秒",
+    l:"雙方交換金鑰，之後傳的內容中間的人<b>知道你在傳東西，但看不到內容</b>。連線建立過一次會重複使用，所以後續請求不用再花這個時間。",
+    broken:"瀏覽器跳「您的連線不是私人連線」，通常是憑證過期或網域設錯。憑證多數是自動續約的，過期代表續約壞了。",
+    terms:["HTTPS","TLS","憑證 certificate"] },
+
+  { n:"CDN 接手", who:"別人的機房", ms:"5 ～ 30 毫秒",
+    l:"請求先撞到離你最近的節點。如果你要的只是圖片、CSS、JS 這種不會變的檔案，<b>這裡直接給你，根本不會麻煩到你的伺服器</b>。是要存資料這種動態的事，才往後送。",
+    broken:"「我改了東西但畫面沒變」——十之八九是這裡的快取還握著舊版本。用無痕視窗開一次就能確認。",
+    terms:["CDN 內容傳遞網路","cache 快取","edge 邊緣節點"] },
+
+  { n:"後端認真檢查一次", who:"你的伺服器", ms:"約 5 毫秒",
+    l:"你是誰？（驗 token）你有沒有權限做這件事？資料格式對不對？<b>這一關才是真的</b>，第 2 站那關只是禮貌。",
+    broken:"401 ＝ 不知道你是誰（沒登入 / token 過期）。403 ＝ 知道你是誰，但你不能做這件事（權限不夠）。兩個差很多，別搞混。",
+    terms:["middleware 中介層","auth 身分驗證","401 / 403"] },
+
+  { n:"寫進資料庫", who:"你的伺服器", ms:"5 ～ 50 毫秒",
+    l:"送一段 SQL 進資料庫。資料庫會保證「要嘛全部成功，要嘛全部不算」——不會存到一半就停在那裡。這個保證叫 transaction（交易）。",
+    broken:"500 錯誤，或是「存了但少一半」。前者去看伺服器 log，後者通常是沒用 transaction 包起來。",
+    terms:["SQL","transaction 交易","ORM 物件關聯對映"] },
+
+  { n:"清掉舊快取", who:"你的伺服器", ms:"約 1 毫秒",
+    l:"資料變了，之前記在快取裡的舊答案就變成錯的，要<b>主動</b>丟掉。這一站最容易被忘記，因為漏掉它程式也不會報錯——只是使用者看到舊資料。",
+    broken:"「存好了，但重新整理還是舊的」＝ 這一站漏做了。這是工程界公認最難的兩件事之一，不是你笨。",
+    terms:["cache invalidation 快取失效","Redis"] },
+
+  { n:"沿路回去：200 OK", who:"網路", ms:"20 ～ 80 毫秒",
+    l:"後端回一個狀態碼加上新資料，沿著來的路回到瀏覽器。<b>2 開頭 ＝ 成功，4 開頭 ＝ 你的問題，5 開頭 ＝ 伺服器的問題</b>。記住這三句就夠了。",
+    broken:"一直轉圈最後失敗，通常是後端卡住沒回應（timeout 逾時），或整個掛掉。這時候前端怎麼改都沒用。",
+    terms:["200 / 201 成功","4xx 你的問題","5xx 伺服器的問題","timeout 逾時"] },
+
+  { n:"前端更新畫面", who:"瀏覽器", ms:"1 ～ 16 毫秒",
+    l:"React 拿到新資料，比對「哪裡跟剛剛不一樣」，<b>只重畫變掉的那一小塊</b>，不是整頁重來。這就是它比手動改 DOM 快的原因。",
+    broken:"資料明明存好了，畫面卻沒動。通常是沒告訴 React「資料變了」——它不會自己去猜。",
+    terms:["state 狀態","re-render 重新繪製","16 毫秒 ＝ 一格畫面"] },
+];
+
+const lineEl = document.getElementById("line");
+const cardEl = document.getElementById("card");
+
+STOPS.forEach((s, i)=>{
+  const b = document.createElement("button");
+  b.className = "stop"; b.type = "button";
+  b.style.setProperty("--who", WHO[s.who]);
+  b.innerHTML = `
+    <span class="stop-rail"><span class="dot"></span><span class="bar"></span></span>
+    <span class="stop-body">
+      <span class="stop-hd">
+        <span class="stop-i">${String(i+1).padStart(2,"0")}</span>
+        <span class="stop-n">${esc(s.n)}</span>
+      </span>
+      <span class="stop-meta">
+        <span class="who">${esc(s.who)}</span>
+        <span class="ms">${esc(s.ms)}</span>
+      </span>
+    </span>`;
+  b.addEventListener("click", ()=>{
+    document.querySelectorAll(".stop").forEach(x=>x.classList.toggle("on", x === b));
+    cardEl.innerHTML = `
+      <div class="d-top">
+        <span class="d-name">${String(i+1).padStart(2,"0")} ${esc(s.n)}</span>
+        <span class="d-tag">${esc(s.who)}</span>
+      </div>
+      <p class="d-full">這一站大約花 ${esc(s.ms)}</p>
+      <p class="d-lede">${s.l}</p>
+      <div class="d-grid">
+        <div class="d-cell"><dt>這站壞掉你會看到</dt><dd>${s.broken}</dd></div>
+        <div class="d-cell"><dt>這站會聽到的名詞</dt>
+          <dd class="d-terms">${s.terms.map(t=>`<span>${esc(t)}</span>`).join("")}</dd></div>
+      </div>`;
+    if(window.matchMedia("(max-width:860px)").matches)
+      cardEl.scrollIntoView({block:"nearest", behavior:"smooth"});
+  });
+  lineEl.appendChild(b);
+});
+
+function esc(s){ return String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+</script>

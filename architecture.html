@@ -1,0 +1,723 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>看懂架構圖 · tech-notes</title>
+<meta name="description" content="技術之間只有六種關係。認得關係，架構圖會自己解開，名詞也會自動歸位。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+/* ── 01 六種關係 ── */
+.rels{display:grid; gap:16px}
+.rel{
+  border:1px solid var(--line); border-radius:4px; background:var(--paper-2);
+  padding:22px 24px; display:grid; grid-template-columns:1fr; gap:14px;
+}
+.rel.key{border-color:var(--accent); box-shadow:var(--shadow)}
+.rel-top{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+.rel-n{
+  font-family:var(--font-mono); font-size:11px; color:var(--on-accent);
+  background:var(--ink); width:24px; height:24px; border-radius:50%;
+  display:grid; place-items:center; flex:none; font-weight:700;
+}
+.rel.key .rel-n{background:var(--accent)}
+.rel-name{font-size:19px; font-weight:700; letter-spacing:.04em}
+.rel-sym{
+  font-family:var(--font-mono); font-size:13px; color:var(--ink-2);
+  background:var(--paper-3); padding:3px 10px; border-radius:3px; white-space:nowrap;
+}
+.rel-flag{
+  font-size:11.5px; font-weight:700; color:var(--on-accent); background:var(--accent);
+  padding:2px 9px; border-radius:3px; letter-spacing:.05em;
+}
+.rel-def{margin:0; font-size:15.5px; color:var(--ink-2)}
+.rel-def b{color:var(--ink); font-weight:700}
+.rel-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+@media (max-width:620px){.rel-grid{grid-template-columns:1fr}}
+.rel-box dt{
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--ink-3); margin-bottom:7px;
+}
+.rel-box dd{margin:0; font-size:14px; color:var(--ink-2); line-height:1.75}
+.says{display:flex; flex-wrap:wrap; gap:6px}
+.says span{
+  font-size:13px; padding:3px 9px; border-radius:3px;
+  background:var(--paper-3); color:var(--ink-2);
+}
+.egs{display:flex; flex-direction:column; gap:4px}
+.egs code{font-size:13px; color:var(--ink); display:block}
+.egs .op{color:var(--accent); padding:0 3px}
+/* ── 02 架構圖 ── */
+.legend{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(168px,1fr));
+  gap:10px; margin-bottom:26px;
+}
+.lg{
+  display:flex; gap:11px; align-items:flex-start; font-size:13.5px;
+  color:var(--ink-2); border:1px solid var(--line-soft); border-radius:4px;
+  padding:11px 13px; background:var(--paper-2);
+}
+.lg svg{flex:none; margin-top:3px}
+.lg b{color:var(--ink); font-weight:700; display:block; font-size:13.5px}
+.diagram-scroll{overflow-x:auto; padding-bottom:6px}
+#arch{width:100%; min-width:640px; max-width:760px; display:block; margin:0 auto; height:auto}
+#arch text{font-family:var(--font-cn); fill:var(--ink)}
+#arch .t-name{font-size:15px; font-weight:700}
+#arch .t-sub{font-size:11.5px; fill:var(--ink-2); font-family:var(--font-mono)}
+#arch .t-edge{font-size:11.5px; fill:var(--ink-3); font-family:var(--font-mono)}
+#arch .t-bound{font-size:12px; fill:var(--ink-3); font-weight:700; letter-spacing:.06em}
+#arch .hot{cursor:pointer}
+#arch .hot rect,#arch .hot ellipse,#arch .hot line{transition:stroke .13s,fill .13s}
+#arch .hot:hover .sh,#arch .hot:focus-visible .sh{stroke:var(--accent); stroke-width:2}
+#arch .hot.on .sh{stroke:var(--accent); stroke-width:2; fill:var(--accent-soft)}
+#arch .hot.on .shf{fill:var(--accent-soft)}
+#arch .hot.on .t-name{fill:var(--accent)}
+#arch .hot:focus-visible{outline:none}
+/* ── 04 洋蔥圖 ── */
+.chains{display:grid; grid-template-columns:1fr; gap:14px}
+@media (max-width:860px){
+    }
+.chain{
+  border:1px solid var(--line); border-radius:4px;
+  background:var(--paper-2); padding:16px 16px 18px;
+}
+.chain-hd{display:flex; align-items:baseline; gap:10px; margin-bottom:13px; flex-wrap:wrap}
+.chain-t{font-size:16.5px; font-weight:700}
+.chain-s{font-size:11.5px; color:var(--ink-3); font-family:var(--font-mono); letter-spacing:.04em}
+.lv{
+  border:1.5px solid var(--c); border-radius:4px; padding:8px 9px 9px;
+  background:var(--paper); cursor:pointer; transition:background .13s;
+}
+.lv .lv{margin-top:8px}
+.lv:hover{background:var(--accent-soft)}
+.lv:has(.lv:hover){background:var(--paper)}
+#chains .lv.on{background:var(--accent-soft); border-color:var(--accent)}
+.lv:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.lv-hd{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.lv-n{font-family:var(--font-mono); font-size:13.5px; font-weight:700; color:var(--ink)}
+.lv-you{
+  font-size:10.5px; color:var(--on-accent); background:var(--accent);
+  padding:1px 8px; border-radius:3px; font-weight:700; white-space:nowrap;
+}
+.lv-deep{
+  font-size:10.5px; color:var(--ink-3); border:1px solid var(--line);
+  padding:0 7px; border-radius:3px; white-space:nowrap;
+}
+
+</style>
+
+<nav class="topnav"><div class="topnav-in">
+  <a class="brand" href="./">tech-notes</a>
+  <div class="navlinks">
+    <a href="architecture.html" aria-current="page">架構圖</a>
+    <a href="errors.html">錯誤訊息</a>
+    <a href="request.html">按鈕之旅</a>
+    <a href="project.html">專案資料夾</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">技術關係手冊</div>
+  <h1>看懂架構圖</h1>
+</header>
+
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><h2>技術之間只有六種關係</h2></div>
+  <p class="sec-lede">下次看到不認識的名字，不要問「這是什麼」，先問<b>「它跟我知道的東西是哪一種關係」</b>。六種而已，看完這一段你就有一套通用的問法。</p>
+
+  <div class="rels" id="rels"></div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>拆一張架構圖給你看</h2></div>
+  <p class="sec-lede">架構圖只有<b>五種符號</b>。先認符號，再看圖，就不會被嚇到。下面是一張很典型的網頁服務架構——<b>點任何一個方塊</b>，會告訴你它是什麼、為什麼要有它、沒有它會怎樣。</p>
+
+  <div class="legend">
+    <div class="lg">
+      <svg width="26" height="20" aria-hidden="true"><rect x="1" y="2" width="24" height="16" rx="2" fill="none" stroke="var(--ink-2)" stroke-width="1.5"/></svg>
+      <span><b>實線方框</b>一段會跑的程式</span>
+    </div>
+    <div class="lg">
+      <svg width="26" height="22" aria-hidden="true"><ellipse cx="13" cy="17" rx="10" ry="3.5" fill="none" stroke="var(--ink-2)" stroke-width="1.5"/><ellipse cx="13" cy="5" rx="10" ry="3.5" fill="none" stroke="var(--ink-2)" stroke-width="1.5"/><line x1="3" y1="5" x2="3" y2="17" stroke="var(--ink-2)" stroke-width="1.5"/><line x1="23" y1="5" x2="23" y2="17" stroke="var(--ink-2)" stroke-width="1.5"/></svg>
+      <span><b>圓柱</b>存資料的地方</span>
+    </div>
+    <div class="lg">
+      <svg width="26" height="20" aria-hidden="true"><rect x="1" y="2" width="24" height="16" rx="2" fill="none" stroke="var(--ink-3)" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
+      <span><b>虛線大框</b>邊界，框裡歸同一個人管</span>
+    </div>
+    <div class="lg">
+      <svg width="26" height="20" aria-hidden="true"><line x1="2" y1="10" x2="18" y2="10" stroke="var(--ink-2)" stroke-width="1.5"/><path d="M18 6 L25 10 L18 14 Z" fill="var(--ink-2)"/></svg>
+      <span><b>箭頭</b>誰主動去找誰</span>
+    </div>
+    <div class="lg">
+      <svg width="26" height="20" aria-hidden="true"><text x="13" y="14" text-anchor="middle" font-size="11" font-family="monospace" fill="var(--accent)">SQL</text></svg>
+      <span><b>線上的字</b>兩邊用什麼規矩講話</span>
+    </div>
+  </div>
+
+  <div class="diagram-scroll">
+  <svg id="arch" viewBox="0 0 660 566" role="img" aria-label="典型網頁服務架構圖">
+    <defs>
+      <marker id="ah" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto">
+        <path d="M0 0 L10 4 L0 8 Z" fill="var(--ink-3)"/>
+      </marker>
+    </defs>
+
+    <!-- 邊界 A -->
+    <rect x="30" y="18" width="380" height="96" rx="5" fill="none" stroke="var(--ink-3)" stroke-width="1.2" stroke-dasharray="5 4" opacity=".7"/>
+    <text class="t-bound" x="44" y="38">使用者的裝置</text>
+
+    <g class="hot" data-k="browser" tabindex="0" role="button" aria-label="瀏覽器">
+      <rect class="sh" x="56" y="48" width="328" height="50" rx="4" fill="var(--paper-2)" stroke="var(--line)" stroke-width="1.5"/>
+      <text class="t-name" x="220" y="70" text-anchor="middle">瀏覽器</text>
+      <text class="t-sub" x="220" y="87" text-anchor="middle">React · Three.js 在這裡跑</text>
+    </g>
+
+    <line x1="220" y1="114" x2="220" y2="142" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#ah)"/>
+    <text class="t-edge" x="232" y="132">① HTTPS</text>
+
+    <g class="hot" data-k="cdn" tabindex="0" role="button" aria-label="CDN">
+      <rect class="sh" x="100" y="146" width="240" height="48" rx="4" fill="var(--ochre-soft)" stroke="var(--ochre)" stroke-width="1.5" stroke-dasharray="6 3"/>
+      <text class="t-name" x="220" y="167" text-anchor="middle">CDN</text>
+      <text class="t-sub" x="220" y="184" text-anchor="middle">Cloudflare · 別人的機房</text>
+    </g>
+
+    <line x1="220" y1="194" x2="220" y2="230" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#ah)"/>
+    <text class="t-edge" x="232" y="217">② 快取沒有才往下問</text>
+
+    <!-- 邊界 B -->
+    <rect x="30" y="230" width="380" height="300" rx="5" fill="none" stroke="var(--ink-3)" stroke-width="1.2" stroke-dasharray="5 4" opacity=".7"/>
+    <text class="t-bound" x="44" y="250">我們自己的伺服器</text>
+
+    <g class="hot" data-k="web" tabindex="0" role="button" aria-label="前端伺服器">
+      <rect class="sh" x="56" y="262" width="328" height="50" rx="4" fill="var(--paper-2)" stroke="var(--line)" stroke-width="1.5"/>
+      <text class="t-name" x="220" y="284" text-anchor="middle">前端伺服器</text>
+      <text class="t-sub" x="220" y="301" text-anchor="middle">Next.js</text>
+    </g>
+
+    <line x1="220" y1="312" x2="220" y2="342" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#ah)"/>
+    <text class="t-edge" x="232" y="332">③ 打 API</text>
+
+    <g class="hot" data-k="api" tabindex="0" role="button" aria-label="後端 API">
+      <rect class="sh" x="56" y="342" width="328" height="50" rx="4" fill="var(--paper-2)" stroke="var(--line)" stroke-width="1.5"/>
+      <text class="t-name" x="220" y="364" text-anchor="middle">後端 API</text>
+      <text class="t-sub" x="220" y="381" text-anchor="middle">Node.js</text>
+    </g>
+
+    <line x1="136" y1="392" x2="136" y2="434" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#ah)"/>
+    <text class="t-edge" x="126" y="418" text-anchor="end">④ SQL</text>
+    <line x1="304" y1="392" x2="304" y2="434" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#ah)"/>
+    <text class="t-edge" x="314" y="418">⑤ 讀寫</text>
+
+    <g class="hot" data-k="db" tabindex="0" role="button" aria-label="資料庫">
+      <ellipse class="sh" cx="136" cy="497" rx="80" ry="9" fill="var(--paper-2)" stroke="var(--line)" stroke-width="1.5"/>
+      <rect class="shf" x="56" y="443" width="160" height="54" fill="var(--paper-2)" stroke="none"/>
+      <line x1="56" y1="443" x2="56" y2="497" stroke="var(--line)" stroke-width="1.5"/>
+      <line x1="216" y1="443" x2="216" y2="497" stroke="var(--line)" stroke-width="1.5"/>
+      <ellipse class="sh" cx="136" cy="443" rx="80" ry="9" fill="var(--paper-2)" stroke="var(--line)" stroke-width="1.5"/>
+      <text class="t-name" x="136" y="472" text-anchor="middle">資料庫</text>
+      <text class="t-sub" x="136" y="489" text-anchor="middle">PostgreSQL</text>
+    </g>
+
+    <g class="hot" data-k="cache" tabindex="0" role="button" aria-label="快取">
+      <ellipse class="sh" cx="304" cy="497" rx="80" ry="9" fill="var(--paper-2)" stroke="var(--line)" stroke-width="1.5"/>
+      <rect class="shf" x="224" y="443" width="160" height="54" fill="var(--paper-2)" stroke="none"/>
+      <line x1="224" y1="443" x2="224" y2="497" stroke="var(--line)" stroke-width="1.5"/>
+      <line x1="384" y1="443" x2="384" y2="497" stroke="var(--line)" stroke-width="1.5"/>
+      <ellipse class="sh" cx="304" cy="443" rx="80" ry="9" fill="var(--paper-2)" stroke="var(--line)" stroke-width="1.5"/>
+      <text class="t-name" x="304" y="472" text-anchor="middle">快取</text>
+      <text class="t-sub" x="304" y="489" text-anchor="middle">Redis</text>
+    </g>
+
+    <line x1="384" y1="367" x2="452" y2="367" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#ah)"/>
+    <text class="t-edge" x="418" y="358" text-anchor="middle">⑥ HTTPS</text>
+
+    <g class="hot" data-k="third" tabindex="0" role="button" aria-label="第三方服務">
+      <rect class="sh" x="456" y="342" width="176" height="50" rx="4" fill="var(--ochre-soft)" stroke="var(--ochre)" stroke-width="1.5" stroke-dasharray="6 3"/>
+      <text class="t-name" x="544" y="364" text-anchor="middle">第三方服務</text>
+      <text class="t-sub" x="544" y="381" text-anchor="middle">Claude API · 金流</text>
+    </g>
+  </svg>
+  </div>
+
+  <div class="detail" id="archDetail">
+    <p class="placeholder">↑ 點圖上任何一個方塊。我會用白話告訴你它是什麼、為什麼要有它、沒有它會怎樣。</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2>名詞解碼器</h2></div>
+  <p class="sec-lede">看不懂的名詞，通常不是因為它難，是因為<b>沒人告訴你會在哪裡遇到它</b>。所以這裡不按字母排，按「你在哪看到它」分類。</p>
+
+  <div class="tools">
+    <input class="search" id="q" type="search" placeholder="搜尋，例如 cache" aria-label="搜尋名詞">
+    <div class="cats" id="cats"></div>
+  </div>
+  <div class="terms" id="terms"></div>
+  <p class="none" id="none" hidden>沒找到。試試更短的關鍵字。</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><h2>洋蔥圖：誰包住誰</h2></div>
+  <p class="sec-lede">「包住」畫出來就是<b>一層包一層，像洋蔥</b>。<br>
+  <b>最外面那層是你寫的</b>，往裡面每一層都是別人已經寫好的。你只碰最外面，但裡面每一層都在跑。<br>
+  左邊是四條真實的鏈。<b>點任何一層</b>，右邊卡片會說明它是什麼。</p>
+
+  <div class="split">
+    <div class="chains" id="chains"></div>
+    <div class="detail sticky" id="layerDetail">
+      <p class="placeholder">← 點洋蔥圖上任何一層，這張卡片會說明它是什麼、它包住誰、同層的對手是誰。</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><b>整份文件只有一個用法：</b>看到不懂的名詞，先問「它是六種關係裡的哪一種」，再問「它在哪一層」。<br>
+  問完這兩題，九成的名詞就不可怕了——剩下那一成，是你真的需要動手做才會懂的。</p>
+  <p class="cred">字體：資源圓體 Resource Han Rounded TW（思源黑體的圓角繁中版，開源）</p>
+</footer>
+
+</div>
+<script>
+/* ══════════ 01 六種關係 ══════════ */
+const RELS = [
+  { n:"包住", sym:"A ⊃ B", key:1,
+    def:"A 是<b>用 B 做出來的</b>。你用 A 的時候，B 一直在下面跑，只是你看不到它。上面的好用，下面的有力。",
+    says:["A 是基於 B","A 底層是 B","A 封裝了 B","A 是 B 的 wrapper"],
+    egs:[["Three.js","包住","WebGL"],["Next.js","包住","React"],["axios","包住","fetch"]],
+    why:"因為下層太難用。用 WebGL 畫一個三角形要一百行，用 Three.js 三行。" },
+  { n:"取代", sym:"A ｜ B", key:1,
+    def:"兩個東西<b>站在同一個位子上搶同一份工作</b>。選一個就好，不用兩個都學。這是最容易誤會成「都要會」的關係。",
+    says:["A vs B","該用 A 還是 B","A 的替代品","A 的競品"],
+    egs:[["React","｜","Vue ｜ Svelte"],["PostgreSQL","｜","MySQL"],["Vite","｜","Webpack"]],
+    why:"判斷法：如果你看到一篇文章在「比較」它們，它們就是這種關係——挑一個就好。" },
+  { n:"需要", sym:"A → 需要 B",
+    def:"沒有 B，A <b>根本啟動不了</b>。安裝的時候會炸在這裡，這是新手最常撞牆的地方。",
+    says:["依賴 / dependency","要先裝 B","requires Node 18+","peer dependency"],
+    egs:[["Next.js","需要","Node.js"],["React Three Fiber","需要","React + Three.js"],["幾乎所有前端工具","需要","Node.js"]],
+    why:"最常出事的是版本。「需要 Node 18 以上」這種話講的就是這件事。" },
+  { n:"講話", sym:"A ──協定──▶ B", key:1,
+    def:"兩個<b>各自獨立</b>的東西，透過某個規矩互相傳資料。<b>架構圖上的箭頭，九成是這一種。</b>箭頭方向＝誰主動去找誰。",
+    says:["打 API","呼叫 / call","送請求","串接","request"],
+    egs:[["瀏覽器","──HTTPS──▶","伺服器"],["後端","──SQL──▶","資料庫"],["前端","──WebSocket──▶","即時伺服器"]],
+    why:"線上寫的那個字最重要，它就是「這兩邊用什麼語言講話」。看不懂那個字，就看不懂那條線。" },
+  { n:"變成", sym:"A ⇒ B",
+    def:"A 是<b>你寫的</b>，B 是<b>機器實際跑的</b>。中間有一道自動翻譯。所以你在專案裡找不到 B，因為 B 是產生出來的。",
+    says:["編譯 / compile","build / 打包","transpile","產生 / generate"],
+    egs:[["TypeScript","⇒","JavaScript"],["Sass","⇒","CSS"],["React 的 JSX","⇒","一般 JavaScript"]],
+    why:"為什麼要多這一道：讓你寫得舒服，跟讓機器跑得順，本來就是兩件事，很難兼顧。" },
+  { n:"外掛", sym:"A + B",
+    def:"A 是 B 的<b>擴充功能</b>，離開 B 就完全沒有用。單獨去查 A 會查不懂，因為它本來就不是獨立的東西。",
+    says:["plugin / 外掛","套件 / package","extension","middleware"],
+    egs:[["postprocessing","＋","Three.js"],["Tailwind","＋","CSS"],["ESLint 規則包","＋","ESLint"]],
+    why:"認法：名字裡有 plugin、-loader、@某某/某某 的，大多是這種。" },
+];
+
+const relsEl = document.getElementById("rels");
+RELS.forEach((r,i)=>{
+  const d = document.createElement("div");
+  d.className = "rel" + (r.key ? " key" : "");
+  d.innerHTML = `
+    <div class="rel-top">
+      <span class="rel-n">${i+1}</span>
+      <span class="rel-name">${r.n}</span>
+      <span class="rel-sym">${r.sym}</span>
+      ${r.key ? '<span class="rel-flag">最常見</span>' : ''}
+    </div>
+    <p class="rel-def">${r.def}</p>
+    <div class="rel-grid">
+      <div class="rel-box"><dt>聽到這些話就是它</dt>
+        <dd class="says">${r.says.map(s=>`<span>${esc(s)}</span>`).join("")}</dd></div>
+      <div class="rel-box"><dt>例子</dt>
+        <dd class="egs">${r.egs.map(e=>
+          `<code>${esc(e[0])}<span class="op">${esc(e[1])}</span>${esc(e[2])}</code>`).join("")}</dd></div>
+    </div>
+    <div class="rel-box"><dt>重點</dt><dd>${r.why}</dd></div>`;
+  relsEl.appendChild(d);
+});
+
+/* ══════════ 02 架構圖 ══════════ */
+const ARCH = {
+  browser:{ n:"瀏覽器", tag:"使用者這邊",
+    l:"使用者真正看得到、摸得到的地方。你寫的 React、Three.js 全部在這裡執行——不是在你的伺服器上。",
+    why:"這是唯一「不是你的機器」的地方。使用者可以打開開發者工具看光你送過去的東西，所以密碼、金鑰絕對不能放這裡。",
+    without:"沒有這一塊就不是網頁了。",
+    real:"Chrome / Safari / Edge。你的 JS 在 V8 引擎裡跑。" },
+  cdn:{ n:"CDN", tag:"第三方服務", full:"Content Delivery Network，內容傳遞網路",
+    l:"把你的圖片、影片、JS 檔複製到全世界幾百個機房。使用者從離自己最近的那個拿，所以在國外開你的網站也不會慢。",
+    why:"你的伺服器可能在美國，台灣使用者連過去要繞半個地球。CDN 讓他直接從台北的機房拿。",
+    without:"海外使用者載入會慢好幾秒，而且所有流量都砸在你自己的伺服器上，容易被打掛。",
+    real:"Cloudflare、Fastly、AWS CloudFront。多數有免費額度。" },
+  web:{ n:"前端伺服器", tag:"你的伺服器",
+    l:"負責「把網頁組好送出去」的程式。它可以在伺服器上先把畫面算好（SSR，Server-Side Rendering，伺服器端渲染），也可以只送一個空殼讓瀏覽器自己畫（CSR，Client-Side Rendering，瀏覽器端渲染）。",
+    why:"先組好再送，Google 才看得到你的內容（SEO，Search Engine Optimization，搜尋引擎最佳化），使用者也不用盯著白畫面等。",
+    without:"純靜態網站可以沒有它——直接把檔案丟 CDN 就好。有登入、有個人化內容才需要。",
+    real:"Next.js、Nuxt、SvelteKit。它們同時是框架也是伺服器。" },
+  api:{ n:"後端 API", tag:"你的伺服器", full:"Application Programming Interface，應用程式介面",
+    l:"真正處理業務邏輯的地方：驗證你是誰、算錢、決定你能看到什麼。前端只是門面，這裡才是大腦。",
+    why:"規則必須放在使用者改不到的地方。前端的檢查全部都能被繞過，只有這裡的檢查是真的。",
+    without:"任何需要「儲存資料」或「不能被作弊」的功能都做不了。",
+    real:"Node.js、Python (FastAPI)、Go。小專案可以跟前端伺服器合在一起。" },
+  db:{ n:"資料庫", tag:"你的伺服器",
+    l:"資料真正躺著的地方。程式重開、伺服器重灌，資料都還在——這是它跟「記憶體」最大的差別。",
+    why:"因為程式的記憶體一關就清空。要讓資料活過重開機，就必須寫進資料庫。",
+    without:"使用者一登出東西就不見了。",
+    real:"PostgreSQL（最通用）、SQLite（整個資料庫就一個檔案，小專案超好用）、MySQL。" },
+  cache:{ n:"快取", tag:"你的伺服器",
+    l:"把常被問到的答案先記在記憶體裡，下次直接給，不用再去問資料庫。讀取速度差距大概是一百倍。",
+    why:"資料庫查詢很貴。同一個熱門頁面被一萬個人打開，沒有快取就要查一萬次。",
+    without:"流量一大資料庫先倒。小專案沒流量的話，其實可以先不加。",
+    real:"Redis 幾乎是預設答案。麻煩的是「資料改了要記得清掉舊快取」，這是工程界公認最難的事情之一。" },
+  third:{ n:"第三方服務", tag:"別人的伺服器",
+    l:"別人已經做好的功能，你付錢用。AI、金流、寄信、簡訊、地圖——這些自己做要花好幾個月。",
+    why:"因為不是你的核心價值。你不會為了收錢自己去接銀行，你會用 Stripe。",
+    without:"什麼都自己做，然後三年後才上線。",
+    real:"Claude API（AI）、Stripe（金流）、Resend（寄信）。要注意兩件事：<b>它掛掉你也會掛</b>，還有<b>用量會計費</b>。" },
+};
+
+const archDetail = document.getElementById("archDetail");
+document.querySelectorAll("#arch .hot").forEach(g=>{
+  const act = ()=>{
+    document.querySelectorAll("#arch .hot").forEach(x=>x.classList.remove("on"));
+    g.classList.add("on");
+    const d = ARCH[g.dataset.k];
+    archDetail.innerHTML = `
+      <div class="d-top"><span class="d-name">${esc(d.n)}</span><span class="d-tag">${esc(d.tag)}</span></div>
+      ${d.full ? `<p class="d-full">（${esc(d.full)}）</p>` : ""}
+      <p class="d-lede">${esc(d.l)}</p>
+      <div class="d-grid">
+        <div class="d-cell"><dt>為什麼要有它</dt><dd>${esc(d.why)}</dd></div>
+        <div class="d-cell"><dt>沒有它會怎樣</dt><dd>${esc(d.without)}</dd></div>
+        <div class="d-cell"><dt>實際上是什麼</dt><dd>${d.real}</dd></div>
+      </div>`;
+    archDetail.scrollIntoView({block:"nearest", behavior:"smooth"});
+  };
+  g.addEventListener("click", act);
+  g.addEventListener("keydown", e=>{
+    if(e.key === "Enter" || e.key === " "){ e.preventDefault(); act(); }
+  });
+});
+
+/* ══════════ 03 名詞解碼器 ══════════ */
+// [名字, 分類, 說明, 全名（沒有就留空）]
+const TERMS = [
+  // ── 架構圖上的方塊 ──
+  ["CDN","架構圖","把檔案複製到全世界的機房，使用者從最近的拿。網站在國外也不慢就是靠它。","Content Delivery Network，內容傳遞網路"],
+  ["Load Balancer","架構圖","前面站一個門房，把湧進來的人平均分給後面好幾台伺服器。","負載平衡器"],
+  ["Cache","架構圖","把常用的答案先記起來，下次不用重算。Redis 是最常見的。","快取"],
+  ["Queue","架構圖","一排等著被處理的工作。寄信、轉檔這種慢工丟進去慢慢做，不要卡住使用者。","佇列"],
+  ["API Gateway","架構圖","所有請求的總入口。負責檢查身分、擋流量、分派到對的服務。","Application Programming Interface Gateway，應用程式介面閘道"],
+  ["Reverse Proxy","架構圖","站在伺服器前面代收請求的中間人，順便處理加密和分流。Nginx 最常見。","反向代理"],
+  ["Worker","架構圖","在背景默默做事的程式，不直接面對使用者。負責處理佇列裡的工作。","背景工作程式"],
+  ["Webhook","架構圖","「有事發生時你打給我」。跟 API 方向相反——不是你去問，是對方主動通知你。","網頁回呼"],
+  ["Microservice","架構圖","把一個大程式拆成很多小程式各管各的。大團隊才划算，小專案會被拆到死。","微服務"],
+  ["Monolith","架構圖","全部寫在一起沒有拆。聽起來土，但小專案這樣最好。","單體式架構"],
+  ["Object Storage","架構圖","放檔案的雲端空間，圖片影片丟這裡。S3、R2 都是。","物件儲存"],
+  ["WAF","架構圖","擋掉惡意流量的防火牆，站在你的服務最前面。","Web Application Firewall，網頁應用程式防火牆"],
+  ["S3","架構圖","Amazon 的檔案儲存服務，是「物件儲存」的代名詞。","Simple Storage Service，簡易儲存服務"],
+  // ── 線上的字（協定）──
+  ["HTTPS","線上的字","瀏覽器跟伺服器講話的標準規矩，而且全程加密。網址開頭那個就是。","HyperText Transfer Protocol Secure，加密的超文字傳輸協定"],
+  ["HTTP","線上的字","同上，但<b>沒有加密</b>。現在幾乎不該再用。","HyperText Transfer Protocol，超文字傳輸協定"],
+  ["SQL","線上的字","跟資料庫要資料時講的語言。<code>SELECT 名字 FROM 使用者</code> 這種。","Structured Query Language，結構化查詢語言"],
+  ["JSON","線上的字","前後端傳資料時最常用的格式，長得像一堆大括號。人看得懂、機器也好讀。","JavaScript Object Notation，JavaScript 物件表示法"],
+  ["TCP","線上的字","網路最底層的送信規矩，保證每個封包都會到、而且順序不會亂。","Transmission Control Protocol，傳輸控制協定"],
+  ["DNS","線上的字","把網址翻譯成 IP 位址的電話簿。網站連不上有一半是它出事。","Domain Name System，網域名稱系統"],
+  ["SSE","線上的字","伺服器單方向持續推訊息給瀏覽器。比 WebSocket 簡單，但只能單向。","Server-Sent Events，伺服器推送事件"],
+  ["gRPC","線上的字","後端跟後端之間講話用的高效格式，比 JSON 快但人看不懂。","Google Remote Procedure Call，Google 遠端程序呼叫"],
+  // ── 檔名 ──
+  ["package.json","檔名","JS 專案的身分證：用了哪些套件、有哪些指令可以跑。",""],
+  [".env","檔名","放密碼和金鑰的檔案。<b>絕對不能上傳到 GitHub</b>，這是最常見的外洩意外。","environment，環境設定"],
+  ["Dockerfile","檔名","「怎麼把這個程式裝進盒子」的說明書。一行一個步驟。",""],
+  [".tsx / .jsx","檔名","React 元件檔。x 代表裡面可以直接寫 HTML 標籤，ts 代表用 TypeScript。","TypeScript XML / JavaScript XML"],
+  [".yml / .yaml","檔名","設定檔格式，靠縮排表示層次。CI/CD 和 Docker 常用。縮排錯一格就爆。","YAML Ain't Markup Language"],
+  ["package-lock.json","檔名","鎖住每個套件的<b>確切版本</b>，確保每台電腦裝出來一模一樣。不要手改。",""],
+  ["node_modules","檔名","裝下來的套件全堆在這，通常幾百 MB。永遠不要動它，也不要上傳。",""],
+  ["dist / build","檔名","打包完成、準備上線的成品資料夾。這才是真正丟到伺服器的東西。","distribution，發布版"],
+  [".glb / .gltf","檔名","3D 模型檔，等於 3D 界的 jpg。","GL Transmission Format (Binary)，圖形傳輸格式"],
+  [".wasm","檔名","編譯後的檔案，讓 C++／Rust 能在瀏覽器裡跑。","WebAssembly，網頁組合語言"],
+  [".gitignore","檔名","列出「不要上傳到 Git 的東西」。node_modules 和 .env 一定要在裡面。",""],
+  ["README.md","檔名","專案說明書。看一個陌生專案先看它。","Markdown 格式的說明檔"],
+  // ── 指令 ──
+  ["npm install","指令","把 package.json 列的套件全部裝下來。拿到新專案第一件事。","Node Package Manager，Node 套件管理器"],
+  ["npm run dev","指令","開發模式啟動。改檔案存檔，畫面自動更新。","development，開發模式"],
+  ["npm run build","指令","打包成上線用的版本，產出丟進 dist 資料夾。",""],
+  ["git push","指令","把本機的改動送上遠端（通常是 GitHub）。",""],
+  ["git pull","指令","把遠端別人的改動拉下來。",""],
+  ["docker run","指令","啟動一個盒子。盒子裡的環境跟你的電腦完全隔離。",""],
+  ["migrate","指令","改資料庫的表格結構，例如加一個欄位。要小心，改壞會遺失資料。","migration，資料庫遷移"],
+  ["seed","指令","塞一批假資料進資料庫，方便開發時測試。","種子資料"],
+  ["lint","指令","檢查程式碼有沒有寫壞或不符合規矩。上線前跑一次。","靜態檢查"],
+  ["deploy","指令","把程式送上正式環境給使用者用。","部署"],
+  // ── 行話 ──
+  ["API","行話","一個程式開給別的程式用的窗口。「打 API」＝去呼叫那個窗口拿東西。","Application Programming Interface，應用程式介面"],
+  ["endpoint","行話","API 的其中一個具體網址，例如 /users/123。一個 API 有很多 endpoint。","端點"],
+  ["SDK","行話","官方寫好的工具包，讓你不用自己手動串 API。裝了就能直接用。","Software Development Kit，軟體開發套件"],
+  ["SSR","行話","網頁在伺服器上先組好才送給你。快、Google 找得到。","Server-Side Rendering，伺服器端渲染"],
+  ["CSR","行話","先送一個空殼過來，JS 載完才把畫面畫出來。會先看到白畫面。","Client-Side Rendering，瀏覽器端渲染"],
+  ["SEO","行話","讓 Google 找得到你、而且排前面的所有做法總稱。","Search Engine Optimization，搜尋引擎最佳化"],
+  ["Hydration","行話","伺服器送來的靜態畫面「接上」JavaScript 變成可互動的那一刻。這裡對不起來就是 hydration error。","注水／水合"],
+  ["middleware","行話","請求到達目的地之前要經過的一道道關卡，例如檢查有沒有登入。","中介層"],
+  ["runtime","行話","程式實際跑起來的地方。Node.js 就是 JavaScript 的 runtime。","執行環境"],
+  ["CI/CD","行話","程式碼一推上去就自動測試、自動上線的流程。GitHub Actions 最常見。","Continuous Integration / Continuous Deployment，持續整合／持續部署"],
+  ["dev / staging / production","行話","三套環境：開發用、測試用、真正給使用者用的。改壞了只會壞在前兩個。","development / staging / production，開發／預備／正式"],
+  ["rate limit","行話","限制你一分鐘能呼叫幾次。超過就被擋，防止服務被打爆。","速率限制"],
+  ["token","行話","一串代表「我是誰」的密碼。登入後拿到，之後每次請求都要帶著。","權杖"],
+  ["REST","行話","前後端講話的規矩。用網址代表資源：<code>GET /users/123</code> 就是「給我 123 號使用者」。","Representational State Transfer，表現層狀態轉移"],
+  ["GraphQL","行話","REST 的對手。讓前端自己指定要哪些欄位，後端不用一個個開 API。","Graph Query Language，圖形查詢語言"],
+  ["ORM","行話","讓你用寫程式的方式操作資料庫，不用手寫 SQL。Prisma、Drizzle 都是。","Object-Relational Mapping，物件關聯對映"],
+  ["CRUD","行話","增、查、改、刪。任何管理資料的功能都逃不出這四個動作。","Create Read Update Delete，新增／讀取／更新／刪除"],
+  ["cache invalidation","行話","資料改了要記得把舊快取丟掉。工程界公認最難的兩件事之一（另一件是命名）。","快取失效"],
+  ["race condition","行話","兩件事同時發生、順序不確定，所以有時對有時錯。最難抓的 bug 之一。","競爭條件"],
+  ["latency","行話","從你送出請求到收到回應的時間。跟「頻寬」不同——頻寬是水管粗細，延遲是水管長度。","延遲"],
+  ["idempotent","行話","同一個動作做一次跟做十次結果一樣。付款 API 一定要做到，不然重送會扣兩次錢。","冪等"],
+  ["environment variable","行話","放在程式外面的設定值，換環境就換一份，不用改程式碼。","環境變數"],
+  ["breaking change","行話","升級之後舊寫法會壞掉。版本號第一碼跳號就是在警告這個。","破壞性變更"],
+  ["UI / UX","行話","UI 是使用者看到摸到的介面，UX 是他用起來的整體感受。兩個常被混用但不一樣。","User Interface / User Experience，使用者介面／使用者體驗"],
+];
+
+const CATS = ["全部","架構圖","線上的字","檔名","指令","行話","分層"];
+let curCat = "全部", curQ = "";
+
+/* ══════════ 04 地層 ══════════ */
+const LAYERS = [
+  { name:"硬體", techs:[
+    { n:"CPU", full:"Central Processing Unit，中央處理器",
+      l:"一次專心做一件事，但很聰明。你的程式邏輯在這裡跑。",
+      down:"實體晶片，最底層", up:"所有東西", vs:"—", meet:"「跑很慢」通常是這裡塞住" },
+    { n:"GPU", full:"Graphics Processing Unit，圖形處理器",
+      l:"一次做幾千件簡單的事。畫圖跟跑 AI 都靠它——那兩件事本質都是「同一個算式重複幾百萬次」。",
+      down:"實體晶片", up:"WebGL、排版引擎", vs:"—", meet:"3D、影片、AI 都在搶它" },
+    { n:"實體機器", full:"伺服器主機",
+      l:"真的有一台電腦擺在某個機房裡。所謂「雲端」，只是別人幫你顧的機器。",
+      down:"—", up:"作業系統", vs:"自己買機器 ｜ 租雲端", meet:"「伺服器掛了」講的就是它" },
+    { n:"作業系統", full:"Operating System，OS",
+      l:"管理硬體、分配資源的底層軟體。伺服器上幾乎都是 Linux。",
+      down:"CPU ＋ 實體機器", up:"Node.js、Python、Docker", vs:"Linux ｜ Windows ｜ macOS", meet:"部署時會遇到" },
+    { n:"Linux", full:"開源作業系統",
+      l:"免費、開源的作業系統。全世界九成以上的伺服器都跑它。",
+      down:"實體機器", up:"Docker、Node.js", vs:"Windows Server", meet:"所有雲端服務底下都是它" },
+  ]},
+  { name:"瀏覽器內部", techs:[
+    { n:"V8", full:"Google 的 JavaScript 引擎代號（不是縮寫）",
+      l:"Chrome 裡負責跑 JavaScript 的引擎，把你的 JS 即時翻譯成機器碼。",
+      down:"CPU", up:"所有 JS、Node.js", vs:"JavaScriptCore（Safari）", meet:"Node.js 就是「把 V8 搬出瀏覽器」" },
+    { n:"Blink", full:"Chrome 的排版引擎代號",
+      l:"把 HTML ＋ CSS 算成「每個字在螢幕的第幾個像素」。",
+      down:"GPU ＋ CPU", up:"DOM", vs:"WebKit（Safari）、Gecko（Firefox）", meet:"改個 CSS 整頁重排變卡，就是它在忙" },
+  ]},
+  { name:"瀏覽器原生功能", techs:[
+    { n:"DOM", full:"Document Object Model，文件物件模型",
+      l:"操作網頁元素的介面。「找到這個按鈕、把文字改掉」就是它。",
+      down:"Blink", up:"React、Vue", vs:"Canvas 2D（另一種畫法）", meet:"React 底下跑的就是它" },
+    { n:"Canvas 2D", full:"畫布",
+      l:"一塊空白畫布，可以自由畫線畫圖。畫完就是一張圖，沒有「元素」的概念。",
+      down:"Blink ＋ GPU", up:"Chart.js、小遊戲", vs:"DOM、WebGL", meet:"圖表、簽名板、小遊戲" },
+    { n:"WebGL", full:"Web Graphics Library，網頁圖形函式庫",
+      l:"直接叫顯示卡畫東西的介面。低階到幾乎沒人直接寫——畫一個三角形要一百行。",
+      down:"GPU", up:"Three.js、Babylon.js", vs:"Canvas 2D、WebGPU", meet:"所有網頁 3D 的底層" },
+    { n:"WebGPU", full:"網頁圖形處理器介面",
+      l:"WebGL 的接班人。更快、也能拿來跑 AI 運算。",
+      down:"GPU", up:"Three.js", vs:"WebGL", meet:"新專案值得考慮" },
+    { n:"WebSocket", full:"網頁雙向連線協定",
+      l:"跟伺服器保持一條雙向通道。一般請求是「你問一句它答一句」，這個是「兩邊隨時都能主動說話」。",
+      down:"TCP", up:"多人遊戲、聊天室", vs:"fetch、SSE", meet:"即時通知、線上協作" },
+    { n:"fetch", full:"瀏覽器內建的網路請求函式",
+      l:"發出網路請求拿資料。",
+      down:"HTTP", up:"axios、React Query", vs:"axios", meet:"所有跟後端拿資料的地方" },
+  ]},
+  { name:"語言", techs:[
+    { n:"JavaScript", full:"",
+      l:"瀏覽器唯一原生看得懂的語言。所有其他選擇最後都要變成它。",
+      down:"V8", up:"全部", vs:"—（瀏覽器裡沒對手）", meet:"到處都是" },
+    { n:"TypeScript", full:"",
+      l:"JavaScript 加上型別檢查。打錯字、傳錯資料，寫的當下就被抓出來。最後還是編譯成 JS。",
+      down:"JavaScript", up:"大部分現代專案", vs:"純 JavaScript", meet:"看到 .ts / .tsx 就是它" },
+    { n:"WebAssembly", full:"WASM，網頁組合語言",
+      l:"讓 C++、Rust 編譯後跑在瀏覽器裡，速度接近原生。用在「JS 太慢」的地方。",
+      down:"瀏覽器", up:"Figma、物理引擎", vs:"JavaScript", meet:"很重的計算搬上網頁時" },
+    { n:"GLSL", full:"OpenGL Shading Language，OpenGL 著色器語言",
+      l:"寫給 GPU 看的迷你語言，負責「這個像素是什麼顏色」。整條 3D 路上唯一真的難的東西。",
+      down:"GPU", up:"WebGL", vs:"WGSL", meet:"要做內建做不出的特效時" },
+    { n:"Python", full:"",
+      l:"資料處理跟 AI 的主流語言。語法簡單、函式庫多。不能在瀏覽器裡跑。",
+      down:"作業系統", up:"PyTorch、FastAPI", vs:"Node.js、Go", meet:"AI、資料分析、爬蟲" },
+  ]},
+  { name:"函式庫", techs:[
+    { n:"Three.js", full:"",
+      l:"把 WebGL 包成人話。用「場景、相機、燈光」這種現實世界的詞寫 3D，不用碰矩陣數學。",
+      down:"WebGL", up:"React Three Fiber", vs:"Babylon.js、PlayCanvas", meet:"網頁 3D 的預設選擇" },
+    { n:"D3.js", full:"Data-Driven Documents，資料驅動文件",
+      l:"資料視覺化的祖師爺。它不畫圖表，它給你「把資料變成座標」的工具。",
+      down:"DOM", up:"各種圖表庫", vs:"Chart.js、ECharts", meet:"客製化圖表" },
+    { n:"GSAP", full:"GreenSock Animation Platform，GreenSock 動畫平台",
+      l:"動畫時間軸。「這個先動 0.3 秒，然後那個淡入」這種編排。",
+      down:"DOM", up:"你的專案", vs:"Framer Motion、CSS animation", meet:"精緻的進場動畫" },
+    { n:"Zod", full:"",
+      l:"檢查資料形狀對不對。從外面拿到的東西不見得符合預期，它擋在門口。",
+      down:"TypeScript", up:"表單、API 層", vs:"Yup、Valibot", meet:"表單驗證" },
+  ]},
+  { name:"UI 框架", techs:[
+    { n:"React", full:"",
+      l:"把畫面拆成一塊一塊的「元件」，資料變了畫面自動跟著變，你不用自己去改 DOM。",
+      down:"DOM", up:"Next.js、React Three Fiber", vs:"Vue、Svelte", meet:"目前市佔最高" },
+    { n:"Vue", full:"",
+      l:"跟 React 做同一件事的對手。上手比較快，語法比較像傳統 HTML。",
+      down:"DOM", up:"Nuxt", vs:"React、Svelte", meet:"亞洲用得多" },
+    { n:"Svelte", full:"",
+      l:"跟 React 做<b>同一件事</b>，但做法不同。React 是把「自動更新畫面」的整套機制一起送到瀏覽器，所以檔案比較大；Svelte 是在你打包的時候就先把這些算好，只送結果過去。對你來說的差別：兩個都能做出一樣的網站，Svelte 寫的字比較少、載入比較快，但會的人比較少、遇到問題比較難查。",
+      down:"DOM", up:"SvelteKit", vs:"React、Vue", meet:"想要網站小又快、而且不怕資源少的時候" },
+    { n:"React Three Fiber", full:"",
+      l:"把 Three.js 包成 React 元件。已經會 React 又想做 3D 的最短路徑。",
+      down:"React ＋ Three.js", up:"你的專案", vs:"直接寫 Three.js", meet:"React 專案要加 3D 時" },
+    { n:"Tailwind CSS", full:"",
+      l:"用一堆小 class 直接在 HTML 裡寫樣式，不用另外開 CSS 檔。",
+      down:"CSS", up:"你的專案", vs:"原生 CSS、CSS Modules", meet:"看到 flex gap-4 p-6 就是它" },
+  ]},
+  { name:"全端框架", techs:[
+    { n:"Next.js", full:"",
+      l:"React 的「完整版」。多了路由、伺服器渲染、API。React 只管畫面，它管整個網站。",
+      down:"React ＋ Node.js", up:"Vercel", vs:"Nuxt、SvelteKit、Remix", meet:"大部分正式 React 專案" },
+    { n:"Astro", full:"",
+      l:"專做內容型網站——部落格、文件站。預設不送 JS 到瀏覽器，所以極快。",
+      down:"Vite", up:"CDN", vs:"Next.js、Hugo", meet:"部落格、文件、行銷頁" },
+    { n:"Express", full:"",
+      l:"寫後端 API 最常見的小工具。負責「有人打這個網址時，執行這段程式」。",
+      down:"Node.js", up:"你的 API", vs:"Fastify、Hono、NestJS", meet:"Node.js 後端幾乎都用它" },
+    { n:"Node.js", full:"",
+      l:"讓 JavaScript 跑在伺服器上，不只瀏覽器裡。本質是「把 V8 引擎搬出瀏覽器」。",
+      down:"V8 ＋ 作業系統", up:"Next.js、Express", vs:"Deno、Bun、Python、Go", meet:"後端和所有 npm 指令" },
+  ]},
+  { name:"工具與部署", techs:[
+    { n:"Vite", full:"",
+      l:"開發時秒開、上線時打包。現在新專案的預設選擇。",
+      down:"Node.js", up:"你的專案", vs:"Webpack、Parcel", meet:"npm run dev 通常就是它" },
+    { n:"npm / pnpm", full:"Node Package Manager，Node 套件管理器",
+      l:"裝套件用的指令。pnpm 比較省硬碟也比較快。",
+      down:"Node.js", up:"所有專案", vs:"yarn、bun", meet:"你每天都在打 npm install" },
+    { n:"Git", full:"",
+      l:"記錄每一次改動，隨時可以退回去。GitHub 是放 Git 的網站，兩個不是同一個東西。",
+      down:"作業系統", up:"GitHub、CI/CD", vs:"—", meet:"所有專案的標配" },
+    { n:"Docker", full:"",
+      l:"把「程式 ＋ 它需要的環境」打包成一個盒子。解決「我電腦跑得起來啊」這個千古難題。",
+      down:"Linux", up:"Vercel、雲端平台", vs:"直接裝在機器上", meet:"部署後端時" },
+    { n:"Vercel", full:"",
+      l:"幫你把網站放上網的平台。git push 就自動上線，免費額度很大方。背後幫你打理伺服器和 CDN。",
+      down:"Docker ＋ CDN", up:"你的網站", vs:"Cloudflare、Netlify、自己租機器", meet:"前端部署的預設答案" },
+  ]},
+];
+
+/* 洋蔥圖：四條真實的「包住」鏈，最外面是你寫的，最裡面是硬體 */
+const OWN = {
+  "你寫的元件":{ full:"你自己的程式碼", l:"你實際打字寫出來的那幾個檔案。整條鏈只有這一層是你的，其他每一層都是別人寫好的。",
+    down:"Next.js", up:"—（最外層）", vs:"—", meet:"你的專案資料夾裡" },
+  "你寫的場景":{ full:"你自己的程式碼", l:"你擺的相機位置、燈光、模型。你只寫這些，剩下的交給下面幾層。",
+    down:"React Three Fiber", up:"—（最外層）", vs:"—", meet:"你的專案資料夾裡" },
+  "你寫的 API":{ full:"你自己的程式碼", l:"你定義的規則：誰能看什麼、資料怎麼算。這是整個服務真正的價值所在。",
+    down:"Express", up:"—（最外層）", vs:"—", meet:"你的專案資料夾裡" },
+  "你的網站":{ full:"打包完的成品", l:"build 之後產生的那一堆檔案。你不用手改它，它是被產生出來的。",
+    down:"Vercel", up:"—（最外層）", vs:"—", meet:"dist 或 build 資料夾" },
+};
+
+const CHAINS = [
+  { t:"做一個網頁介面", sub:"最常見的一條", levels:["你寫的元件","Next.js","React","DOM","Blink","GPU"] },
+  { t:"做網頁 3D", sub:"多包了兩層", levels:["你寫的場景","React Three Fiber","Three.js","WebGL","GPU"] },
+  { t:"跑一個後端", sub:"伺服器那邊", levels:["你寫的 API","Express","Node.js","V8","作業系統","CPU"] },
+  { t:"把網站放上網", sub:"部署", levels:["你的網站","Vercel","Docker","Linux","實體機器"] },
+];
+
+/* ---- 洋蔥圖渲染 ---- */
+const layerDetail = document.getElementById("layerDetail");
+const idx = new Map();
+LAYERS.forEach(L=>L.techs.forEach(t=>idx.set(t.n, {...t, cat:L.name})));
+Object.entries(OWN).forEach(([k,v])=>idx.set(k, {n:k, ...v, cat:"你自己的程式"}));
+
+const chainsEl = document.getElementById("chains");
+CHAINS.forEach(ch=>{
+  const card = document.createElement("div");
+  card.className = "chain";
+  card.innerHTML = `<div class="chain-hd"><span class="chain-t">${ch.t}</span><span class="chain-s">${ch.sub}</span></div>`;
+
+  // 由內往外組，最後外層包住內層
+  let inner = null;
+  for(let i = ch.levels.length - 1; i >= 0; i--){
+    const name = ch.levels[i];
+    const t = idx.get(name) || {n:name, l:"", down:"", up:"", vs:"", meet:"", cat:""};
+    const box = document.createElement("div");
+    box.className = "lv";
+    box.style.setProperty("--c", `var(--d${Math.min(7, i)})`);
+    box.tabIndex = 0;
+    box.setAttribute("role","button");
+    const head = document.createElement("div");
+    head.className = "lv-hd";
+    head.innerHTML = `<span class="lv-n">${esc(name)}</span>` +
+      (i === 0 ? '<span class="lv-you">你寫的</span>'
+               : (i === ch.levels.length - 1 ? '<span class="lv-deep">最底層</span>' : ''));
+    box.appendChild(head);
+    if(inner) box.appendChild(inner);
+    box.addEventListener("click", e=>{ e.stopPropagation(); show(t, box); });
+    box.addEventListener("keydown", e=>{
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); e.stopPropagation(); show(t, box); }
+    });
+    inner = box;
+  }
+  card.appendChild(inner);
+  chainsEl.appendChild(card);
+});
+
+function show(t, box){
+  document.querySelectorAll(".lv").forEach(x=>x.classList.remove("on"));
+  if(box) box.classList.add("on");
+  layerDetail.innerHTML = `
+    <div class="d-top"><span class="d-name${/^[\x00-\x7F.\s/+]+$/.test(t.n) ? " mono" : ""}">${esc(t.n)}</span>${
+      t.cat ? `<span class="d-tag">${esc(t.cat)}</span>` : ""
+    }</div>
+    ${t.full ? `<p class="d-full">（${esc(t.full)}）</p>` : ""}
+    <p class="d-lede">${t.l}</p>
+    <div class="d-grid">
+      <div class="d-cell"><dt>它包住誰</dt><dd>${esc(t.down || "—")}</dd></div>
+      <div class="d-cell"><dt>誰包住它</dt><dd>${esc(t.up || "—")}</dd></div>
+      <div class="d-cell"><dt>同層對手</dt><dd>${esc(t.vs || "—")}</dd></div>
+      <div class="d-cell"><dt>你會在哪遇到</dt><dd>${esc(t.meet || "—")}</dd></div>
+    </div>`;
+  // 窄螢幕時卡片在洋蔥圖下方，捲過去才看得到
+  if(window.matchMedia("(max-width:860px)").matches){
+    layerDetail.scrollIntoView({block:"nearest", behavior:"smooth"});
+  }
+}
+
+/* ---- 解碼器渲染（含地層技術）---- */
+const ALL = TERMS.map(t=>({n:t[0], cat:t[1], l:t[2], full:t[3]||""}));
+LAYERS.forEach(L=>L.techs.forEach(t=>ALL.push({n:t.n, cat:"分層", l:t.l, full:t.full||""})));
+
+const catsEl = document.getElementById("cats");
+CATS.forEach(c=>{
+  const b = document.createElement("button");
+  b.className = "cat"; b.type = "button"; b.textContent = c;
+  b.setAttribute("aria-pressed", String(c === "全部"));
+  b.addEventListener("click", ()=>{
+    curCat = c;
+    [...catsEl.children].forEach(x=>x.setAttribute("aria-pressed", String(x === b)));
+    drawTerms();
+  });
+  catsEl.appendChild(b);
+});
+
+const termsEl = document.getElementById("terms");
+const noneEl = document.getElementById("none");
+function drawTerms(){
+  const f = curQ.trim().toLowerCase();
+  const rows = ALL.filter(r =>
+    (curCat === "全部" || r.cat === curCat) &&
+    (!f || (r.n + r.cat + r.l + r.full).toLowerCase().includes(f)));
+  termsEl.innerHTML = rows.map(r =>
+    `<div class="term"><div class="tn">${esc(r.n)}${
+      r.full ? `<span class="tf">（${esc(r.full)}）</span>` : ""
+    }</div><div class="tc">${esc(r.cat)}</div><div class="tl">${r.l}</div></div>`
+  ).join("");
+  noneEl.hidden = rows.length > 0;
+}
+document.getElementById("q").addEventListener("input", e=>{ curQ = e.target.value; drawTerms(); });
+drawTerms();
+
+function esc(s){ return String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+</script>

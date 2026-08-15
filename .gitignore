@@ -1,0 +1,7 @@
+# 字體原始檔太大（各 9MB），不進版控。
+# 下載方式見 README。瘦身後的 assets/*.woff2 有進版控，網站不靠這些檔案也能跑。
+fonts/*.ttf
+fonts/*.otf
+subset.txt
+
+.DS_Store

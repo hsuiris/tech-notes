@@ -1,0 +1,331 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>看懂一個專案資料夾 · tech-notes</title>
+<meta name="description" content="打開別人的 repo，每個檔案跟資料夾各是幹嘛的、哪些能動、哪些千萬別動。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+/* ── 檔案樹 ── */
+.tree{
+  background:var(--paper-3); border:1px solid var(--line);
+  border-radius:4px; padding:12px 10px; overflow-x:auto;
+}
+.tree-root{
+  font-family:var(--font-mono); font-size:13px; font-weight:700;
+  color:var(--ink); padding:4px 10px 8px;
+}
+.f{
+  display:flex; align-items:center; gap:9px; width:100%; text-align:left;
+  border:0; background:none; cursor:pointer; font-family:var(--font-mono);
+  font-size:12.5px; color:var(--ink); padding:5px 10px; border-radius:3px;
+  border-left:3px solid transparent; transition:background .12s;
+  white-space:nowrap;
+}
+.f:hover{background:var(--paper-2)}
+.f.on{background:var(--accent-soft); border-left-color:var(--accent)}
+.f .stick{color:var(--ink-3); flex:none}
+.f .nm{font-weight:600}
+.f.dir .nm{color:var(--ink)}
+.f .kind{
+  margin-left:auto; font-family:var(--font-cn); font-size:10.5px;
+  padding:1px 8px; border-radius:3px; flex:none;
+  color:var(--k); border:1px solid var(--k);
+}
+
+/* ── 三種檔案 ── */
+.kinds{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+@media (max-width:760px){.kinds{grid-template-columns:1fr}}
+.kd{
+  border:1px solid var(--line); border-top:3px solid var(--k);
+  border-radius:4px; background:var(--paper-2); padding:20px;
+}
+.kd h3{font-size:17px; margin-bottom:4px; color:var(--k)}
+.kd .rule{font-size:14px; color:var(--ink); font-weight:700; margin:0 0 12px}
+.kd p{margin:0 0 10px; font-size:14px; color:var(--ink-2); line-height:1.72}
+.kd ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:4px}
+.kd li{
+  font-family:var(--font-mono); font-size:12.5px; color:var(--ink-2);
+  padding-left:14px; position:relative; word-break:break-word;
+}
+.kd li::before{content:"·"; position:absolute; left:2px; color:var(--ink-3)}
+
+/* ── 別碰清單 ── */
+.nope{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); border-radius:4px; overflow:hidden}
+.np{
+  display:grid; grid-template-columns:200px 1fr; gap:18px;
+  background:var(--paper-2); padding:15px 18px; align-items:start;
+}
+@media (max-width:700px){.np{grid-template-columns:1fr; gap:5px}}
+.np .n{font-family:var(--font-mono); font-size:13.5px; font-weight:700; color:var(--ochre)}
+.np .w{font-size:14.5px; color:var(--ink-2); line-height:1.72}
+.np .w b{color:var(--ink); font-weight:700}
+</style>
+
+<nav class="topnav"><div class="topnav-in">
+  <a class="brand" href="./">tech-notes</a>
+  <div class="navlinks">
+    <a href="architecture.html">架構圖</a>
+    <a href="errors.html">錯誤訊息</a>
+    <a href="request.html">按鈕之旅</a>
+    <a href="project.html" aria-current="page">專案資料夾</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">專案資料夾</div>
+  <h1>看懂一個專案資料夾</h1>
+  <p class="sub">打開一個 repo，滿滿的檔案跟資料夾，每個都不敢碰。<br>
+  其實只要分成<b>三種</b>就好：你寫的、機器產生的、別人的。</p>
+</header>
+
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><h2>一個典型的專案長什麼樣</h2></div>
+  <p class="sec-lede">這是一個很標準的網頁專案結構。<b>點任何一個檔案或資料夾</b>，右邊會說明它是什麼、能不能改、改了會怎樣。</p>
+
+  <div class="split">
+    <div class="tree" id="tree"><div class="tree-root">my-app/</div></div>
+    <div class="detail sticky" id="card">
+      <p class="placeholder">← 點左邊任何一個檔案，這裡會說明它是什麼、能不能碰。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>只要分成三種就好</h2></div>
+  <p class="sec-lede">看到一個沒見過的檔案，先問一句：<b>這是誰放的？</b>答案只有三個，而且對應三種完全不同的態度。</p>
+
+  <div class="kinds">
+    <div class="kd" style="--k:var(--accent)">
+      <h3>你寫的</h3>
+      <p class="rule">改這裡。這是你的工作區。</p>
+      <p>你打字打出來的東西。改了會生效、會被 Git 記錄、會被別人看到。</p>
+      <ul>
+        <li>src/</li><li>public/</li><li>README.md</li>
+        <li>package.json</li><li>各種 .config 設定檔</li>
+      </ul>
+    </div>
+    <div class="kd" style="--k:var(--ochre)">
+      <h3>機器產生的</h3>
+      <p class="rule">改了會被蓋掉。白費工。</p>
+      <p>從「你寫的」自動生出來的。你改它就像改影印本——原稿一印，你的改動就沒了。</p>
+      <ul>
+        <li>dist/ · build/ · .next/</li>
+        <li>package-lock.json</li>
+        <li>*.d.ts（自動產生的型別檔）</li>
+        <li>coverage/（測試報告）</li>
+      </ul>
+    </div>
+    <div class="kd" style="--k:var(--ink-3)">
+      <h3>別人的</h3>
+      <p class="rule">完全不要進去。</p>
+      <p>從網路下載來的套件。你改了，別人重裝就沒有，等於你一個人在演。</p>
+      <ul>
+        <li>node_modules/</li>
+        <li>vendor/</li>
+        <li>.git/（Git 自己的紀錄）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:22px">
+    <b>怎麼快速分辨？</b>打開 <code>.gitignore</code>，<b>裡面列出來的，全部都是「產生的」或「別人的」</b>。<br>
+    因為 Git 不記錄它們——不需要記錄的東西，就是不需要你改的東西。
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2>拿到一個陌生專案，照這五步</h2></div>
+  <p class="sec-lede">不要一打開就從第一個檔案開始讀。照順序來，<b>15 分鐘就能摸清楚一個中型專案</b>。</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-rail"><div class="dot"></div><div class="bar"></div></div>
+      <div class="step-body">
+        <h3>先讀 README.md<span class="time">3 分鐘</span></h3>
+        <p>這是專案的說明書：它是什麼、怎麼跑起來、要先裝什麼。寫得爛的 README 也有資訊——代表這專案可能沒人維護。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-rail"><div class="dot"></div><div class="bar"></div></div>
+      <div class="step-body">
+        <h3>看 package.json 的 scripts<span class="time">2 分鐘</span></h3>
+        <p>這段告訴你<b>這個專案能打哪些指令</b>。冒號左邊是指令名，右邊是它實際會做的事。</p>
+        <div class="pre">"scripts": {
+  "dev":   "vite",              ← npm run dev  開發模式
+  "build": "tsc && vite build", ← npm run build 打包上線
+  "test":  "vitest"             ← npm run test 跑測試
+}</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-rail"><div class="dot"></div><div class="bar"></div></div>
+      <div class="step-body">
+        <h3>找進入點<span class="time">3 分鐘</span></h3>
+        <p>整個程式從哪一行開始跑。通常在 <code>src/</code> 裡面，叫 <code>main</code>、<code>index</code> 或 <code>App</code>。從它往下讀，比隨便亂翻有效十倍。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-rail"><div class="dot"></div><div class="bar"></div></div>
+      <div class="step-body">
+        <h3>真的把它跑起來<span class="time">5 分鐘</span></h3>
+        <p>讀十遍不如跑一遍。如果需要 <code>.env</code>，看看有沒有 <code>.env.example</code> 可以照抄。</p>
+        <div class="pre">npm install
+npm run dev</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-rail"><div class="dot"></div></div>
+      <div class="step-body">
+        <h3>改一個字，確認畫面真的會變<span class="time">2 分鐘</span></h3>
+        <p>隨便找一段畫面上看得到的文字，改掉它，看瀏覽器有沒有跟著變。<b>這一步是在確認「你改的檔案，就是你看到的畫面」</b>——很多人卡好幾小時，最後發現一直在改錯的檔案。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><h2>這五個絕對不要動</h2></div>
+  <p class="sec-lede">不是「最好不要」，是<b>動了會出事而且不好救</b>。</p>
+
+  <div class="nope">
+    <div class="np">
+      <div class="n">node_modules/</div>
+      <div class="w">下載來的套件，幾萬個檔案。<b>你改的東西別人完全看不到</b>，因為他重裝就蓋掉了。要改套件行為，用官方提供的設定，不要動原始碼。</div>
+    </div>
+    <div class="np">
+      <div class="n">package-lock.json</div>
+      <div class="w">手改會讓「鎖版本」失效，導致<b>你的電腦跟伺服器裝到不同版本</b>——那種「我這邊明明好好的」就是這樣來的。要改就改 package.json，然後 <code>npm install</code> 讓它自己更新。</div>
+    </div>
+    <div class="np">
+      <div class="n">dist/ · build/</div>
+      <div class="w">打包產生的成品。<b>下次 build 會整包蓋掉</b>，你的改動一秒消失。要改就去改 <code>src/</code> 裡的原稿。</div>
+    </div>
+    <div class="np">
+      <div class="n">.git/</div>
+      <div class="w">Git 的全部歷史紀錄都在這個資料夾裡。<b>刪掉等於所有版本紀錄永久消失</b>，沒有任何辦法救回來。它看起來只是個隱藏資料夾，但它是整個專案的記憶。</div>
+    </div>
+    <div class="np">
+      <div class="n">.env（別人的）</div>
+      <div class="w">裡面是密碼和金鑰。<b>不要上傳、不要貼給任何人、不要放進截圖</b>。真的外洩了，正確做法是去服務商後台把那把金鑰作廢重發，光刪掉檔案沒有用——它已經在 Git 歷史裡了。</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><b>一句話帶走：</b>看到不認識的檔案，先打開 <code>.gitignore</code>。<br>
+  在裡面 ＝ 不用管它。不在裡面 ＝ 有人刻意寫的，值得看一眼。</p>
+  <p class="cred"><a href="./">← 回目錄</a></p>
+</footer>
+
+</div>
+
+<script>
+const K = { "你寫的":"var(--accent)", "產生的":"var(--ochre)", "別人的":"var(--ink-3)", "設定":"var(--d3)" };
+
+// [縮排層級, 名字, 是否資料夾, 種類, 說明, 能不能改, 改了會怎樣 / 重點]
+const FILES = [
+  [0,"README.md",0,"你寫的",
+   "專案說明書：這是什麼、怎麼跑起來、要先裝什麼。",
+   "可以，而且應該改。",
+   "拿到陌生專案<b>第一個看它</b>。寫得好的 README 可以省你兩小時。"],
+  [0,"package.json",0,"你寫的",
+   "專案的身分證：名字、版本、用了哪些套件、有哪些指令可以跑。",
+   "可以，但改版本號要小心。",
+   "重點看 <code>\"scripts\"</code> 那一段——它列出這個專案<b>能打哪些指令</b>。"],
+  [0,"package-lock.json",0,"產生的",
+   "鎖住每一個套件的<b>確切版本</b>，確保每台電腦裝出來一模一樣。通常好幾千行。",
+   "不要手改。",
+   "它就是為了消滅「我電腦跑得起來啊」而存在的。手改會讓這個保證失效。"],
+  [0,".env",0,"你寫的",
+   "放密碼、API 金鑰、資料庫連線字串的地方。",
+   "可以改，但<b>絕對不能上傳</b>。",
+   "外洩了光刪檔案沒用——要去服務商後台把金鑰<b>作廢重發</b>，因為它已經進 Git 歷史了。"],
+  [0,".env.example",0,"你寫的",
+   "<code>.env</code> 的<b>範本</b>：只寫「需要哪些變數」，不寫真正的值。",
+   "可以改。這個才是要上傳的。",
+   "別人 clone 你的專案，照著這份就知道要準備哪些金鑰。體貼的專案都有這個。"],
+  [0,".gitignore",0,"你寫的",
+   "列出「不要上傳到 Git 的東西」。",
+   "可以改，但少一行可能造成外洩。",
+   "<code>node_modules</code> 和 <code>.env</code> <b>一定要在裡面</b>。想快速分辨哪些檔案不用管，看這份就對了。"],
+  [0,"tsconfig.json",0,"設定",
+   "告訴 TypeScript 要多嚴格、程式在哪、編譯成哪個版本。",
+   "可以，但通常照抄範本就好。",
+   "看不懂沒關係。九成的專案這份都是複製來的，沒人從頭寫。"],
+  [0,"vite.config.ts",0,"設定",
+   "打包工具的設定：要裝哪些外掛、路徑別名怎麼對應。",
+   "可以，加外掛時會動到。",
+   "檔名會隨工具變：Webpack 是 <code>webpack.config.js</code>，Next.js 是 <code>next.config.js</code>。"],
+  [0,"node_modules/",1,"別人的",
+   "下載來的套件全堆在這，通常幾百 MB、幾萬個檔案。",
+   "<b>永遠不要進去改。</b>",
+   "改了別人完全看不到，因為他重裝就蓋掉。它也不會上傳到 Git——所以別人 clone 之後要自己 <code>npm install</code>。"],
+  [0,"public/",1,"你寫的",
+   "靜態檔案資料夾。這裡的東西<b>原封不動</b>被送出去，不會被處理。",
+   "可以改。",
+   "網站圖示（favicon）、<code>robots.txt</code>、不需要打包的圖片放這裡。"],
+  [0,"src/",1,"你寫的",
+   "<b>你的程式碼幾乎全部在這。</b>改東西的時間九成花在這個資料夾裡。",
+   "可以改。這就是你的工作區。",
+   "打開一個陌生專案，如果只能看一個資料夾，看這個。"],
+  [1,"main.tsx",0,"你寫的",
+   "<b>進入點。</b>整個程式從這個檔案的第一行開始跑。",
+   "可以改，但很少需要。",
+   "想知道一個專案怎麼運作，<b>從這裡開始讀</b>，順著它引用的東西往下追。有時叫 <code>index.tsx</code>。"],
+  [1,"App.tsx",0,"你寫的",
+   "最外層的元件。通常放路由（哪個網址對到哪個畫面）跟共用版面。",
+   "可以改。",
+   "要加一個新頁面，通常從這裡開始。"],
+  [1,"components/",1,"你寫的",
+   "可以重複使用的畫面零件：按鈕、卡片、表單、彈窗。",
+   "可以改。",
+   "一個檔案一個元件。檔名通常就是元件名，開頭大寫。"],
+  [1,"lib/",1,"你寫的",
+   "共用的工具函式：日期格式化、呼叫 API 的封裝、常數。",
+   "可以改。",
+   "有時候叫 <code>utils/</code> 或 <code>helpers/</code>，是同一件事。"],
+  [0,"dist/",1,"產生的",
+   "<code>npm run build</code> 產生的成品。<b>真正上線的就是這一包。</b>",
+   "改了會被下次 build 整包蓋掉。",
+   "看到裡面的程式碼擠成一團、變數名都是 a b c，那是正常的——那叫壓縮，為了讓檔案變小。"],
+  [0,".git/",1,"別人的",
+   "Git 存所有歷史紀錄的地方。你每一次 commit 都在這裡面。",
+   "<b>絕對不要動，更不要刪。</b>",
+   "刪掉等於<b>所有版本紀錄永久消失</b>，沒有辦法救。它是整個專案的記憶。"],
+  [0,".github/workflows/",1,"你寫的",
+   "自動化流程設定：程式推上去之後要自動做什麼（跑測試、自動部署）。",
+   "可以改。",
+   "裡面是 <code>.yml</code> 檔，靠縮排表示層次——<b>縮排錯一格就整個不動</b>，這是最常見的坑。"],
+];
+
+const treeEl = document.getElementById("tree");
+const cardEl = document.getElementById("card");
+
+FILES.forEach((f, i)=>{
+  const [depth, name, isDir, kind, l, edit, note] = f;
+  const last = i === FILES.length - 1 || (FILES[i+1] && FILES[i+1][0] < depth);
+  const b = document.createElement("button");
+  b.className = "f" + (isDir ? " dir" : "");
+  b.type = "button";
+  b.style.setProperty("--k", K[kind]);
+  const stick = depth === 0 ? (last ? "└──" : "├──") : "│&nbsp;&nbsp;&nbsp;" + (last ? "└──" : "├──");
+  b.innerHTML = `<span class="stick">${stick}</span><span class="nm">${esc(name)}</span><span class="kind">${esc(kind)}</span>`;
+  b.addEventListener("click", ()=>{
+    document.querySelectorAll(".f").forEach(x=>x.classList.toggle("on", x === b));
+    cardEl.innerHTML = `
+      <div class="d-top"><span class="d-name mono">${esc(name)}</span><span class="d-tag">${esc(kind)}</span></div>
+      <p class="d-lede">${l}</p>
+      <div class="d-grid">
+        <div class="d-cell"><dt>能不能改</dt><dd>${edit}</dd></div>
+        <div class="d-cell"><dt>重點</dt><dd>${note}</dd></div>
+      </div>`;
+    if(window.matchMedia("(max-width:860px)").matches)
+      cardEl.scrollIntoView({block:"nearest", behavior:"smooth"});
+  });
+  treeEl.appendChild(b);
+});
+
+function esc(s){ return String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+</script>
