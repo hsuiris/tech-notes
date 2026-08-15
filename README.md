@@ -12,6 +12,7 @@
 | [看懂錯誤訊息](https://hsuiris.github.io/tech-notes/errors.html) | 跳出一大串紅字，不知道要看哪一行 |
 | [按鈕之旅](https://hsuiris.github.io/tech-notes/request.html) | 知道有前端後端，但中間到底發生什麼 |
 | [看懂專案資料夾](https://hsuiris.github.io/tech-notes/project.html) | 打開別人的 repo，滿滿的檔案不敢碰 |
+| [自己做一個 Claude 技能](https://hsuiris.github.io/tech-notes/skills.html) | 別人的外掛很好用，但那到底是怎麼做出來的 |
 
 ## 寫作規則
 

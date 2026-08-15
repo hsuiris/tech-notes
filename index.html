@@ -20,6 +20,12 @@ h1.home{font-size:clamp(38px,8vw,64px)}
   color:var(--ink-3); margin-bottom:12px;
 }
 .card:hover .card-n{color:var(--accent)}
+.card.wide{grid-column:1/-1}
+@media (max-width:760px){.card.wide{grid-column:auto}}
+.card.wide ul{
+  display:grid; grid-template-columns:1fr 1fr; gap:5px 20px;
+}
+@media (max-width:760px){.card.wide ul{grid-template-columns:1fr}}
 .card h2{font-size:21px; margin-bottom:10px}
 .card .pain{
   font-size:14px; color:var(--ink); background:var(--paper-3);
@@ -42,6 +48,7 @@ h1.home{font-size:clamp(38px,8vw,64px)}
     <a href="errors.html">錯誤訊息</a>
     <a href="request.html">按鈕之旅</a>
     <a href="project.html">專案資料夾</a>
+    <a href="skills.html">Claude 技能</a>
   </div>
 </div></nav>
 
@@ -105,11 +112,24 @@ h1.home{font-size:clamp(38px,8vw,64px)}
     </ul>
   </a>
 
+  <a class="card wide" href="skills.html">
+    <div class="card-n">05</div>
+    <h2>自己做一個 Claude 技能</h2>
+    <p class="pain">「別人的外掛很好用，但那到底是怎麼做出來的？」</p>
+    <ul>
+      <li>skill／command／agent／hook／MCP 差在哪</li>
+      <li>拆三個真的外掛給你看（含實際行數）</li>
+      <li>15 分鐘做出第一個 skill，指令可複製</li>
+      <li>打包成 plugin 放 GitHub 給別人裝</li>
+      <li>五個一定會踩的坑</li>
+    </ul>
+  </a>
+
 </div>
 
 <div class="how">
   <div class="soon">還想看什麼主題？開一個 issue 或直接跟我說。<br>
-  已經在排的：AI 工具名詞（token、context、MCP、agent、RAG）。</div>
+  已經在排的：AI 工具名詞（token、context、RAG、embedding）。</div>
 </div>
 
 <footer>

@@ -1,0 +1,707 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>自己做一個 Claude 技能 · tech-notes</title>
+<meta name="description" content="imagegen、財務分析、claude-video 這些外掛拆開來長什麼樣？五種零件的差別、三種架構、15 分鐘做出你自己的第一個 skill。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+/* ── 01 可點的零件表 ── */
+.parts{
+  display:grid; gap:1px; background:var(--line-soft);
+  border:1px solid var(--line-soft); border-radius:4px; overflow:hidden;
+}
+.part{
+  display:grid; grid-template-columns:150px 1fr; gap:14px; align-items:baseline;
+  background:var(--paper-2); padding:13px 15px; cursor:pointer; text-align:left;
+  border:0; border-left:3px solid transparent; width:100%;
+  font-family:var(--font-cn); font-size:15px; color:var(--ink);
+  transition:background .13s, border-color .13s;
+}
+.part:hover{background:var(--paper-3)}
+.part.on{background:var(--accent-soft); border-left-color:var(--accent)}
+.part .pn{font-family:var(--font-mono); font-size:14px; font-weight:700}
+.part .pn small{
+  display:block; font-family:var(--font-cn); font-size:11.5px; font-weight:400;
+  color:var(--ink-3); margin-top:2px; letter-spacing:.02em;
+}
+.part.on .pn{color:var(--accent)}
+.part .pw{font-size:13.5px; color:var(--ink-2); line-height:1.6}
+@media (max-width:760px){
+  .part{grid-template-columns:1fr; gap:3px}
+}
+
+/* ── 02 三個外掛的分頁 ── */
+.tabs{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px}
+.tab{
+  font-family:var(--font-cn); font-size:13.5px; padding:8px 14px;
+  border:1px solid var(--line); background:var(--paper-2); color:var(--ink-2);
+  border-radius:3px; cursor:pointer; transition:all .13s; line-height:1.4;
+}
+.tab small{display:block; font-size:11px; color:var(--ink-3); margin-top:1px}
+.tab:hover{border-color:var(--accent); color:var(--accent)}
+.tab[aria-selected="true"]{background:var(--accent); border-color:var(--accent); color:var(--on-accent)}
+.tab[aria-selected="true"] small{color:var(--on-accent); opacity:.75}
+.panel[hidden]{display:none}
+.panel-grid{display:grid; grid-template-columns:minmax(0,340px) minmax(0,1fr); gap:22px; align-items:start}
+@media (max-width:860px){.panel-grid{grid-template-columns:1fr}}
+.tree{
+  font-family:var(--font-mono); font-size:12px; line-height:1.85;
+  background:var(--paper-3); padding:15px 16px; border-radius:4px;
+  overflow-x:auto; white-space:pre; color:var(--ink);
+}
+.tree i{font-style:normal; color:var(--ink-3)}
+.tree b{font-weight:700; color:var(--accent)}
+.facts{display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 0}
+.fact{
+  border:1px solid var(--line); border-radius:3px; background:var(--paper-2);
+  padding:8px 11px; font-size:12.5px; color:var(--ink-2); line-height:1.5;
+}
+.fact b{display:block; font-family:var(--font-mono); font-size:16px; color:var(--ink); font-weight:700}
+.read h3{font-size:17px; margin-bottom:8px}
+.read h3 + p{margin-top:0}
+.read p{color:var(--ink-2); font-size:14.5px; margin:0 0 16px; line-height:1.75}
+.read p b{color:var(--ink)}
+.read code{
+  font-family:var(--font-mono); font-size:12.5px; background:var(--paper-3);
+  padding:1px 5px; border-radius:3px; color:var(--ink);
+}
+.steal{
+  border-left:3px solid var(--good); background:var(--good-soft);
+  padding:13px 16px; border-radius:0 4px 4px 0; font-size:14px; color:var(--ink);
+}
+.steal b{color:var(--good)}
+
+/* ── 03 三種架構 ── */
+.picks{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+@media (max-width:860px){.picks{grid-template-columns:1fr}}
+.pick{
+  border:1px solid var(--line); border-radius:4px; background:var(--paper-2);
+  padding:18px 20px 20px; display:flex; flex-direction:column; gap:11px;
+}
+.pick .lv{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.14em;
+  color:var(--accent); text-transform:uppercase;
+}
+.pick h3{font-size:17px}
+.pick .when{
+  font-size:13.5px; color:var(--ink); background:var(--paper-3);
+  padding:8px 11px; border-radius:3px; line-height:1.6;
+}
+.pick ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:5px}
+.pick li{font-size:13.5px; color:var(--ink-2); padding-left:15px; position:relative; line-height:1.6}
+.pick li::before{content:"—"; position:absolute; left:0; color:var(--ink-3)}
+.pick .eg{font-size:12.5px; color:var(--ink-3); border-top:1px solid var(--line-soft); padding-top:10px; margin-top:auto}
+
+/* ── 04/05 可複製的程式碼 ── */
+.tpl{position:relative}
+.copy{
+  position:absolute; top:9px; right:9px; font-family:var(--font-cn);
+  font-size:12px; padding:4px 11px; border:1px solid var(--line);
+  background:var(--paper-2); color:var(--ink-2); border-radius:3px; cursor:pointer;
+}
+.copy:hover{border-color:var(--accent); color:var(--accent)}
+.copy.done{background:var(--good-soft); border-color:var(--good); color:var(--good)}
+.pre .c{color:var(--ink-3)}
+.pre .k{color:var(--accent)}
+
+/* ── 好壞對照 ── */
+.vs{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px}
+@media (max-width:760px){.vs{grid-template-columns:1fr}}
+.vs > div{border:1px solid var(--line); border-radius:4px; padding:14px 16px; background:var(--paper-2)}
+.vs .bad{border-left:3px solid var(--accent)}
+.vs .ok{border-left:3px solid var(--good)}
+.vs .lab{
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--ink-3); margin-bottom:8px;
+}
+.vs .bad .lab{color:var(--accent)}
+.vs .ok .lab{color:var(--good)}
+.vs p{margin:0; font-family:var(--font-mono); font-size:12.5px; line-height:1.7; color:var(--ink)}
+.vs .why{font-family:var(--font-cn); font-size:13px; color:var(--ink-2); margin-top:9px; line-height:1.65}
+
+/* ── 06 坑 ── */
+.traps{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+@media (max-width:820px){.traps{grid-template-columns:1fr}}
+.trap{
+  border:1px solid var(--line); border-radius:4px; background:var(--paper-2);
+  padding:16px 18px 18px;
+}
+.trap h3{font-size:15.5px; margin-bottom:11px; padding-bottom:10px; border-bottom:1px solid var(--line-soft)}
+.trap dl{margin:0; display:flex; flex-direction:column; gap:9px}
+.trap dt{
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.13em;
+  color:var(--ink-3); text-transform:uppercase; margin-bottom:2px;
+}
+.trap dd{margin:0; font-size:14px; color:var(--ink-2); line-height:1.7}
+.trap dd code{
+  font-family:var(--font-mono); font-size:12.5px; background:var(--paper-3);
+  padding:1px 5px; border-radius:3px; color:var(--ink); word-break:break-word;
+}
+.trap .fix dd{color:var(--ink)}
+</style>
+
+<nav class="topnav"><div class="topnav-in">
+  <a class="brand" href="./">tech-notes</a>
+  <div class="navlinks">
+    <a href="architecture.html">架構圖</a>
+    <a href="errors.html">錯誤訊息</a>
+    <a href="request.html">按鈕之旅</a>
+    <a href="project.html">專案資料夾</a>
+    <a href="skills.html" aria-current="page">Claude 技能</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Claude 技能</div>
+  <h1>自己做一個 Claude 技能</h1>
+  <p class="sub">你裝的那些外掛——imagegen、財務分析、claude-video——<b>拆開來大部分不是程式，是說明書</b>。<br>
+  一個資料夾，加一個 Markdown 檔（純文字筆記檔，副檔名 <code style="font-family:var(--font-mono);font-size:13.5px">.md</code>），就是一個技能。</p>
+</header>
+
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><h2>一個外掛裡面，最多只有五種零件</h2></div>
+  <p class="sec-lede">名字看起來很多：skill、command、agent、hook、MCP。<b>它們的差別只有一個——誰去叫它。</b>點左邊任何一個看說明。</p>
+
+  <div class="split">
+    <div class="parts" id="parts">
+      <button class="part" data-p="skill" type="button">
+        <span class="pn">skill<small>技能</small></span>
+        <span class="pw">Claude 自己判斷「這件事該用它」，你不用喊</span>
+      </button>
+      <button class="part" data-p="cmd" type="button">
+        <span class="pn">command<small>指令</small></span>
+        <span class="pw">你自己打 <code>/名字</code> 才會跑</span>
+      </button>
+      <button class="part" data-p="agent" type="button">
+        <span class="pn">agent<small>分身</small></span>
+        <span class="pw">Claude 派另一個 Claude 去做，做完只回報結論</span>
+      </button>
+      <button class="part" data-p="hook" type="button">
+        <span class="pn">hook<small>掛勾</small></span>
+        <span class="pw">在固定時機自動跑，跟你想不想要無關</span>
+      </button>
+      <button class="part" data-p="mcp" type="button">
+        <span class="pn">MCP<small>外接資料</small></span>
+        <span class="pw">Claude 需要外面的資料或工具時，從這裡拿</span>
+      </button>
+    </div>
+
+    <div class="detail sticky" id="partCard">
+      <p class="placeholder">← 點左邊任何一個，這裡會說明它是什麼、放在哪、你已經在用的例子。</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:24px">
+    <b>一句話分辨：</b>skill 是<b>知識</b>（要用的時候自己想起來）、command 是<b>按鈕</b>（你按才動）、agent 是<b>員工</b>（派出去自己做完）、hook 是<b>鬧鐘</b>（時間到自己響）、MCP 是<b>插座</b>（接外面的東西）。<br>
+    <b>plugin（外掛）不是第六種零件</b>——它只是一個把上面五種裝在一起、可以整包送人的資料夾。
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>拆三個真的來看</h2></div>
+  <p class="sec-lede">這三個都是<b>你電腦裡真的裝著的東西</b>，下面的檔案數量和行數都是實際數出來的。它們剛好代表三種完全不同的做法。</p>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-t="a" aria-selected="true">imagegen<small>純規則型</small></button>
+    <button class="tab" role="tab" data-t="b" aria-selected="false">financial-analysis<small>總機型</small></button>
+    <button class="tab" role="tab" data-t="c" aria-selected="false">claude-video<small>工具型</small></button>
+  </div>
+
+  <!-- A：imagegen -->
+  <div class="panel" data-panel="a">
+    <div class="panel-grid">
+      <div>
+        <div class="tree">~/.claude/skills/
+└── imagegen-frontend-web/
+    └── <b>SKILL.md</b>  <i>← 就這一個檔</i></div>
+        <div class="facts">
+          <div class="fact"><b>1</b>個檔案</div>
+          <div class="fact"><b>987</b>行純文字</div>
+          <div class="fact"><b>0</b>行程式碼</div>
+        </div>
+      </div>
+      <div class="read">
+        <h3>它其實沒有「做」任何事，它只是規定</h3>
+        <p>987 行裡面<b>一行程式都沒有</b>。全部是寫給 Claude 看的硬規則，而且寫得很兇。真的內容長這樣：</p>
+        <div class="pre">一個 section（網頁的一個區塊）就出一張圖。
+8 個 section 就是 8 張圖。永不合併成一張。
+這條規則蓋過模型本來想偷懶的預設行為。</div>
+        <p style="margin-top:14px">為什麼要寫得這麼兇？因為 Claude 有自己的懶惰習慣（它會想把 8 個區塊擠成一張長圖）。<b>這種外掛的價值不在功能，在於「把品味變成不能討價還價的條文」</b>——像是「左文字右圖片是最爛的 AI 老套版型，不准當第一選擇」。</p>
+        <div class="steal"><b>你可以偷學：</b>如果你每次都要重複糾正 Claude 同一件事（「不要用 emoji」「表格要有單位」「先問我再動手」），那就是一個 skill，而且你今天就能做完——它就是一個 <code>.md</code> 檔。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B：financial-analysis -->
+  <div class="panel" data-panel="b" hidden>
+    <div class="panel-grid">
+      <div>
+        <div class="tree">financial-analysis/
+├── .claude-plugin/
+│   └── <b>plugin.json</b>   <i>← 身分證</i>
+├── commands/        <i>7 個 /指令</i>
+│   ├── dcf.md
+│   ├── comps.md
+│   └── …
+├── skills/          <i>13 個技能</i>
+│   ├── dcf-model/
+│   │   ├── SKILL.md      <i>1263 行</i>
+│   │   ├── references/   <i>要用才讀</i>
+│   │   └── scripts/      <i>驗算用</i>
+│   └── …
+├── hooks/hooks.json <i>（空的）</i>
+└── <b>.mcp.json</b>      <i>接 11 家資料商</i></div>
+        <div class="facts">
+          <div class="fact"><b>13</b>個 skill</div>
+          <div class="fact"><b>7</b>個 command</div>
+          <div class="fact"><b>11</b>個外接資料源</div>
+        </div>
+      </div>
+      <div class="read">
+        <h3>command 當總機，skill 當專業</h3>
+        <p>打 <code>/dcf</code> 的時候，那個檔案自己<b>不做任何計算</b>。它做的事是排流程，然後把工作丟給別的 skill：</p>
+        <div class="pre">第 2 步 → 先叫 comps-analysis 這個 skill，
+         找 4~6 家同業、抓出中位數倍數
+第 3 步 → 再叫 dcf-model 這個 skill，
+         用剛剛那些數字當假設去估值
+第 4 步 → 拿兩邊結果互相對照，差太多就回頭查</div>
+        <p style="margin-top:14px">為什麼要拆？因為 <b>skill 是可以被重複叫的零件</b>。<code>comps-analysis</code> 這個技能，<code>/dcf</code> 會用、<code>/comps</code> 也會用，寫一次兩邊共用。</p>
+        <p><code>.mcp.json</code> 那 11 筆是外部金融資料服務的網址（S&amp;P、Moody's、PitchBook 這種）。這個檔案就是插座——<b>它自己沒有資料，只是寫下「要錢的話去這些地方拿」</b>。</p>
+        <div class="steal"><b>你可以偷學：</b>需要多步驟、每步都要你確認的工作，用 command 寫流程；每一步真正的專業知識寫成獨立 skill。<b>流程和知識分開，改一邊不會弄壞另一邊。</b></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C：claude-video -->
+  <div class="panel" data-panel="c" hidden>
+    <div class="panel-grid">
+      <div>
+        <div class="tree">claude-video/
+├── .claude-plugin/
+│   ├── plugin.json
+│   └── <b>marketplace.json</b> <i>← 給人裝的</i>
+├── hooks/
+│   ├── hooks.json
+│   └── scripts/check-setup.sh
+└── skills/watch/
+    ├── <b>SKILL.md</b>   <i>268 行說明</i>
+    └── scripts/   <i>2343 行 Python</i>
+        ├── download.py
+        ├── frames.py
+        ├── whisper.py
+        └── …</div>
+        <div class="facts">
+          <div class="fact"><b>268</b>行說明</div>
+          <div class="fact"><b>2343</b>行程式</div>
+          <div class="fact"><b>1</b>個 hook</div>
+        </div>
+      </div>
+      <div class="read">
+        <h3>程式做苦工，SKILL.md 只寫「怎麼用這些程式」</h3>
+        <p>Claude 本身看不到影片。這個外掛是用 Python 程式把影片下載、切成一張張圖片、把聲音轉成文字，<b>再把成果交給 Claude 看</b>。</p>
+        <p>所以 268 行的 SKILL.md 幾乎全部在寫操作手冊，例如：「先跑檢查程式，<b>回傳 2 代表工具沒裝、3 代表沒設金鑰、4 代表兩個都缺</b>，各自要做什麼」。<b>真正的活是程式在幹，SKILL.md 只負責看懂回傳值然後決定下一步。</b></p>
+        <p>那個 hook 是 <code>SessionStart</code>（每次開新對話時自動跑），5 秒內檢查 <code>ffmpeg</code> 這些工具在不在。<b>沒問題就完全不出聲</b>——這是好 hook 的樣子，只有壞掉才講話。</p>
+        <div class="steal"><b>你可以偷學：</b>會算錯的事情不要交給 Claude 用想的。<b>數字、格式轉換、檔案處理，寫成一支 script 讓它每次跑出一樣的結果</b>，SKILL.md 只寫什麼時候跑、跑完怎麼判讀。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2>你要做哪一種？</h2></div>
+  <p class="sec-lede">不要一開始就蓋大的。<b>從最左邊開始，不夠再往右長。</b>大部分人的需求停在第一格就結束了。</p>
+
+  <div class="picks">
+    <div class="pick">
+      <div class="lv">Level 1</div>
+      <h3>一個 SKILL.md</h3>
+      <div class="when">「我每次都要重複交代同一件事」</div>
+      <ul>
+        <li>寫作口氣、格式規定</li>
+        <li>公司內部的做事規矩</li>
+        <li>某個領域的判斷標準</li>
+      </ul>
+      <div class="eg">例：imagegen。<b>15 分鐘</b>可以做完。</div>
+    </div>
+    <div class="pick">
+      <div class="lv">Level 2</div>
+      <h3>SKILL.md + 檔案</h3>
+      <div class="when">「內容太長，或有些事不能靠猜」</div>
+      <ul>
+        <li><code>references/</code>：查得到但不用一直記的資料</li>
+        <li><code>scripts/</code>：要算得準、每次一樣的事</li>
+        <li><code>assets/</code>：範本、字體、圖檔</li>
+      </ul>
+      <div class="eg">例：claude-video。<b>看你會不會寫程式。</b></div>
+    </div>
+    <div class="pick">
+      <div class="lv">Level 3</div>
+      <h3>包成 plugin</h3>
+      <div class="when">「要給同事裝，或東西多到要分類」</div>
+      <ul>
+        <li>多個 skill 互相呼叫</li>
+        <li>command 寫流程、skill 寫專業</li>
+        <li>放 GitHub 讓人一行指令安裝</li>
+      </ul>
+      <div class="eg">例：financial-analysis。<b>多花 30 分鐘</b>打包。</div>
+    </div>
+  </div>
+
+  <div class="callout warn" style="margin-top:22px">
+    <b>不要犯的順序錯誤：</b>先建一堆資料夾、寫 plugin.json、想 marketplace，結果 skill 本身還沒寫。<b>先寫那個 <code style="font-family:var(--font-mono);font-size:13.5px">.md</code>，確定 Claude 真的會照做，其他都是後面的事。</b>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><h2>15 分鐘做出第一個 skill</h2></div>
+  <p class="sec-lede">下面每一段都可以直接複製貼上。做完你就有一個<b>會自己跳出來幫你的</b>技能。</p>
+
+  <div class="steps">
+
+    <div class="step">
+      <div class="step-rail"><span class="dot"></span><span class="bar"></span></div>
+      <div class="step-body">
+        <h3>建一個資料夾<span class="time">30 秒</span></h3>
+        <p>名字用小寫加連字號，<b>資料夾名字就是技能的名字</b>。放在 <code style="font-family:var(--font-mono);font-size:12.5px">~/.claude/skills/</code> 底下的技能，你所有的專案都用得到。</p>
+        <div class="pre tpl"><button class="copy" type="button">複製</button>mkdir -p ~/.claude/skills/my-first-skill</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-rail"><span class="dot"></span><span class="bar"></span></div>
+      <div class="step-body">
+        <h3>寫 SKILL.md<span class="time">10 分鐘</span></h3>
+        <p>檔名一定要<b>全大寫的 <code style="font-family:var(--font-mono);font-size:12.5px">SKILL.md</code></b>，寫成 skill.md 不會被認出來。最上面用三個橫線夾起來的那塊叫 frontmatter（前置資料，給機器讀的標籤），<b>只有 name 和 description 是必填</b>。</p>
+        <div class="pre tpl"><button class="copy" type="button">複製</button><span class="c"># 用這行把整個範本寫進檔案（含最後那個 EOF）</span>
+cat &gt; ~/.claude/skills/my-first-skill/SKILL.md &lt;&lt;'EOF'
+<span class="k">---</span>
+<span class="k">name:</span> my-first-skill
+<span class="k">description:</span> 使用者要寫給客戶的信、報價說明或道歉信時使用。
+  也在使用者說「幫我寫封信」「這樣講會不會太兇」時使用。
+  純內部筆記或程式註解不要用這個技能。
+<span class="k">---</span>
+
+# 寫客戶信
+
+## 什麼時候用
+使用者要對外發訊息，收件人是客戶或合作對象。
+
+## 規則
+1. 先講結論，再講原因。不要鋪陳。
+2. 一段最多三行。
+3. 有壞消息時，壞消息放第一段，補救方案放第二段。
+4. 不要用「我們深感抱歉」這種空話，寫具體做了什麼。
+
+## 產出格式
+主旨一行 + 內文，直接給可以複製的成品，不要問我要不要改。
+EOF</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-rail"><span class="dot"></span><span class="bar"></span></div>
+      <div class="step-body">
+        <h3>description 是唯一的開關<span class="time">最重要的一步</span></h3>
+        <p>Claude 平常<b>只看得到 name 和 description</b>，本文要等它決定「這件事該用這個技能」才會讀進去。這叫 progressive disclosure（漸進式揭露，用到才載入，省記憶體）。<b>所以 description 寫壞，你整份技能就永遠不會被叫到。</b></p>
+        <div class="vs">
+          <div class="bad">
+            <div class="lab">寫成這樣 → 不會觸發</div>
+            <p>description: 幫忙寫信的技能</p>
+            <div class="why">沒有任何「使用者說什麼算數」的線索。Claude 不知道什麼時候該想起它。</div>
+          </div>
+          <div class="ok">
+            <div class="lab">寫成這樣 → 會觸發</div>
+            <p>description: 使用者要寫給客戶的信、報價說明或道歉信時使用。也在使用者說「幫我寫封信」「這樣講會不會太兇」時使用。純內部筆記不要用。</p>
+            <div class="why">列出實際會講的話，還寫了什麼時候<b>不要</b>用。三個要素：做什麼、聽到什麼觸發、什麼時候不要。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-rail"><span class="dot"></span><span class="bar"></span></div>
+      <div class="step-body">
+        <h3>重開，然後測<span class="time">2 分鐘</span></h3>
+        <p><b>改完一定要重開 Claude Code</b>，它是開啟時掃一次技能清單，不會邊跑邊發現新檔案。重開後先確認它看得到：</p>
+        <div class="pre tpl"><button class="copy" type="button">複製</button><span class="c"># 在 Claude Code 裡面打這行，清單裡要出現 my-first-skill</span>
+/help</div>
+        <p style="margin-top:12px">然後<b>不要直接喊技能名字</b>——那是作弊。講一句真實情境（「幫我寫封信跟客戶說交期要延一週」），看它會不會自己想起來。<b>不會，就是 description 還不夠具體，回上一步改。</b></p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-rail"><span class="dot"></span></div>
+      <div class="step-body">
+        <h3>太長就拆出去<span class="time">之後再說</span></h3>
+        <p>SKILL.md 本文<b>控制在 5000 字以內</b>。超過的部分放進 <code style="font-family:var(--font-mono);font-size:12.5px">references/</code> 資料夾，本文只留一句「詳細對照表看 references/xxx.md」。</p>
+        <div class="pre">my-first-skill/
+├── SKILL.md          <span class="c">← 只留規則和流程</span>
+└── references/
+    └── examples.md   <span class="c">← 20 封範例信，要用才讀</span></div>
+        <p style="margin-top:12px"><b>同一件事不要兩邊都寫。</b>寫在 references 裡就從 SKILL.md 拿掉，不然改了一邊會忘記另一邊。</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">05</span><h2>打包成 plugin，給別人一行指令安裝</h2></div>
+  <p class="sec-lede">skill 只有你自己的電腦有。要送人就得包成 plugin（外掛）——<b>其實就是多兩個 json 檔（一種給機器讀的資料格式）加一個 GitHub repo</b>。</p>
+
+  <div class="steps">
+
+    <div class="step">
+      <div class="step-rail"><span class="dot"></span><span class="bar"></span></div>
+      <div class="step-body">
+        <h3>照這個資料夾長相擺<span class="time">5 分鐘</span></h3>
+        <p><b>兩條規則不能破：</b>plugin.json 一定要在 <code style="font-family:var(--font-mono);font-size:12.5px">.claude-plugin/</code> 裡面；其他資料夾一定要在最外層，<b>不能塞進 .claude-plugin/</b>。放錯位置就是整個外掛消失，而且不會報錯。</p>
+        <div class="pre">my-plugin/
+├── .claude-plugin/
+│   ├── plugin.json        <span class="c">← 必要。身分證</span>
+│   └── marketplace.json   <span class="c">← 要給人裝才需要</span>
+├── skills/
+│   └── my-first-skill/
+│       └── SKILL.md
+├── commands/              <span class="c">← 沒有就不用建</span>
+├── agents/                <span class="c">← 沒有就不用建</span>
+├── hooks/hooks.json       <span class="c">← 沒有就不用建</span>
+└── .mcp.json              <span class="c">← 沒有就不用建</span></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-rail"><span class="dot"></span><span class="bar"></span></div>
+      <div class="step-body">
+        <h3>兩個 json 檔<span class="time">3 分鐘</span></h3>
+        <p><b>plugin.json</b> 只有 name 是必填，其他都是給人看的。<b>marketplace.json</b> 是店面目錄——別人是先「加你的店」，再「裝店裡的東西」。</p>
+        <div class="pre tpl"><button class="copy" type="button">複製</button><span class="c">// .claude-plugin/plugin.json</span>
+{
+  "name": "my-plugin",
+  "version": "0.1.0",
+  "description": "一句話講清楚這個外掛做什麼",
+  "author": { "name": "你的名字" },
+  "license": "MIT"
+}</div>
+        <div class="pre tpl" style="margin-top:12px"><button class="copy" type="button">複製</button><span class="c">// .claude-plugin/marketplace.json</span>
+{
+  "name": "my-marketplace",
+  "owner": { "name": "你的名字" },
+  "plugins": [
+    {
+      "name": "my-plugin",
+      "description": "一句話講清楚這個外掛做什麼",
+      "source": "./"
+    }
+  ]
+}</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-rail"><span class="dot"></span><span class="bar"></span></div>
+      <div class="step-body">
+        <h3>推上 GitHub<span class="time">2 分鐘</span></h3>
+        <div class="pre tpl"><button class="copy" type="button">複製</button>cd my-plugin
+git init
+git add .
+git commit -m "第一版外掛"
+git branch -M main
+git remote add origin https://github.com/你的帳號/my-plugin.git
+git push -u origin main</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-rail"><span class="dot"></span></div>
+      <div class="step-body">
+        <h3>別人這樣裝<span class="time">30 秒</span></h3>
+        <p>把這兩行貼給對方就好。第一行是「把你的店加進他的清單」，第二行才是「裝」。</p>
+        <div class="pre tpl"><button class="copy" type="button">複製</button>/plugin marketplace add 你的帳號/my-plugin
+/plugin install my-plugin@my-marketplace</div>
+        <p style="margin-top:12px">裝好之後檔案會躺在對方電腦的 <code style="font-family:var(--font-mono);font-size:12.5px">~/.claude/plugins/</code> 底下。<b>你自己的電腦也可以這樣裝自己的外掛</b>，順便驗證包得對不對。</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">06</span><h2>五個一定會踩的坑</h2></div>
+  <p class="sec-lede">前四個是新手坑，<b>最後一個是官方外掛真的踩到的</b>。</p>
+
+  <div class="traps">
+
+    <div class="trap">
+      <h3>技能做好了，但它永遠不出現</h3>
+      <dl>
+        <dt>症狀</dt>
+        <dd>喊名字才動，講情境完全沒反應。</dd>
+        <dt>原因</dt>
+        <dd>description 寫太籠統。Claude 平常只看得到那一行。</dd>
+        <dt class="fix-t">怎麼修</dt>
+        <dd class="fix">把你<b>真的會講的那句話</b>直接抄進 description，並補一句「什麼時候不要用」。</dd>
+      </dl>
+    </div>
+
+    <div class="trap">
+      <h3>改了半天，Claude 還在用舊版</h3>
+      <dl>
+        <dt>症狀</dt>
+        <dd>明明改了規則，行為一模一樣。</dd>
+        <dt>原因</dt>
+        <dd>技能清單是<b>開啟時掃一次</b>，執行中不會重掃。</dd>
+        <dt>怎麼修</dt>
+        <dd class="fix">關掉重開。這比你想的更常是原因。</dd>
+      </dl>
+    </div>
+
+    <div class="trap">
+      <h3>整個外掛像不存在一樣</h3>
+      <dl>
+        <dt>症狀</dt>
+        <dd>裝了沒錯誤訊息，但什麼都沒出現。</dd>
+        <dt>原因</dt>
+        <dd>檔案放錯層。<code>plugin.json</code> 沒在 <code>.claude-plugin/</code> 裡，或 <code>skills/</code> 被塞進 <code>.claude-plugin/</code> 裡面了。</dd>
+        <dt>怎麼修</dt>
+        <dd class="fix">對照第 05 節那張圖。<b>只有 plugin.json 和 marketplace.json 在 .claude-plugin/ 裡，其他全在最外層。</b></dd>
+      </dl>
+    </div>
+
+    <div class="trap">
+      <h3>SKILL.md 越寫越長，反而變笨</h3>
+      <dl>
+        <dt>症狀</dt>
+        <dd>加了新規則，舊規則開始被忽略。</dd>
+        <dt>原因</dt>
+        <dd>本文塞太多，重點被稀釋。超過 5000 字就該拆了。</dd>
+        <dt>怎麼修</dt>
+        <dd class="fix">規則和流程留在 SKILL.md，<b>查表、範例、長文件搬去 <code>references/</code></b>，兩邊不要重複寫。</dd>
+      </dl>
+    </div>
+
+    <div class="trap" style="grid-column:1/-1">
+      <h3>漏一個逗號，整個檔案報廢<span class="err-cat" style="font-size:10.5px;font-family:var(--font-cn);font-weight:400;color:var(--ink-3);border:1px solid var(--line);padding:1px 7px;border-radius:3px;margin-left:8px;white-space:nowrap;display:inline-block;vertical-align:2px">真實案例</span></h3>
+      <dl>
+        <dt>症狀</dt>
+        <dd>Anthropic 官方發布的 <code>financial-analysis</code> 外掛 0.1.1 版，<code>.mcp.json</code> 裡 <code>egnyte</code> 那段結尾少一個逗號，下一段 <code>box</code> 又少一個結尾大括號。整個檔案<b>不是合法 JSON</b>，那 11 個金融資料來源一個都接不上。</dd>
+        <dt>原因</dt>
+        <dd>JSON 這種格式，<b>逗號和括號錯一個字元就整份失效</b>，而且它通常不會跳出紅字告訴你——只是安靜地什麼都沒發生。</dd>
+        <dt>怎麼修</dt>
+        <dd class="fix">改完 json 檔就跑一次這行，會直接指出第幾行有問題：
+        <div class="pre tpl" style="margin-top:9px"><button class="copy" type="button">複製</button>python3 -m json.tool 你的檔案.json</div></dd>
+      </dl>
+    </div>
+
+  </div>
+
+  <div class="callout ok" style="margin-top:24px">
+    <b>下一步只做一件事：</b>想一句你這個月已經對 Claude 重複講過三次以上的話，把它寫成 SKILL.md 的第一條規則。<b>一條就好</b>，其他的用著用著自己會冒出來。
+  </div>
+</section>
+
+<footer>
+  <p>本頁的檔案結構、行數、外掛版本，都是從<b>這台電腦上實際安裝的外掛</b>數出來的（2026 年 8 月）。<br>
+  官方外掛會改版，如果你看到的跟這裡不一樣，以你電腦裡的為準。</p>
+  <p>字體：資源圓體 Resource Han Rounded TW（思源黑體的圓角繁中版，開源）</p>
+  <p class="cred"><a href="https://github.com/hsuiris/tech-notes">github.com/hsuiris/tech-notes</a></p>
+</footer>
+
+</div>
+
+<script>
+// ── 01 零件說明 ──
+const PARTS = {
+  skill: {
+    n: "skill", tag: "技能", full: "Agent Skill",
+    lede: "一個資料夾，裡面一定有一個 SKILL.md。Claude 會自己判斷「現在這件事該用它」，你不用喊。",
+    cells: [
+      ["長什麼樣", "一個資料夾 + SKILL.md。可以再加 references/（查得到的資料）、scripts/（要跑的程式）、assets/（範本圖檔）。"],
+      ["放在哪", "個人用：~/.claude/skills/名字/SKILL.md。只給某個專案用：那個專案的 .claude/skills/ 底下。"],
+      ["怎麼被叫到", "Claude 平常只看得到 name 和 description 兩行。覺得符合才把本文讀進去。description 寫壞 = 永遠不會被叫到。"],
+      ["你在用的例子", "imagegen（設計規則）、ponytail（叫 Claude 不要寫太複雜）、i-have-adhd（叫它講重點）。"]
+    ]
+  },
+  cmd: {
+    n: "command", tag: "指令", full: "Slash Command",
+    lede: "一個 .md 檔案，檔名就是指令名字。你打 /名字 它才會跑，Claude 不會自己去用。",
+    cells: [
+      ["長什麼樣", "commands/ 資料夾裡一個 .md 檔。dcf.md 就是 /dcf。內容是寫給 Claude 看的步驟表。"],
+      ["放在哪", "外掛的 commands/ 底下，或你自己的 ~/.claude/commands/。"],
+      ["跟 skill 差在哪", "skill 是知識（它自己想起來），command 是按鈕（你按才動）。複雜的 command 常常只負責排流程，真正的活丟給 skill 做。"],
+      ["你在用的例子", "/watch（看影片）、/dcf（估值）、/code-review（審程式碼）。"]
+    ]
+  },
+  agent: {
+    n: "agent", tag: "分身", full: "Subagent",
+    lede: "另一個獨立的 Claude。它拿到任務去自己做，做完只把結論帶回來，過程中翻的那一堆檔案不會塞爆主對話。",
+    cells: [
+      ["長什麼樣", "agents/ 底下一個 .md 檔。前面幾行寫「什麼時候派它出去」「它能用哪些工具」，後面是給它的工作說明。"],
+      ["為什麼要用", "省記憶體。要翻 50 個檔案才能回答的問題，派分身去翻，你只會看到那句答案。"],
+      ["可以限制它", "tools 那行可以指定它只能讀不能寫，或只能用某幾個工具。不寫就是全部都能用。"],
+      ["你在用的例子", "你自己設的「林納斯」（寫程式）、「阿文」（寫文案）、Explore（大範圍搜檔案）。"]
+    ]
+  },
+  hook: {
+    n: "hook", tag: "掛勾", full: "Hook",
+    lede: "在固定時機自動跑的一段指令。不是 Claude 決定要不要跑，是系統時間到了就跑。",
+    cells: [
+      ["長什麼樣", "hooks/hooks.json 裡面寫「什麼時機」配「跑哪個檔案」。真正做事的通常是一支 .sh 或 .py。"],
+      ["常見時機", "SessionStart（每次開新對話）、UserPromptSubmit（你送出訊息時）、工具執行前後。"],
+      ["好 hook 的樣子", "沒問題就完全不出聲。claude-video 的 hook 每次開場檢查工具裝了沒，5 秒內跑完，一切正常就一個字都不印。"],
+      ["你在用的例子", "你開對話時看到的 ADHD MODE ACTIVE、PONYTAIL MODE ACTIVE 那幾行，就是 hook 印的。"]
+    ]
+  },
+  mcp: {
+    n: "MCP", tag: "外接資料", full: "Model Context Protocol（模型情境協定）",
+    lede: "讓 Claude 連到外面的資料和工具的統一插座。Notion、Figma、Google Drive、金融資料庫都是這樣接進來的。",
+    cells: [
+      ["長什麼樣", "外掛根目錄一個 .mcp.json，裡面就是一串「服務名字 + 網址」。它自己沒有資料，只是寫下去哪裡拿。"],
+      ["跟 skill 差在哪", "skill 是教 Claude 怎麼做事，MCP 是給 Claude 新的手腳。一個是知識，一個是通路。"],
+      ["注意", "多數要登入或 API 金鑰。而且 JSON 格式很脆，逗號漏一個整份失效——官方外掛也發生過（見第 06 節）。"],
+      ["你在用的例子", "financial-analysis 接的 11 家金融資料商；你現在能用的 Notion、Figma、Canva、Google Drive。"]
+    ]
+  }
+};
+
+const partCard = document.getElementById("partCard");
+document.getElementById("parts").addEventListener("click", e => {
+  const btn = e.target.closest(".part");
+  if (!btn) return;
+  document.querySelectorAll(".part").forEach(b => b.classList.toggle("on", b === btn));
+  const d = PARTS[btn.dataset.p];
+  partCard.innerHTML =
+    '<div class="d-top"><span class="d-name mono">' + d.n + '</span>' +
+    '<span class="d-tag">' + d.tag + '</span></div>' +
+    '<p class="d-full">' + d.full + '</p>' +
+    '<p class="d-lede">' + d.lede + '</p>' +
+    '<dl class="d-grid">' + d.cells.map(c =>
+      '<div class="d-cell"><dt>' + c[0] + '</dt><dd>' + c[1] + '</dd></div>').join("") +
+    '</dl>';
+});
+
+// ── 02 分頁 ──
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(t =>
+      t.setAttribute("aria-selected", String(t === tab)));
+    document.querySelectorAll(".panel").forEach(p =>
+      p.hidden = p.dataset.panel !== tab.dataset.t);
+  });
+});
+
+// ── 複製按鈕 ──
+document.querySelectorAll(".copy").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const box = btn.parentElement.cloneNode(true);
+    box.querySelector(".copy").remove();
+    navigator.clipboard.writeText(box.textContent.trim()).then(() => {
+      btn.textContent = "已複製";
+      btn.classList.add("done");
+      setTimeout(() => { btn.textContent = "複製"; btn.classList.remove("done"); }, 1600);
+    });
+  });
+});
+</script>
