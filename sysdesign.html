@@ -1,0 +1,376 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>系統設計 · tech-notes</title>
+<meta name="description" content="一個網站從一台機器開始，每次撞牆加一個零件，一路長到五億使用者。四個要先做的取捨，以及短網址、聊天室、動態牆、通知系統四題經典題的答法。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+/* ── 01 成長車站 ── */
+.line{display:flex; flex-direction:column; gap:0}
+.stop{
+  display:grid; grid-template-columns:26px 1fr; gap:14px;
+  border:0; background:none; padding:0; width:100%; text-align:left;
+  font-family:var(--font-cn); color:inherit; cursor:pointer;
+}
+.stop-rail{display:flex; flex-direction:column; align-items:center}
+.stop .dot{
+  width:14px; height:14px; border-radius:50%; background:var(--paper);
+  border:2.5px solid var(--line); flex:none; margin-top:11px; transition:all .13s;
+}
+.stop .bar{width:2px; flex:1; background:var(--line); min-height:10px}
+.stop:last-child .bar{display:none}
+.stop-body{
+  padding:9px 12px 11px; border-radius:4px; margin-bottom:4px;
+  border:1px solid transparent; transition:background .13s, border-color .13s;
+}
+.stop:hover .stop-body{background:var(--paper-2); border-color:var(--line-soft)}
+.stop.on .stop-body{background:var(--accent-soft); border-color:var(--accent)}
+.stop.on .dot{background:var(--accent); border-color:var(--accent); transform:scale(1.15)}
+.stop-hd{display:flex; align-items:baseline; gap:9px; flex-wrap:wrap}
+.stop-i{font-family:var(--font-mono); font-size:11px; color:var(--ink-3); letter-spacing:.05em}
+.stop-n{font-size:15px; font-weight:700; line-height:1.5}
+.stop-w{font-size:13px; color:var(--ink-2); margin-top:3px; line-height:1.6}
+.stop-add{
+  display:inline-block; margin-top:6px; font-size:11.5px; padding:2px 8px; border-radius:3px;
+  background:var(--paper-3); color:var(--ink-2);
+}
+.stop.on .stop-add{background:var(--accent); color:var(--on-accent)}
+
+.d-shape{
+  font-family:var(--font-mono); font-size:11.5px; line-height:1.85; white-space:pre;
+  background:var(--paper-3); padding:12px 14px; border-radius:4px;
+  margin:0 0 14px; overflow-x:auto; color:var(--ink);
+}
+
+/* 前後對比 */
+.ba{display:flex; flex-direction:column; gap:8px; margin:0 0 16px}
+.ba > div{border-radius:4px; padding:12px 14px}
+.ba .no{background:var(--ochre-soft); border-left:3px solid var(--ochre)}
+.ba .yes{background:var(--good-soft); border-left:3px solid var(--good)}
+.ba .lab{
+  display:block; font-family:var(--font-mono); font-size:10.5px;
+  letter-spacing:.12em; margin-bottom:6px;
+}
+.ba .no .lab{color:var(--ochre)}
+.ba .yes .lab{color:var(--good)}
+.ba p{margin:0; font-size:14px; line-height:1.8; color:var(--ink-2)}
+.ba p b{color:var(--ink)}
+.ba .arrow{
+  text-align:center; padding:0; color:var(--ink-3); font-size:13px;
+  background:none; border:0;
+}
+
+/* 取捨 */
+.tos{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+@media (max-width:860px){.tos{grid-template-columns:1fr}}
+.to{
+  border:1px solid var(--line); border-radius:4px; background:var(--paper-2);
+  padding:16px 18px 18px;
+}
+.to h3{font-size:15.5px; margin-bottom:11px; padding-bottom:9px; border-bottom:1px solid var(--line-soft)}
+.to .two{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:11px}
+.to .side{background:var(--paper-3); border-radius:3px; padding:9px 11px}
+.to .side b{display:block; font-size:13px; color:var(--ink); margin-bottom:3px}
+.to .side span{font-size:12.5px; color:var(--ink-2); line-height:1.6}
+.to .rule{font-size:13.5px; color:var(--ink-2); line-height:1.7}
+.to .rule b{color:var(--ink)}
+
+/* 分頁 */
+.tabs{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px}
+.tab{
+  font-family:var(--font-cn); font-size:13.5px; padding:8px 14px;
+  border:1px solid var(--line); background:var(--paper-2); color:var(--ink-2);
+  border-radius:3px; cursor:pointer; transition:all .13s; line-height:1.4;
+}
+.tab small{display:block; font-size:11px; color:var(--ink-3); margin-top:1px}
+.tab:hover{border-color:var(--accent); color:var(--accent)}
+.tab[aria-selected="true"]{background:var(--accent); border-color:var(--accent); color:var(--on-accent)}
+.tab[aria-selected="true"] small{color:var(--on-accent); opacity:.75}
+.panel[hidden]{display:none}
+.qa{display:flex; flex-direction:column; gap:14px}
+.qa > div{
+  border:1px solid var(--line); border-radius:4px; background:var(--paper-2);
+  padding:15px 18px 17px;
+}
+.qa dt{
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.13em;
+  color:var(--ink-3); text-transform:uppercase; margin-bottom:6px;
+}
+.qa dd{margin:0; font-size:14px; color:var(--ink-2); line-height:1.75}
+.qa dd b{color:var(--ink)}
+.qa dd code{
+  font-family:var(--font-mono); font-size:12.5px; background:var(--paper-3);
+  padding:1px 5px; border-radius:3px; color:var(--ink);
+}
+
+/* 數字直覺 */
+.nums{display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--line-soft);
+  border:1px solid var(--line-soft); border-radius:4px; overflow:hidden}
+@media (max-width:760px){.nums{grid-template-columns:1fr}}
+.nums > div{background:var(--paper-2); padding:13px 16px; display:grid;
+  grid-template-columns:1fr auto; gap:12px; align-items:baseline}
+.nums .k{font-size:13.5px; color:var(--ink-2)}
+.nums .v{font-family:var(--font-mono); font-size:14px; font-weight:700; color:var(--accent); white-space:nowrap}
+</style>
+
+<nav class="topnav"><div class="topnav-in">
+  <a class="brand" href="./">tech-notes</a>
+  <div class="navlinks">
+    <a href="architecture.html">架構圖</a>
+    <a href="errors.html">錯誤訊息</a>
+    <a href="request.html">按鈕之旅</a>
+    <a href="project.html">專案資料夾</a>
+    <a href="skills.html">Claude 技能</a>
+    <a href="agents.html">AI 大軍</a>
+    <a href="sysdesign.html" aria-current="page">系統設計</a>
+    <a href="mlsystem.html">ML 系統</a>
+    <a href="mldesign.html">面試怎麼答</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">系統設計</div>
+  <h1>系統設計的基本元件與取捨</h1>
+</header>
+
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><h2>一個網站是怎麼一步一步長大的</h2></div>
+  <p class="sec-lede">從一台機器開始。每一站都是「撞到什麼牆，所以加了什麼」。<b>點任何一站</b>，右邊會說明當時發生什麼事、加了什麼、加完之後圖長什麼樣。</p>
+
+  <div class="split">
+    <div class="line" id="line"></div>
+    <div class="detail sticky" id="card">
+      <p class="placeholder">← 點左邊任何一站，這裡會說明撞到什麼牆、加了什麼。</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:24px">
+    這個順序幾乎每家公司都差不多。快取幾乎都是第一個加的，因為便宜、效果又立刻看得到。Sharding 通常排最後，不是因為它不好，是因為<b>拆開之後有代價</b>：一堆本來一句話查得到的東西會變麻煩。所以要等其他方法都不夠用了，確定資料量真的到那個程度，再來拆。<br>
+    說真的，零件本身不難懂，難的是<b>什麼時候該加</b>。還沒撞牆就先加，只是提早承受複雜度，一點好處都換不到。
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>四個要先做的取捨</h2></div>
+
+  <div class="tos">
+    <div class="to">
+      <h3>資料要馬上一致，還是先能用就好？</h3>
+      <div class="two">
+        <div class="side"><b>馬上一致</b><span>寫進去之後，每個人看到的都一樣</span></div>
+        <div class="side"><b>先能用</b><span>可能有幾秒鐘看到舊的，但不會壞掉</span></div>
+      </div>
+      <p class="rule">資料一旦存了很多份，「每一份都同步好了才給你看」跟「隨時都拿得到」這兩件事沒辦法同時做到滿，只能選一邊靠。<br>
+      那要怎麼選？你就想一件事：<b>使用者看到幾秒前的舊資料，會不會出事？</b>銀行餘額會，貼文的按讚數不會。</p>
+    </div>
+
+    <div class="to">
+      <h3>當場做完，還是丟進佇列？</h3>
+      <div class="two">
+        <div class="side"><b>當場做完</b><span>做完才回應，使用者確定知道結果</span></div>
+        <div class="side"><b>丟進佇列</b><span>先說收到了，背景慢慢做</span></div>
+      </div>
+      <p class="rule">丟進佇列可以讓回應快很多，但有個代價：<b>使用者不會馬上知道到底成功還是失敗</b>，你得另外想辦法通知他。<br>
+      所以要問的是：這件事如果失敗了，使用者需不需要立刻知道？寄信不用，扣款一定要。</p>
+    </div>
+
+    <div class="to">
+      <h3>存成好查的樣子，還是好改的樣子？</h3>
+      <div class="two">
+        <div class="side"><b>拆很細</b><span>同一份資料只存一個地方，好改</span></div>
+        <div class="side"><b>先拼好</b><span>查詢要的樣子直接存起來，好查</span></div>
+      </div>
+      <p class="rule">拆很細的話改起來安全，可是查一次要拼好幾張表。先拼好的話查得快，可是同一份資料散在好幾個地方，改的時候很容易漏掉一個。<br>
+      這題先去量<b>讀跟寫的比例</b>。多數網站是讀遠多於寫，一百次讀才一次寫很正常，這種就往「先拼好」那邊靠。</p>
+    </div>
+
+    <div class="to">
+      <h3>一台大機器，還是很多台小的？（scale up vs. scale out）</h3>
+      <div class="two">
+        <div class="side"><b>換大台</b><span>加記憶體加 CPU，程式不用改</span></div>
+        <div class="side"><b>加很多台</b><span>擴充沒有上限，但程式要能拆</span></div>
+      </div>
+      <p class="rule">換大台是最省事的，而且說真的，現在一台機器能撐的量比多數人想像的大很多。<b>先換大台，真的撐不住了再拆。</b><br>
+      還沒有量就先拆成很多台，只是提早把複雜度扛在身上，什麼好處都還沒換到。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2>四題經典題，完整答一次</h2></div>
+  <p class="sec-lede">每一題都照同一個順序走：問清楚、估量、資料怎麼存、怎麼撐大、會在哪裡壞。</p>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-t="url" aria-selected="true">短網址<small>入門必考</small></button>
+    <button class="tab" role="tab" data-t="chat" aria-selected="false">聊天室<small>即時性最難</small></button>
+    <button class="tab" role="tab" data-t="feed" aria-selected="false">動態牆<small>推拉之爭</small></button>
+    <button class="tab" role="tab" data-t="notify" aria-selected="false">通知系統<small>佇列的代表作</small></button>
+  </div>
+
+  <div class="panel" data-panel="url">
+    <div class="qa">
+      <div><dt>題目</dt><dd>「設計一個像 bit.ly 的短網址服務。」</dd></div>
+      <div><dt>先問清楚</dt><dd>每天產生幾條短網址？<b>短網址要不要可以自訂</b>？要不要過期？<b>需不需要統計點擊次數</b>？短碼可不可以被猜到（有些場景不能）？</dd></div>
+      <div><dt>估量</dt><dd>假設每天新增 100 萬條、每條被點 100 次。<b>讀寫比是 100 比 1</b>，這個數字決定了整套設計往「讀」的方向優化。<br>五年下來約 18 億條，每條約 500 位元組，總共不到 1 TB，<b>單一台資料庫其實裝得下</b>。</dd></div>
+      <div><dt>資料怎麼存</dt><dd>核心就一張表：短碼、原始網址、建立時間。<br><b>短碼怎麼生</b>是這題的重點。最乾淨的做法是<b>用遞增的號碼轉成 62 進位</b>（0 到 9、a 到 z、A 到 Z）。七位數就能表示 3.5 兆個，永遠夠用。<br>不要用「把網址算成雜湊值」的做法，因為會撞到，還要另外處理。</dd></div>
+      <div><dt>怎麼撐大</dt><dd>讀多寫少，所以<b>快取就能解決九成的問題</b>。熱門的短網址放記憶體，命中率通常很高。<br>轉址的時候用 <code>301</code> 還是 <code>302</code>，這個一定會被追問。301 的意思是「永久搬家」，瀏覽器會自己記住，之後就不再問你的伺服器了，很省流量，可是<b>你就統計不到點擊數</b>。要統計的話就得用 302。</dd></div>
+      <div><dt>會在哪裡壞</dt><dd><b>號碼產生器變成單點</b>。如果所有機器都跟同一個地方要號碼，那裡掛了全部停擺。做法是<b>一次配一批號碼給每台機器</b>，各自慢慢用。<br>另一個是<b>有人拿去放釣魚網站</b>，要有黑名單跟檢舉機制。</dd></div>
+    </div>
+  </div>
+
+  <div class="panel" data-panel="chat" hidden>
+    <div class="qa">
+      <div><dt>題目</dt><dd>「設計一個像 LINE 的即時通訊。」</dd></div>
+      <div><dt>先問清楚</dt><dd>一對一還是群組？群組上限幾人？<b>要不要已讀狀態</b>？<b>訊息要保存多久</b>？要不要端對端加密？離線的人上線後要收到全部訊息嗎？</dd></div>
+      <div><dt>估量</dt><dd>假設 5000 萬日活、每人每天 40 則訊息，就是每天 20 億則，平均每秒約 23000 則。<b>這個量單台絕對撐不住</b>，一定要拆。<br>訊息本身很小（幾百位元組），但量大，一年下來是好幾百 TB。</dd></div>
+      <div><dt>資料怎麼存</dt><dd>訊息按<b>對話編號</b>做 sharding，因為查詢永遠是「給我這個對話的訊息」。同一個對話的訊息落在同一台，查起來最快。<br>另外要有一張<b>離線信箱</b>：使用者不在線上的時候，訊息先堆在這裡，他一上線就推給他，推完就清掉。</dd></div>
+      <div><dt>怎麼撐大</dt><dd>這題的關鍵在<b>連線怎麼維持</b>。一般網頁是「你問一次我答一次」，聊天室需要伺服器主動推給你，所以要用長連線（WebSocket）。<br>問題是<b>長連線很吃資源</b>，而且使用者連在哪一台是隨機的。所以要有一張表記錄「這個人現在連在哪一台」，訊息才知道要轉發到哪台。</dd></div>
+      <div><dt>會在哪裡壞</dt><dd><b>訊息重複或漏掉</b>。網路斷線重連的時候最容易出事。做法是每則訊息給一個編號，收到重複的就丟掉，發現跳號就回頭補。<br><b>群組訊息會放大</b>：500 人的群組，一則訊息要送 500 次。大群組通常改成「上線才拉」而不是「主動推給每個人」。</dd></div>
+    </div>
+  </div>
+
+  <div class="panel" data-panel="feed" hidden>
+    <div class="qa">
+      <div><dt>題目</dt><dd>「設計一個像 IG 首頁的動態牆。」</dd></div>
+      <div><dt>先問清楚</dt><dd>按時間排還是<b>依演算法排</b>？要不要插廣告？<b>一個人最多追蹤幾個帳號</b>？名人帳號有幾千萬粉絲要怎麼處理？看到新貼文可以延遲多久？</dd></div>
+      <div><dt>估量</dt><dd>假設 3 億日活、每人每天看 10 次動態牆，就是每天 30 億次讀取。發文遠少於這個。<br><b>讀寫比極度懸殊</b>，所以這題的所有設計都是在犧牲寫入速度、換取讀取速度。</dd></div>
+      <div><dt>資料怎麼存</dt><dd>這題的核心叫<b>推還是拉</b>。<br><b>推</b>：有人發文的時候，馬上把它塞進每個粉絲的動態牆清單裡。讀取超快，直接拿現成的。<br><b>拉</b>：使用者打開的時候，才去把他追蹤的每個人的最新貼文撈出來排序。寫入很輕，但讀取很慢。</dd></div>
+      <div><dt>怎麼撐大</dt><dd><b>正解是混用</b>，這是這題的標準答案。業界叫這個 <b>fan-out</b>：推是 fan-out on write，拉是 fan-out on read。<br>一般帳號用<b>推</b>：粉絲不多，塞得起。<br>名人帳號用<b>拉</b>：一個人發文要塞進三千萬個清單，會直接把系統打垮。所以名人的貼文不推，等使用者打開動態牆時<b>當場撈進來跟推好的合併</b>。<br>判斷是不是名人，就設一個粉絲數門檻。</dd></div>
+      <div><dt>會在哪裡壞</dt><dd><b>剛追蹤的人的舊貼文不會出現</b>，因為推的時候他還不是粉絲。要另外補一次回填。<br><b>刪文之後還留在別人的清單裡</b>。清單是複製出來的，原文刪了要一個個去清，通常改成讀取時再過濾一次。</dd></div>
+      <div><dt>真實案例</dt><dd>這題業界有個外號叫「<b>Justin Bieber 問題</b>」。2011 年他在 Instagram 發第一張照片，幾百萬粉絲同時湧進來按讚留言，<b>直接把 Instagram 的伺服器打掛</b>。Instagram 共同創辦人後來說，他把 Bieber 帳號在資料庫裡的編號背得滾瓜爛熟，因為出問題的常常就是那個帳號。<br>Twitter 後來公開的做法就是上面講的混用：一般人的推文用推的，塞進粉絲的清單；<b>粉絲超過某個門檻的名人改用拉的</b>，使用者打開的時候才當場撈進來合併。</dd></div>
+    </div>
+  </div>
+
+  <div class="panel" data-panel="notify" hidden>
+    <div class="qa">
+      <div><dt>題目</dt><dd>「設計一個系統，可以發推播、簡訊、email 給使用者。」</dd></div>
+      <div><dt>先問清楚</dt><dd>有哪些管道？<b>要不要保證一定送到</b>？<b>同一個事件會不會重複發</b>？使用者能不能關掉某些通知？要不要排程（例如早上八點才發）？每天尖峰量多少？</dd></div>
+      <div><dt>估量</dt><dd>假設每天 1 億則通知，平均每秒約 1200 則。但通知有<b>極端的尖峰</b>：一次全站公告可能瞬間要發幾千萬則。<br><b>這就是佇列存在的理由</b>：尖峰時先囤著，用固定速度慢慢消化，不用為了尖峰買一堆機器。</dd></div>
+      <div><dt>資料怎麼存</dt><dd>三張東西：<b>通知模板</b>（內容長什麼樣）、<b>使用者設定</b>（他要不要收、要用哪個管道）、<b>發送紀錄</b>（發了沒、成功沒、什麼時候）。<br>發送紀錄一定要留，因為使用者說「我沒收到」的時候你要查得出來。</dd></div>
+      <div><dt>怎麼撐大</dt><dd>標準架構是<b>一條佇列接好幾組工人</b>。事件進來先寫進佇列，推播、簡訊、email 各自有一組工人去拿來處理。<br>好處是<b>某一個管道掛掉不會拖垮其他管道</b>。簡訊供應商當機，推播照樣送，簡訊那組工人就先停著，恢復後繼續。</dd></div>
+      <div><dt>會在哪裡壞</dt><dd><b>重複發送</b>是最常見的客訴。佇列大多只保證「至少送到一次」，所以重試的時候會重複。做法是每則通知給一個唯一編號，發送前先檢查發過沒。<br><b>發太多把使用者煩走</b>。要有頻率上限，例如同一個人一小時最多幾則，並且合併同類型的（「你有 5 則新留言」而不是發 5 次）。</dd></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><h2>幾個記起來很好用的數字</h2></div>
+  <p class="sec-lede">估算的時候不用查，記住數量級就夠了。</p>
+
+  <div class="nums">
+    <div><span class="k">從記憶體讀一筆</span><span class="v">約 0.1 毫秒</span></div>
+    <div><span class="k">從 SSD 讀一筆</span><span class="v">約 0.1 到 1 毫秒</span></div>
+    <div><span class="k">同機房內連線來回</span><span class="v">約 0.5 毫秒</span></div>
+    <div><span class="k">台灣到美國來回</span><span class="v">約 150 毫秒</span></div>
+    <div><span class="k">一台資料庫大概撐得住</span><span class="v">每秒幾千次查詢</span></div>
+    <div><span class="k">一台快取（Redis）大概撐得住</span><span class="v">每秒十萬次以上</span></div>
+    <div><span class="k">一年有幾秒</span><span class="v">約 3150 萬秒</span></div>
+    <div><span class="k">一天有幾秒</span><span class="v">86400 秒</span></div>
+    <div><span class="k">尖峰通常是平均的</span><span class="v">2 到 3 倍</span></div>
+    <div><span class="k">多數網站的讀寫比</span><span class="v">100 比 1 以上</span></div>
+  </div>
+
+  <div class="callout" style="margin-top:20px">
+    最常用到的是這條：每天一百萬次，換算下來<b>平均每秒才 12 次</b>。<br>
+    很多人一聽到「每天一百萬」就開始畫分散式架構，可是這個量一台機器就吃得下了。先把數字換算成每秒，你會發現大部分時候根本不用想那麼多。
+  </div>
+</section>
+
+<footer>
+  <p>下次看到系統設計題，先把量換算成每秒，再看讀寫比，通常就知道該加什麼了。<br>
+  AI 系統的部分看 <a href="mlsystem.html">ML 系統</a>，面試流程看 <a href="mldesign.html">面試怎麼答</a>。</p>
+  <p class="cred"><a href="./">← 回目錄</a></p>
+</footer>
+
+</div>
+
+<script>
+const STOPS = [
+  { n:"第一天：一台機器搞定", add:"什麼都還沒加", who:"幾百人",
+    wall:"你寫了一個賣手工餅乾的網站。程式跟資料庫<b>裝在同一台機器</b>上，一天幾百個人來看，順順的。",
+    fix:"什麼都不用加。這個階段加任何東西都是浪費。",
+    shape:"[ 使用者 ] ──▶ [ 一台機器：程式 + 資料庫 ]",
+    note:"很多人一開始就想把架構做大。先不要。能一台搞定就一台，等真的撞到牆再說，而且通常比你想的晚很多才會撞到。" },
+
+  { n:"第一次上新聞：首頁被算到當機", add:"加快取", who:"幾千人同時",
+    wall:"你的餅乾被網紅推薦，晚上八點一秒衝進來一千個人。首頁的「本週熱銷」要從訂單裡算出來，資料庫就<b>每秒把同一份訂單算一千次</b>，答案還全部一樣。算到當機。",
+    fix:"在資料庫前面放一個<b>快取</b>（Cache）。算完第一次把答案記在記憶體裡，之後 999 個人直接拿現成的。從記憶體拿比查資料庫快大約一百倍。",
+    shape:"[ 使用者 ] ──▶ [ 程式 ] ──▶ [ 快取 ] ──沒有才問──▶ [ 資料庫 ]",
+    note:"快取幾乎都是第一個加的，因為便宜，而且效果立刻看得到。不過它有個前提，就是<b>同一個答案要被重複問</b>，如果每個人問的都不一樣，快取幫不上忙。之後會踩到的坑是：訂單更新了，快取裡還是舊的熱銷榜，記得要清。" },
+
+  { n:"直播帶貨：一台機器 CPU 跑到 100%", add:"加 load balancer", who:"上萬人同時",
+    wall:"你上了一場直播，一秒三千人。這次不是資料庫的問題，是<b>程式那台機器本身算不過來</b>，CPU 滿載，所有人一起卡住。你想再開兩台分擔，但使用者的手機只認得原本那台的地址，<b>新開的兩台根本沒人連過去</b>。",
+    fix:"在最前面站一個「門房」，這就是 <b>load balancer</b>（負載平衡器）。使用者只認得門房的地址，門房收到請求後輪流丟給後面三台。哪一台掛了就不丟給它。",
+    shape:"[ 使用者 ] ──▶ [ 門房 ] ──┬──▶ [ 程式 A ]\n                       ├──▶ [ 程式 B ] ──▶ [ 快取 ] ──▶ [ 資料庫 ]\n                       └──▶ [ 程式 C ]",
+    note:"順便多了一個好處：更新程式不用斷線。先把 A 拿下來更新，門房把流量導去 B 跟 C，更新完再換手。<br>有個地方會踩到：購物車如果存在 A 那台機器上，使用者下一次被丟到 B，購物車就不見了。所以程式不能自己存東西，狀態要放到外面去。" },
+
+  { n:"註冊按了三次：因為寄信太慢", add:"加佇列", who:"開始有很多後台工作",
+    wall:"使用者按下「註冊」，你的程式要做四件事：寫資料庫、寄歡迎信、產生頭像縮圖、通知業務。前三秒都在等郵件伺服器回應，使用者盯著轉圈圈，<b>以為壞了，按了三次註冊</b>。郵件伺服器剛好當機，整個註冊跟著失敗。",
+    fix:"只做第一件「寫資料庫」，剩下三件<b>丟進一排隊伍</b>（Queue），馬上跟使用者說「成功」。後面有一組工人慢慢從隊伍裡拿出來做。使用者 0.2 秒看到成功畫面，信晚十秒到沒人在乎。",
+    shape:"[ 程式 ] ──寫──▶ [ 資料庫 ]\n   └──丟進──▶ [ 佇列 ] ──▶ [ 工人們：寄信、縮圖、通知 ]",
+    note:"只要有一件事要超過一秒（寄信、轉檔、算報表、呼叫外部服務都算），就可以考慮了。<br>之後會踩到的坑是同一封歡迎信寄了兩次。因為佇列多半只保證「至少送到一次」，工人做到一半掛掉、重來的時候就會重複。所以做事的那端要能承受同一件事做兩次不出錯，例如寄信前先查一下這封寄過沒。" },
+
+  { n:"硬碟壞了：昨天以後的訂單全沒了", add:"做 replication", who:"資料開始值錢",
+    wall:"你只有一台資料庫。有一天硬碟壞了，<b>所有資料一起消失</b>，備份是昨天凌晨的，今天一整天的訂單全沒了。另外，平常一百個人看商品才一個人下單，讀跟寫全擠在同一台，光是被讀就快滿了。",
+    fix:"同一份資料<b>多存兩台</b>，這叫 <b>replication</b>（複製幾份備用的意思）。主要那台負責寫，另外兩台負責讀，主要那台一有新資料就同步過去。看商品的一百人分給兩台備用的，下單的一人去主要那台。主要那台掛了，把一台備用的升上來頂替，資料還在。",
+    shape:"[ 程式 ] ──寫──▶ [ 主資料庫 ] ──同步──▶ [ 備用 1 ]\n   └────讀────────────────────────▶ [ 備用 2 ]",
+    note:"這個概念放大到整個機房就是 Netflix 的做法：他們把整套服務<b>同時跑在美國東岸跟西岸兩個 AWS 機房</b>，其中一邊整個掛掉，流量會自動切到另一邊，使用者幾乎沒感覺。他們甚至寫了一個工具叫 Chaos Kong，<b>故意定期把一整個機房弄掛</b>，來確認切換真的會動。<br>回到單一資料庫的層級，這個要跟下一站的 sharding 分清楚：<b>replication 是每台都存完整的一份，sharding 是每台只存一部分</b>。讀太多做 replication，資料太多做 sharding。<br>之後會踩到的坑很經典：使用者按了儲存，立刻重新整理，看到的還是舊資料。因為他寫進主庫，可是重新整理是去備用那台讀，備用的還沒同步到。剛寫完那幾秒要強制去主庫讀。" },
+
+  { n:"有人寫錯迴圈：一秒打你一萬次", add:"加 rate limit", who:"開放 API 給外面",
+    wall:"你開放了 API 讓別人接。某個開發者迴圈寫錯，<b>一秒打你一萬次</b>。你的伺服器全部在服務他一個人，其他正常使用者全部卡住。你後面接的簡訊服務要付費，這一萬次全在燒你的錢。",
+    fix:"在最前面加 <b>rate limit</b>（限制每個人的呼叫次數）：每個帳號一分鐘最多 60 次，超過直接回「請稍後再試」，連處理都不處理。第 61 次開始全部擋掉，幾乎零成本，其他人完全不受影響。",
+    shape:"[ 使用者 ] ──▶ [ rate limit ] ──▶ [ 門房 ] ──▶ ⋯",
+    note:"只要對外開放就一定要有，沒得商量。<br>之後會踩到的坑：整間公司共用一個對外 IP，你按 IP 限，結果一個人打太多害全公司被封。所以按帳號限通常比按 IP 公平，而且要留白名單給付費客戶跟自己的內部服務。" },
+
+  { n:"美國使用者說很慢：圖片要繞半個地球", add:"加 CDN", who:"使用者跨國了",
+    wall:"你的伺服器在台灣，一個美國使用者打開你的網站。首頁 30 張餅乾照片，每一張都要<b>從台灣繞半個地球</b>過去，一張來回 150 毫秒，30 張排隊下來他等了三、四秒。而且全世界的圖片流量都砸在你台灣那台。",
+    fix:"把圖片、影片、JS 這些<b>不會變的檔案</b>複製到全世界幾百個機房，這就是 <b>CDN</b>（Content Delivery Network）。美國使用者從洛杉磯的機房拿，來回 10 毫秒。你台灣的機器只處理「真的要算」的請求。",
+    shape:"[ 美國使用者 ] ──▶ [ 洛杉磯 CDN 節點 ] （圖片直接給）\n                     └──沒有的才問──▶ [ 台灣：rate limit → 門房 → ⋯ ]",
+    note:"多數 CDN 有免費額度，通常直接開著就好。<br>之後會踩到的坑：你改了 logo，使用者看到的還是舊的，因為全世界的機房還握著舊檔案不放。解法很土但很有效：檔名加版本號（logo-v2.png），換檔就換名字，根本不會撞到舊的。<br><b>另一個坑是 CDN 自己掛掉。</b>2019 年 7 月 Cloudflare（全世界最大的 CDN 之一）出了一次 30 分鐘的故障，幾百個知名網站一起變成打不開。這種事之後大公司學到的是：<b>不要只押一家 CDN</b>，重要的服務要準備第二家隨時切過去。" },
+
+  { n:"五億使用者：一台資料庫裝不下了", add:"做 sharding", who:"真的很大了",
+    wall:"你不賣餅乾了，改做社群 App，五億使用者，光使用者資料就 20 TB。一台資料庫硬碟裝不下，就算裝得下，<b>所有人的查詢擠在同一台</b>。加快取也沒用，因為每個人查的是自己的資料，沒有重複答案可以記。多存幾份備用也沒用，因為每一份還是要存完整的 20 TB。",
+    fix:"按使用者編號<b>拆成十台</b>，這個動作叫 <b>sharding</b>（台灣工程師也會說「分庫分表」或「把資料庫拆開」）：1 到 5000 萬在第一台、5000 萬到 1 億在第二台⋯⋯每台只存十分之一、扛十分之一的查詢。3 億 2 千萬號登入，程式算一下就知道去第七台找。",
+    shape:"[ 程式 ] ──算編號在哪台──┬──▶ [ 第 1 片：1 ~ 5000 萬 ]\n                          ├──▶ [ 第 2 片：5000 萬 ~ 1 億 ]\n                          └──▶ ⋯ [ 第 10 片 ]",
+    note:"這一步通常排最後，很多公司到幾千萬使用者都還沒做 sharding，不是不敢做，是還沒到需要的時候。因為拆開之後日子會變得比較麻煩：老闆問「全站最活躍的一百個使用者是誰」，你要問十台再自己合併排序，本來一句話查得到的東西變成一個工程。" },
+];
+
+const lineEl = document.getElementById("line"), card = document.getElementById("card");
+STOPS.forEach((s,i)=>{
+  const b = document.createElement("button");
+  b.className = "stop"; b.type = "button";
+  b.innerHTML = `
+    <span class="stop-rail"><span class="dot"></span><span class="bar"></span></span>
+    <span class="stop-body">
+      <span class="stop-hd"><span class="stop-i">第 ${i+1} 站</span><span class="stop-n">${s.n}</span></span>
+      <span class="stop-w">${s.who}</span>
+      <span class="stop-add">${s.add}</span>
+    </span>`;
+  b.addEventListener("click", ()=>{
+    document.querySelectorAll(".stop").forEach(x=>x.classList.toggle("on", x === b));
+    card.innerHTML = `
+      <div class="d-top"><span class="d-name">${s.add}</span><span class="d-tag">第 ${i+1} 站</span></div>
+      <div class="ba">
+        <div class="no"><span class="lab">撞到什麼牆</span><p>${s.wall}</p></div>
+        <div class="arrow">↓ 所以</div>
+        <div class="yes"><span class="lab">加了什麼</span><p>${s.fix}</p></div>
+      </div>
+      <div class="d-shape">${s.shape}</div>
+      <div class="d-grid">
+        <div class="d-cell"><dt>要記得的事</dt><dd>${s.note}</dd></div>
+      </div>`;
+    if(window.matchMedia("(max-width:860px)").matches)
+      card.scrollIntoView({block:"nearest", behavior:"smooth"});
+  });
+  lineEl.appendChild(b);
+});
+
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click", ()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected", String(x === t)));
+    document.querySelectorAll(".panel").forEach(p=>{ p.hidden = p.dataset.panel !== t.dataset.t; });
+  });
+});
+</script>

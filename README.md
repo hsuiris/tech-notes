@@ -13,13 +13,19 @@
 | [按鈕之旅](https://hsuiris.github.io/tech-notes/request.html) | 知道有前端後端，但中間到底發生什麼 |
 | [看懂專案資料夾](https://hsuiris.github.io/tech-notes/project.html) | 打開別人的 repo，滿滿的檔案不敢碰 |
 | [自己做一個 Claude 技能](https://hsuiris.github.io/tech-notes/skills.html) | 每次都要跟 AI 重複交代同一件事 |
+| [幾個 AI 一起做事，有幾種組法](https://hsuiris.github.io/tech-notes/agents.html) | 大家都說要派很多 AI，但到底怎麼派 |
+| [系統設計的基本元件與取捨](https://hsuiris.github.io/tech-notes/sysdesign.html) | 大家都說要加快取加佇列，但什麼時候該加 |
+| [一個 AI 產品，從資料到上線](https://hsuiris.github.io/tech-notes/mlsystem.html) | 聽得懂每個字，但不知道它們怎麼串起來 |
+| [ML System Design 的 45 分鐘](https://hsuiris.github.io/tech-notes/mldesign.html) | 知道要答什麼，但不知道怎麼開場 |
 
 ## 寫作規則
 
 1. 術語第一次出現，後面用括號解釋一句。縮寫一律補上英文全名跟中文意思。
 2. 不貼整段錯誤訊息，只留關鍵那一行並翻成中文。
-3. 能點就不要只用讀的——圖上每個方塊、每一層、每一站都可以點開看說明。
+3. 能點就不要只用讀的，圖上每個方塊、每一層、每一站都可以點開看說明。
 4. 繁體中文，國中生看得懂的程度。不確定就直說「我不確定」。
+5. 只用台灣慣用語，不用大陸用語、不從英文硬翻。專業術語直接寫英文原文，後面括號註明白話。
+6. 不用破折號。標題底下不放引言，語氣客觀不下斷言。
 
 ## 本機預覽
 
@@ -37,7 +43,7 @@ python3 -m http.server 8000
 1. 複製 `errors.html` 當範本，改掉 `<title>`、`<header>`、內容。
 2. 在**所有頁面**的 `<nav>` 加一個連結，並在自己那頁的連結加上 `aria-current="page"`。
 3. 在 `index.html` 的 `.cards` 加一張卡片。
-4. 跑一次 `python3 build.py`（見下）——新頁面如果用了舊字體檔沒有的字，不跑會顯示成系統預設字體。
+4. 跑一次 `python3 build.py`（見下）。新頁面如果用了舊字體檔沒有的字，不跑會顯示成系統預設字體。
 
 ## 字體
 
@@ -54,7 +60,7 @@ pip install fonttools brotli
 python3 build.py
 ```
 
-`fonts/*.ttf` 沒有進版控（太大）。`assets/*.woff2` 有進版控，所以**不跑 build.py 網站也能正常顯示**——只有在你新增了現有字體檔沒涵蓋的字時才需要重跑。
+`fonts/*.ttf` 沒有進版控（太大）。`assets/*.woff2` 有進版控，所以**不跑 build.py 網站也能正常顯示**，只有在你新增了現有字體檔沒涵蓋的字時才需要重跑。
 
 漏字也不會爆掉，只會 fallback 到系統的蘋方（PingFang TC）。
 

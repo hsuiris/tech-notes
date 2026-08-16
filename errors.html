@@ -75,6 +75,10 @@
     <a href="request.html">按鈕之旅</a>
     <a href="project.html">專案資料夾</a>
     <a href="skills.html">Claude 技能</a>
+    <a href="agents.html">AI 大軍</a>
+    <a href="sysdesign.html">系統設計</a>
+    <a href="mlsystem.html">ML 系統</a>
+    <a href="mldesign.html">面試怎麼答</a>
   </div>
 </div></nav>
 
@@ -83,13 +87,11 @@
 <header>
   <div class="eyebrow">錯誤訊息</div>
   <h1>看懂錯誤訊息</h1>
-  <p class="sub">紅字看起來有 40 行，<b>但只有 2 行是給你看的</b>。<br>
-  剩下 38 行是程式在自言自語，連工程師也不看。</p>
 </header>
 
 <section>
   <div class="sec-head"><span class="sec-num">01</span><h2>一段錯誤訊息，只有兩行要看</h2></div>
-  <p class="sec-lede">下面是一段<b>真實的</b>錯誤訊息。它被分成三塊——<b>點任何一塊</b>，右邊會說明那塊在講什麼、要不要看。</p>
+  <p class="sec-lede">下面這段錯誤訊息被分成三塊，<b>點任何一塊</b>，右邊會說明那塊在講什麼、要不要看。</p>
 
   <div class="split">
     <div class="errbox" id="errbox">
@@ -109,7 +111,7 @@
   </div>
 
   <div class="callout" style="margin-top:24px">
-    <b>一句話記法：</b>看<b>第一行</b>知道「發生什麼事」，看<b>有你檔名的那一行</b>知道「在哪裡發生」。<br>
+    記一句話就好：看<b>第一行</b>知道「發生什麼事」，看<b>有你檔名的那一行</b>知道「在哪裡發生」。<br>
     其他行有 <code style="font-family:var(--font-mono);font-size:12.5px">node_modules</code> 這個字的，一律跳過。
   </div>
 </section>
@@ -128,14 +130,14 @@
 
 <section>
   <div class="sec-head"><span class="sec-num">03</span><h2>問人之前，先自己試這三招</h2></div>
-  <p class="sec-lede">這三招解掉的問題，比你想像的多。順序照排，<b>不要跳</b>。</p>
+  <p class="sec-lede">順序照排，<b>不要跳</b>。</p>
 
   <div class="steps">
     <div class="step">
       <div class="step-rail"><div class="dot"></div><div class="bar"></div></div>
       <div class="step-body">
         <h3>關掉重開<span class="time">10 秒</span></h3>
-        <p>在跑程式的那個終端機視窗按 <code>Ctrl</code> ＋ <code>C</code> 停掉，再重跑一次。改了設定檔、裝了新套件之後，一定要這樣做——舊的還在記憶體裡跑，你看到的是過期的畫面。</p>
+        <p>在跑程式的那個終端機視窗按 <code>Ctrl</code> ＋ <code>C</code> 停掉，再重跑一次。改了設定檔、裝了新套件之後，一定要這樣做。舊的還在記憶體裡跑，你看到的是過期的畫面。</p>
         <div class="pre">Ctrl + C
 npm run dev</div>
       </div>
@@ -161,7 +163,7 @@ npm install</div>
 
 <section>
   <div class="sec-head"><span class="sec-num">04</span><h2>貼給 AI 的正確方式</h2></div>
-  <p class="sec-lede">整段貼 40 行不會讓 AI 更聰明，<b>反而會讓它抓錯重點</b>。它的注意力跟你一樣有限。照下面這樣貼，答對率高很多。</p>
+  <p class="sec-lede">整段貼 40 行<b>反而會讓 AI 抓錯重點</b>。照下面這樣貼，答對率比較高。</p>
 
   <div class="split">
     <div>
@@ -196,7 +198,7 @@ npm install</div>
         · 含 <code style="font-family:var(--font-mono);font-size:12.5px">node_modules</code> 的那幾十行<br>
         · 整個檔案的程式碼（先貼出事那 10 行就好）<br>
         · 螢幕截圖裡看不清楚的紅字（用複製的）<br>
-        · <b>你的 .env 內容</b>——裡面是密碼，貼出去等於外洩
+        · <b>你的 .env 內容</b>，裡面是密碼，貼出去等於外洩
       </div>
     </div>
   </div>
@@ -204,7 +206,7 @@ npm install</div>
 
 <footer>
   <p><b>整頁只有一個重點：</b>錯誤訊息不是要你全部看懂，是要你<b>找出那兩行</b>。<br>
-  找到之後，剩下的交給 Google 或 AI 都行——但你得先知道要問什麼。</p>
+  找到之後，剩下的交給 Google 或 AI 都行，但你得先知道要問什麼。</p>
   <p class="cred"><a href="./">← 回目錄</a></p>
 </footer>
 
@@ -227,7 +229,7 @@ const ZONES = {
       l:"這叫 stack trace（呼叫堆疊，程式一路是怎麼被叫到這裡的紀錄）。路徑裡有 <code>node_modules</code> 的，全部都是<b>別人寫的套件</b>。",
       read:"react-dom 是 React 的內部程式。它沒有壞，它只是剛好在你出錯的時候站在旁邊。",
       todo:"<b>跳過。不要貼給 AI，也不要花時間讀。</b>",
-      why:"這些行的用途是給套件作者除錯用的。對你來說是雜訊，貼出去還會稀釋掉真正重要的那兩行。" },
+      why:"這些行是寫給套件作者 debug 用的。對你來說就是雜訊，貼出去只會把真正重要的那兩行蓋掉。" },
 };
 const zoneCard = document.getElementById("zoneCard");
 document.querySelectorAll(".z").forEach(btn=>{
@@ -263,7 +265,7 @@ const ERRORS = [
    "看 <code>useEffect</code> 第二個參數（那個中括號）裡放了什麼，是不是跟裡面改的東西同一個。"],
   ["Hydration failed because the initial UI does not match","畫面",
    "伺服器先畫好的畫面，跟瀏覽器後來畫的<b>對不起來</b>。",
-   "用了 <code>new Date()</code>、<code>Math.random()</code> 或 <code>window.xxx</code>——這些東西伺服器跟瀏覽器算出來本來就不一樣。",
+   "用了 <code>new Date()</code>、<code>Math.random()</code> 或 <code>window.xxx</code>，這些東西伺服器跟瀏覽器算出來本來就不一樣。",
    "把那段改成只在瀏覽器跑（放進 <code>useEffect</code> 裡面）。"],
   ["Each child in a list should have a unique \"key\" prop","畫面",
    "你用迴圈畫了一串東西，但沒給每一個身分證，React 分不出誰是誰。",
@@ -278,7 +280,7 @@ const ERRORS = [
    "網址打錯，伺服器回了一個 404 找不到頁面給你。",
    "把那個網址直接貼到瀏覽器打開，看看到底出現什麼。九成是網址錯。"],
   ["CORS policy: No 'Access-Control-Allow-Origin' header","網路",
-   "後端沒有允許你的網站來拿資料。瀏覽器基於安全，主動幫你擋下來了。",
+   "後端沒把你的網站放進允許名單。瀏覽器為了安全，直接幫你擋掉了。",
    "前端在一個網址、後端在另一個網址，後端沒把你加進白名單。",
    "<b>這要改後端設定，前端怎麼改都沒用。</b>不要浪費時間在前端試。"],
   ["401 Unauthorized","網路",
@@ -292,11 +294,11 @@ const ERRORS = [
   ["500 Internal Server Error","網路",
    "後端自己爆了，而且它也不知道為什麼。",
    "跟你的前端<b>完全無關</b>。錯在伺服器那邊。",
-   "不要在前端找原因。去看伺服器的 log（執行紀錄），真正的錯誤訊息在那裡。"],
+   "不要在前端找原因，找到天亮也沒有。去看伺服器的 log（執行紀錄），真正的錯誤訊息在那裡。"],
   ["Module not found: Can't resolve 'xxx'","安裝",
    "找不到叫 xxx 的東西。",
    "忘了 <code>npm install</code>；或名字打錯；或檔案路徑寫錯。",
-   "先 <code>npm install xxx</code>。還是不行就檢查<b>大小寫</b>——你的 Mac 不分大小寫，伺服器會分。"],
+   "先 <code>npm install xxx</code>。還是不行就檢查<b>大小寫</b>。你的 Mac 不分大小寫，伺服器會分。"],
   ["EADDRINUSE: address already in use :::3000","安裝",
    "3000 這個門牌已經有程式佔著了，新的擠不進去。",
    "上一次沒關乾淨，舊的還在背景偷偷跑。",

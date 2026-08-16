@@ -1,0 +1,550 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>幾個 AI 一起做事 · tech-notes</title>
+<meta name="description" content="八種讓多個 AI 一起做事的組法：接力、分流、分頭做、投票、主管派工、辯論、寫手加評審、層級。附 Anthropic 自己的實測數字與失敗模式。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+/* ── 01 可點的八種組法 ── */
+.parts{
+  display:grid; gap:1px; background:var(--line-soft);
+  border:1px solid var(--line-soft); border-radius:4px; overflow:hidden;
+}
+.part{
+  display:grid; grid-template-columns:132px 1fr; gap:14px; align-items:baseline;
+  background:var(--paper-2); padding:13px 15px; cursor:pointer; text-align:left;
+  border:0; border-left:3px solid transparent; width:100%;
+  font-family:var(--font-cn); font-size:15px; color:var(--ink);
+  transition:background .13s, border-color .13s;
+}
+.part:hover{background:var(--paper-3)}
+.part.on{background:var(--accent-soft); border-left-color:var(--accent)}
+.part .pn{font-size:15px; font-weight:700}
+.part .pn small{
+  display:block; font-family:var(--font-mono); font-size:10.5px; font-weight:400;
+  color:var(--ink-3); margin-top:3px; letter-spacing:.02em; line-height:1.4;
+}
+.part.on .pn{color:var(--accent)}
+.part .pw{font-size:13.5px; color:var(--ink-2); line-height:1.6}
+@media (max-width:760px){.part{grid-template-columns:1fr; gap:4px}}
+
+.d-shape{
+  font-family:var(--font-mono); font-size:12px; line-height:1.9; white-space:pre;
+  background:var(--paper-3); padding:12px 14px; border-radius:4px;
+  margin:0 0 14px; overflow-x:auto; color:var(--ink);
+}
+
+/* ── 02 兩套做法對照 ── */
+.duo{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+@media (max-width:820px){.duo{grid-template-columns:1fr}}
+.duo > div{
+  border:1px solid var(--line); border-radius:4px; background:var(--paper-2);
+  padding:18px 20px 20px;
+}
+.duo .lab{
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--accent); margin-bottom:8px;
+}
+.duo h3{font-size:16.5px; margin-bottom:10px}
+.duo dl{margin:12px 0 0; display:flex; flex-direction:column; gap:10px}
+.duo dt{
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.13em;
+  color:var(--ink-3); text-transform:uppercase; margin-bottom:3px;
+}
+.duo dd{margin:0; font-size:14px; color:var(--ink-2); line-height:1.7}
+.duo dd b{color:var(--ink)}
+
+/* ── 02b 五種收斂法 ── */
+.conv{width:100%; border-collapse:collapse; font-size:13.5px; margin:0 0 4px}
+.conv th,.conv td{padding:11px 12px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line-soft); line-height:1.6}
+.conv th{font-size:11px; font-family:var(--font-mono); letter-spacing:.1em; color:var(--ink-3); font-weight:400; text-transform:uppercase; border-bottom:1px solid var(--line)}
+.conv td:first-child{font-weight:700; color:var(--ink); white-space:nowrap}
+.conv td:first-child small{display:block; font-family:var(--font-mono); font-size:10px; font-weight:400; color:var(--ink-3); margin-top:2px}
+.conv td{color:var(--ink-2)}
+.conv td b{color:var(--ink)}
+.conv-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:4px; background:var(--paper-2); padding:0 4px}
+@media (max-width:760px){.conv{min-width:640px}}
+
+/* ── 03 數字 ── */
+.facts{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:0 0 18px}
+@media (max-width:820px){.facts{grid-template-columns:repeat(2,1fr)}}
+.fact{
+  border:1px solid var(--line); border-radius:4px; background:var(--paper-2);
+  padding:14px 16px; line-height:1.55;
+}
+.fact b{
+  display:block; font-family:var(--font-mono); font-size:24px;
+  color:var(--accent); font-weight:700; margin-bottom:4px;
+}
+.fact span{font-size:12.5px; color:var(--ink-2)}
+
+/* ── 04/05 三欄與四欄卡片 ── */
+.picks{display:grid; gap:14px}
+@media (max-width:860px){.picks{grid-template-columns:1fr !important}}
+.pick{
+  border:1px solid var(--line); border-radius:4px; background:var(--paper-2);
+  padding:18px 20px 20px; display:flex; flex-direction:column; gap:11px;
+}
+.pick .lv{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.14em;
+  color:var(--accent); text-transform:uppercase;
+}
+.pick h3{font-size:17px}
+.pick .when{
+  font-size:13.5px; color:var(--ink); background:var(--paper-3);
+  padding:8px 11px; border-radius:3px; line-height:1.6;
+}
+.pick ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:5px}
+.pick li{font-size:13.5px; color:var(--ink-2); padding-left:15px; position:relative; line-height:1.6}
+.pick li::before{content:"·"; position:absolute; left:0; color:var(--ink-3)}
+.pick .eg{font-size:12.5px; color:var(--ink-3); border-top:1px solid var(--line-soft); padding-top:10px; margin-top:auto}
+
+/* ── 04 坑 ── */
+.traps{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+@media (max-width:820px){.traps{grid-template-columns:1fr}}
+.trap{
+  border:1px solid var(--line); border-left:3px solid var(--accent);
+  border-radius:4px; background:var(--paper-2); padding:15px 18px 17px;
+}
+.trap h3{font-size:15px; margin-bottom:7px}
+.trap p{margin:0; font-size:14px; color:var(--ink-2); line-height:1.7}
+</style>
+
+<nav class="topnav"><div class="topnav-in">
+  <a class="brand" href="./">tech-notes</a>
+  <div class="navlinks">
+    <a href="architecture.html">架構圖</a>
+    <a href="errors.html">錯誤訊息</a>
+    <a href="request.html">按鈕之旅</a>
+    <a href="project.html">專案資料夾</a>
+    <a href="skills.html">Claude 技能</a>
+    <a href="agents.html" aria-current="page">AI 大軍</a>
+    <a href="sysdesign.html">系統設計</a>
+    <a href="mlsystem.html">ML 系統</a>
+    <a href="mldesign.html">面試怎麼答</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">AI 大軍</div>
+  <h1>幾個 AI 一起做事，有幾種組法</h1>
+</header>
+
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><h2>常見的八種組法</h2></div>
+  <p class="sec-lede"><b>點左邊任何一種</b>，右邊會說明它長什麼樣、什麼時候贏、什麼時候別用。</p>
+
+  <div class="split">
+    <div class="parts" id="parts">
+      <button class="part" data-p="chain" type="button">
+        <span class="pn">接力<small>Prompt Chaining</small></span>
+        <span class="pw">一個做完換下一個，每人只做一段</span>
+      </button>
+      <button class="part" data-p="route" type="button">
+        <span class="pn">分流<small>Routing</small></span>
+        <span class="pw">先有人看題目，決定丟給誰</span>
+      </button>
+      <button class="part" data-p="split" type="button">
+        <span class="pn">分頭做<small>Parallelization</small></span>
+        <span class="pw">切成不相干的小塊，同時做</span>
+      </button>
+      <button class="part" data-p="vote" type="button">
+        <span class="pn">投票<small>Voting</small></span>
+        <span class="pw">同一題做很多次，取多數</span>
+      </button>
+      <button class="part" data-p="boss" type="button">
+        <span class="pn">主管派工<small>Orchestrator-Workers</small></span>
+        <span class="pw">主管當場決定要派幾個人、各查什麼</span>
+      </button>
+      <button class="part" data-p="debate" type="button">
+        <span class="pn">辯論<small>Debate</small></span>
+        <span class="pw">各自先答，再互相反駁、修正</span>
+      </button>
+      <button class="part" data-p="critic" type="button">
+        <span class="pn">寫手＋評審<small>Evaluator-Optimizer</small></span>
+        <span class="pw">一個寫，一個挑毛病，來回改到過關</span>
+      </button>
+      <button class="part" data-p="tree" type="button">
+        <span class="pn">層級<small>Hierarchical</small></span>
+        <span class="pw">主管上面還有主管</span>
+      </button>
+    </div>
+
+    <div class="detail sticky" id="card">
+      <p class="placeholder">← 點左邊任何一種，這裡會說明它怎麼運作、什麼時候贏、什麼時候別用。</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:24px">
+    <b>一句話分辨：</b>接力是<b>生產線</b>、分流是<b>櫃檯</b>、分頭做是<b>分組報告</b>、投票是<b>問三個醫生</b>、主管派工是<b>專案經理</b>、辯論是<b>法庭</b>、寫手加評審是<b>編輯台</b>、層級是<b>整間公司</b>。
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>兩套最常被拿來比的做法</h2></div>
+
+  <div class="duo">
+    <div>
+      <div class="lab">做法 A · 分頭做 ＋ 接力</div>
+      <h3>收完資料就往下游送</h3>
+      <div class="d-shape">六個同時收資料
+      ↓
+   整合成一份
+      ↓
+    分析
+      ↓
+    寫結論</div>
+      <dl>
+        <div><dt>它賭的是什麼</dt><dd>這套能不能成，全看<b>題目切得乾不乾淨</b>。六個人負責的領域要剛好不重疊，收回來的東西拼起來才會是全貌。</dd></div>
+        <div><dt>什麼時候贏</dt><dd>資料來源明確、彼此不相干、要快。收集是整件事裡最花時間的一段，六個同時做就是六倍快。</dd></div>
+        <div><dt>什麼時候輸</dt><dd>切不乾淨的時候。<b>兩個人做了同一件事，有些角落又沒人管</b>，麻煩的是後面沒有任何一關會發現。前面漏掉的，後面就全部照著錯下去。</dd></div>
+      </dl>
+    </div>
+
+    <div>
+      <div class="lab">做法 B · 分頭做 ＋ 辯論</div>
+      <h3>各自寫完再互相打</h3>
+      <div class="d-shape">六個各寫一份報告
+      ↓
+  互相看對方的
+      ↓
+  反駁、修正
+      ↓
+   收斂成結論</div>
+      <dl>
+        <div><dt>它賭的是什麼</dt><dd>賭的是<b>總會有人抓到別人的錯</b>。同一件事六個角度看過一遍，錯的說法應該撐不過互相檢查。</dd></div>
+        <div><dt>什麼時候贏</dt><dd>題目有爭議、答案不只一種、錯了代價很高。多一道互相檢查，比多收一倍資料有用。</dd></div>
+        <div><dt>什麼時候輸</dt><dd>它<b>最貴也最慢</b>，每多一輪就多燒一輪。而且有一種失敗很陰險：六個人可能<b>互相說服到一起錯</b>，最後很有自信地給你一個錯的答案，你還看不出來。</dd></div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="callout ok" style="margin-top:20px">
+    這兩套其實可以合起來用。用 A 那種方式把資料收齊，因為快又便宜，最後<b>只在下結論那一關開辯論</b>。貴的部分只跑一次，互相抓錯的好處又留著。<br>
+    講白一點：收資料不用辯論，結論要不要辯論，看錯了會不會出事。
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2>辯論跟投票，差在哪</h2></div>
+  <p class="sec-lede">辯論的最後一步常常真的是投票，所以很容易覺得是同一件事。差別在<b>投票之前，有沒有讓大家看到彼此的答案</b>。</p>
+
+  <div class="duo">
+    <div>
+      <div class="lab">投票</div>
+      <h3>各自關在房間裡答</h3>
+      <div class="d-shape">三個人各自答
+     ↓
+交出紙條
+     ↓
+數哪個答案最多</div>
+      <dl>
+        <div><dt>從頭到尾</dt><dd>三個人<b>不知道別人寫什麼</b>。</dd></div>
+        <div><dt>它賭的是</dt><dd>賭多數人不會剛好一起錯。</dd></div>
+        <div><dt>它怕的是</dt><dd>怕題目剛好有個常見的陷阱，三個人<b>一起掉進去</b>，投出來三票都是錯的，而且沒有人會發現。</dd></div>
+      </dl>
+    </div>
+    <div>
+      <div class="lab">辯論</div>
+      <h3>攤開來互相看</h3>
+      <div class="d-shape">三個人各自答
+     ↓
+把答案攤開，互相看
+     ↓
+「你第二點錯了，因為⋯⋯」
+     ↓
+每個人可以改自己的
+     ↓
+來回幾輪，最後才收斂</div>
+      <dl>
+        <div><dt>多出來的那段</dt><dd><b>看到別人的答案，然後可以改</b>。這一段投票沒有。</dd></div>
+        <div><dt>它賭的是</dt><dd>賭三個人裡面總有一個會看出那是陷阱。</dd></div>
+        <div><dt>它怕的是</dt><dd>怕第一個開口的人講得很有自信，把其他人<b>說服到一起錯</b>。這點投票反而沒問題，因為大家互相看不到。</dd></div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="callout" style="margin:20px 0 26px">
+    所以要選哪個？答案有標準、錯誤是隨機出現的，<b>投票就夠了</b>。答案有爭議、有陷阱、要推理才答得出來，<b>辯論才有用</b>。
+  </div>
+
+  <h3 style="font-size:17px;margin:0 0 6px">「讓 AI 互相看答案」其實有五種做法</h3>
+  <p class="sec-lede" style="margin-bottom:12px">差別在<b>誰可以看誰的</b>，以及看完之後<b>怎麼收斂成一個結果</b>。</p>
+
+  <div class="conv-wrap">
+  <table class="conv">
+    <thead><tr><th>做法</th><th>誰看誰</th><th>怎麼收斂</th><th>適合</th></tr></thead>
+    <tbody>
+      <tr><td>Voting<small>投票</small></td><td>誰都不看誰</td><td>數票</td><td>答案是選項、錯誤隨機</td></tr>
+      <tr><td>Debate<small>辯論</small></td><td>每個人看全部人的</td><td>來回幾輪後<b>投票或取共識</b></td><td>答案是選項、但有爭議要推理</td></tr>
+      <tr><td>Mixture-of-Agents<small>合併成一份</small></td><td>只有一個負責合併的看全部人的</td><td>把大家的<b>融合成一份新的</b></td><td>答案是一篇東西（報告、方案）</td></tr>
+      <tr><td>LLM-as-Judge<small>挑一份最好的</small></td><td>一個法官看全部人的</td><td>法官<b>挑一份最好的</b>，不合併</td><td>答案是一篇東西，而且要完整不要拼湊</td></tr>
+      <tr><td>Evaluator-Optimizer<small>寫手加評審</small></td><td>評審看寫手的，寫手看評審意見</td><td>改到評審過關</td><td>有明確好壞標準的產出</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="callout ok" style="margin-top:18px">
+    這五種其實只有兩條線在分。<br>
+    第一條看<b>答案是選項還是文章</b>。選項可以數票，所以投票跟辯論可以用。文章沒辦法數票，一定要有人把它們合併成一份或挑一份出來，那就是 Mixture-of-Agents 跟 LLM-as-Judge。<br>
+    第二條看<b>合併還是挑選</b>。Mixture-of-Agents 是把大家的東西融成一份新的，可能會東拼西湊；LLM-as-Judge 是原封不動挑一份最好的，可能會錯過別人的好點子。要一份完整的用 Judge，要吸收大家優點的用 Mixture-of-Agents。
+  </div>
+
+  <div class="callout warn" style="margin-top:14px">
+    回頭看上面那兩套做法。「六個各寫報告再辯論」仔細想，其實是<b>Debate 接 Mixture-of-Agents</b>：六份報告是文章不是選項，沒辦法投票，最後一定要有人把它們寫成一份。所以真正的流程是各寫、互相看、互相反駁、<b>最後一個人合併成最終版</b>。<br>
+    而「六個平行收資料再往下送」是<b>分頭做接接力</b>，中間沒有任何互看的環節。兩套差的不是有沒有六個人，差的是<b>有沒有互看那一段，還有那一段要花幾倍的錢</b>。
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><h2>代價：好很多，但也貴很多</h2></div>
+  <p class="sec-lede">以下數字出自 Anthropic 公開的實測，對象是用 Claude 做的深度研究系統。</p>
+
+  <div class="facts">
+    <div class="fact"><b>+90.2%</b><span>多個 AI 一起做，比單一個做，表現好 90.2%</span></div>
+    <div class="fact"><b>15 倍</b><span>吃掉的量是一般聊天的 15 倍。單一個 AI 只吃 4 倍</span></div>
+    <div class="fact"><b>80%</b><span>效果差異裡，有八成單純來自「用掉的量比較多」</span></div>
+    <div class="fact"><b>剩 1/10</b><span>複雜題目的耗時，因為同時做可以縮到十分之一</span></div>
+  </div>
+
+  <div class="callout warn">
+    這四個數字放在一起讀，結論其實不太浪漫：多個 AI 之所以贏，<b>很大一部分是贏在捨得燒</b>。<br>
+    所以該問的不是「多派幾個會不會比較好」，是<b>「這題值不值得花 15 倍」</b>。查一個事實不值得，做一份會拿去開會決策的報告，可能就值得。
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">05</span><h2>什麼時候不要組大軍</h2></div>
+
+  <div class="traps">
+    <div class="trap">
+      <h3>大家需要看同一份東西</h3>
+      <p>分頭做的前提是「你做你的、我做我的」。如果每個人都得先讀完同一份完整資料才能動手，那分頭就沒有意義，只是把同一份東西讀了六次。</p>
+    </div>
+    <div class="trap">
+      <h3>寫程式</h3>
+      <p>程式碼前後高度相依，改了 A 檔案常常就要跟著改 B。這種工作<b>切不開</b>，硬要平行只會製造互相打架的改動。</p>
+    </div>
+    <div class="trap">
+      <h3>需要一邊做一邊喬</h3>
+      <p>分身之間沒辦法即時討論，只能各做各的、做完回報。凡是「做到一半要問一下對方」的工作，都不適合。</p>
+    </div>
+    <div class="trap">
+      <h3>一個 AI 已經做得夠好</h3>
+      <p>這是最容易忽略的一條。單一個已經答得不錯的題目，加人進來只會多出協調成本，<b>結果更慢、更貴、還可能更差</b>。</p>
+    </div>
+  </div>
+
+  <h3 style="font-size:17px;margin:28px 0 10px">實際踩過的坑</h3>
+
+  <div class="traps">
+    <div class="trap">
+      <h3>簡單問題派了 50 個分身</h3>
+      <p>沒有告訴主管「這題大概該派幾個」，它就會亂派。要在規則裡直接寫死：簡單查詢一個就好，複雜的最多幾個。</p>
+    </div>
+    <div class="trap">
+      <h3>兩個人做同一件事，有些沒人做</h3>
+      <p>分工講得不夠清楚的結果。派工的時候要把「你負責什麼、不要碰什麼」寫明白，不能只說「你去查一下 A 方面」。</p>
+    </div>
+    <div class="trap">
+      <h3>只挑搜尋排前面的內容</h3>
+      <p>會自然偏好那種為了衝排名寫出來的文章，跳過真正有料的論文 PDF。要明講「優先看原始來源」。</p>
+    </div>
+    <div class="trap">
+      <h3>講太多，前面的被吃掉</h3>
+      <p>每個 AI 能記住的量有上限（大約 20 萬字）。超過之後最前面的內容會被截掉，而且它<b>不會告訴你</b>，只會表現得像忘記了。</p>
+    </div>
+  </div>
+
+  <h3 style="font-size:17px;margin:28px 0 10px">壞掉的原因，大多不是 AI 不夠聰明</h3>
+  <p class="sec-lede" style="margin-bottom:14px">一份針對 7 個主流框架、1600 多次執行紀錄的研究，整理出 14 種失敗模式，分屬三大類。</p>
+
+  <div class="picks" style="grid-template-columns:repeat(3,1fr)">
+    <div class="pick">
+      <div class="lv">第一類</div>
+      <h3>系統設計沒寫好</h3>
+      <div class="when">還沒開始跑就注定會壞</div>
+      <ul>
+        <li>沒講清楚誰負責什麼</li>
+        <li>沒說「做到什麼程度算做完」</li>
+        <li>沒設上限，簡單題也大陣仗</li>
+      </ul>
+      <div class="eg">這一類最好修，因為改的是規則，不是程式。</div>
+    </div>
+    <div class="pick">
+      <div class="lv">第二類</div>
+      <h3>彼此對不起來</h3>
+      <div class="when">各做各的，話沒接上</div>
+      <ul>
+        <li>抱著錯的假設一路做下去</li>
+        <li>看到同伴給的資訊卻不理它</li>
+        <li>做完的東西別人接不上</li>
+      </ul>
+      <div class="eg">最難抓，因為每一個分身單獨看都很正常。</div>
+    </div>
+    <div class="pick">
+      <div class="lv">第三類</div>
+      <h3>沒人負責驗收</h3>
+      <div class="when">錯的東西一路過關到最後</div>
+      <ul>
+        <li>做完沒有人檢查對不對</li>
+        <li>檢查了但標準太鬆</li>
+        <li>提早收工，事情只做一半</li>
+      </ul>
+      <div class="eg">最容易補：加一關專門驗收的就好。</div>
+    </div>
+  </div>
+
+  <div class="callout ok" style="margin-top:18px">
+    <b>這份研究最重要的結論：</b>大部分失敗<b>換更強的模型也救不回來</b>，因為問題出在分工怎麼設計、誰負責驗收。<br>
+    所以真的要改善，順序是：<b>先把分工跟驗收寫清楚，再考慮換模型</b>。反過來做通常是白花錢。
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">06</span><h2>真的要動手，工具挑哪個</h2></div>
+
+  <div class="picks" style="grid-template-columns:repeat(2,1fr)">
+    <div class="pick">
+      <div class="lv">最好上手</div>
+      <h3>CrewAI</h3>
+      <div class="when">用「角色 ＋ 任務」描述，像在分派工作</div>
+      <ul>
+        <li>天生適合<b>接力</b>跟<b>分頭做</b></li>
+        <li>寫到第一個能跑的版本大約 30 到 60 行</li>
+        <li>做原型很快，但正式上線的除錯能力較弱</li>
+      </ul>
+      <div class="eg">適合：先做出一個看得到成果的版本。</div>
+    </div>
+    <div class="pick">
+      <div class="lv">正式環境最多人用</div>
+      <h3>LangGraph</h3>
+      <div class="when">把流程畫成一張圖，走哪條線自己定</div>
+      <ul>
+        <li>天生適合<b>主管派工</b>跟<b>寫手加評審</b></li>
+        <li>失敗可以重試、狀態存得住</li>
+        <li>入門較陡，第一版大約要 80 到 150 行</li>
+      </ul>
+      <div class="eg">適合：這套東西要真的上線給別人用。</div>
+    </div>
+    <div class="pick">
+      <div class="lv">辯論最強</div>
+      <h3>AutoGen</h3>
+      <div class="when">核心是「幾個 AI 在群組裡對話」</div>
+      <ul>
+        <li>天生適合<b>辯論</b>跟<b>互相驗證</b></li>
+        <li>對話玩法最多，研究單位用得最多</li>
+        <li>正式上線的採用度相對小</li>
+      </ul>
+      <div class="eg">適合：你要的就是那種吵出結論的做法。</div>
+    </div>
+    <div class="pick">
+      <div class="lv">最輕</div>
+      <h3>Swarm</h3>
+      <div class="when">只做一件事：把題目交給對的人</div>
+      <ul>
+        <li>天生適合<b>分流</b></li>
+        <li>刻意做得很小，不是完整的工具</li>
+        <li>需求一長大就得換掉</li>
+      </ul>
+      <div class="eg">適合：只是想試試看交接怎麼運作。</div>
+    </div>
+  </div>
+
+  <div class="callout warn" style="margin-top:20px">
+    不用急著挑工具。Anthropic 自己的說法是，做得好的案例大多<b>沒有用什麼複雜的框架</b>，就是把幾個簡單的做法組起來而已。<br>
+    先用最土的方法把流程跑通，卡住了再去找工具。反過來先挑工具再想要做什麼，通常都會被工具綁住。
+  </div>
+</section>
+
+<footer>
+  <p><b>整頁只有一個重點：</b>先問「這題切得開嗎」，再問「值不值得花 15 倍」。<br>
+  兩題都是「是」才組大軍。有一題是「否」，一個 AI 加上把話講清楚，通常更好。</p>
+  <p class="cred">來源：Anthropic 的 <a href="https://www.anthropic.com/engineering/multi-agent-research-system">多代理研究系統工程筆記</a>與 <a href="https://www.anthropic.com/research/building-effective-agents">Building Effective Agents</a>；失敗分類取自論文 <a href="https://arxiv.org/abs/2503.13657">Why Do Multi-Agent LLM Systems Fail?</a>（1600 多筆執行紀錄、7 個框架）；Mixture-of-Agents 數字取自該論文於 ICLR 2025 發表的版本。<br>
+  <a href="./">← 回目錄</a></p>
+</footer>
+
+</div>
+
+<script>
+const WAYS = {
+  chain:{ n:"接力", en:"Prompt Chaining",
+    shape:"A ──▶ B ──▶ C ──▶ 完成\n每個人只做一段，做完交給下一個",
+    how:"把工作切成固定的幾步，一個 AI 做完一步，把結果交給下一個。像工廠生產線。",
+    win:"步驟<b>每次都一樣</b>的工作。例如：先抓資料、再整理格式、再寫成文章。每一步變簡單了，做對的機率就高。",
+    lose:"步驟沒辦法事先講死的時候。另外有個地方會踩到：<b>前面錯了，後面就全部照著錯下去</b>，而且沒人會發現。",
+    cost:"最便宜的一種。人數等於步驟數，不會爆增。" },
+
+  route:{ n:"分流", en:"Routing",
+    shape:"        ┌─▶ 專門處理退貨的\n題目 ──▶ 看一下 ─┼─▶ 專門處理技術問題的\n        └─▶ 專門處理帳務的",
+    how:"先有一個 AI 看題目屬於哪一類，再丟給對應的專門處理。像醫院掛號櫃檯。",
+    win:"題目<b>種類明確</b>、而且每一類要用完全不同的處理方式。分對了，每個專門處理的就能寫得很專精。",
+    lose:"類別界線模糊的時候。<b>分錯就整題錯</b>，而且後面那個專家再厲害也救不回來。",
+    cost:"很便宜。只是多一次「看一眼」的成本。" },
+
+  split:{ n:"分頭做", en:"Parallelization（Sectioning）",
+    shape:"        ┌─▶ 查 A 領域 ─┐\n題目 ──┼─▶ 查 B 領域 ─┼─▶ 拼起來\n        └─▶ 查 C 領域 ─┘",
+    how:"把一個大工作<b>事先</b>切成幾塊互不相干的小工作，同時派出去做，做完拼回來。像分組報告。",
+    win:"要查的方向多、而且<b>彼此不相干</b>。六個同時做就是六倍快，這是速度提升最直接的一種。",
+    lose:"切不乾淨的時候。<b>兩個人做同一件事、有些角落沒人管</b>，拼起來看起來很完整，其實有洞。",
+    cost:"人數乘上去。六個人就是大約六倍的量，但時間只要六分之一。" },
+
+  vote:{ n:"投票", en:"Parallelization（Voting）",
+    shape:"        ┌─▶ 做法 1 ─▶ 答案 A ─┐\n同一題 ─┼─▶ 做法 2 ─▶ 答案 A ─┼─▶ 取多數：A\n        └─▶ 做法 3 ─▶ 答案 B ─┘",
+    how:"<b>同一題</b>讓好幾個各做一次，看哪個答案出現最多次。像不放心去問三家醫院。",
+    win:"答案容易出錯、而且<b>對錯很明確</b>的題目。例如判斷一段程式有沒有漏洞、一則留言算不算違規。",
+    lose:"開放性的問題，因為根本沒有「多數答案」可以數。還有一個風險：<b>大家可能一起錯</b>，畢竟是同一個模型。",
+    cost:"跑幾次就是幾倍。要提高信心通常三到五次，成本很好估。",
+    more:"<b>進階版叫 Mixture-of-Agents。</b>不是同一個模型跑很多次，而是<b>找好幾個不同家的模型</b>各給一份答案，再讓一個負責合併成一份。因為模型不一樣，犯的錯也不一樣，比較不會一起錯。在 AlpacaEval 2.0 這個測驗上，六個開源模型這樣組起來拿到 65.1 分，贏過單獨的 GPT-4 Omni 的 57.5 分，而且每一個開源模型單獨都比 GPT-4 Omni 弱。" },
+
+  boss:{ n:"主管派工", en:"Orchestrator-Workers",
+    shape:"      主管（看完題目才決定）\n         │\n  ┌──────┼──────┐\n查什麼   查什麼   查什麼\n  └──────┼──────┘\n      主管整合",
+    how:"跟「分頭做」很像，差別是<b>子任務不是事先定好的</b>。主管看完題目才當場決定要派幾個人、每個人查什麼。",
+    win:"<b>你事先不知道要查什麼</b>的題目。例如「找出這個產業有哪些沒被注意到的風險」，題目本身就不知道會岔出幾個方向。",
+    lose:"工作內容其實固定的時候，那用「分頭做」就好，不用讓主管多想一輪。<b>主管也是單點</b>，它想歪，全隊跟著歪。",
+    cost:"最貴的常見做法之一。Anthropic 自己的研究系統用的就是這種，實測吃掉一般聊天的 15 倍。" },
+
+  debate:{ n:"辯論", en:"Debate / Multi-Agent Debate",
+    shape:"各自先給答案\n     ↓\n互相看對方的答案\n     ↓\n反駁、修正自己的\n     ↓\n收斂成一個結論",
+    how:"每個先獨立給答案，然後<b>互相看對方的</b>，可以反駁、也可以修正自己。來回幾輪之後收斂。",
+    win:"題目<b>有爭議、答案不只一種</b>、而且錯了代價很高。多一道互相檢查，常常比多收一倍資料有用。",
+    lose:"事實很明確的題目，辯論只是浪費。真正陰險的失敗是<b>互相說服到一起錯</b>，最後很有自信地給你一個錯答案。",
+    cost:"最貴。人數乘上輪數，跑三輪就是三倍再乘人數。" },
+
+  critic:{ n:"寫手＋評審", en:"Evaluator-Optimizer",
+    shape:"寫手產出 ──▶ 評審挑毛病\n   ▲                │\n   └──── 照著改 ◀───┘\n（改到過關才放行）",
+    how:"一個負責產出，另一個<b>專門挑毛病</b>，把意見丟回去改，來回到過關為止。像編輯台。",
+    win:"<b>好壞標準講得出來</b>的工作：翻譯、寫文案、寫程式。人類自己看過一遍就會想改的東西，通常都適合。",
+    lose:"沒有明確標準的時候，評審會給出模稜兩可的意見，然後<b>無限迴圈改不完</b>。一定要設「最多改幾輪」。",
+    cost:"每多一輪就多一次的量。通常兩到三輪就收斂，算好控制。" },
+
+  tree:{ n:"層級", en:"Hierarchical",
+    shape:"        總負責\n      ┌───┴───┐\n    主管A    主管B\n   ┌─┴─┐    ┌─┴─┐\n  做事 做事  做事 做事",
+    how:"主管上面還有主管。每個主管管一群做事的，上面再有一個總負責統籌。就是一間公司的組織圖。",
+    win:"<b>幾十個以上</b>的分身、而且分成好幾個完全不同的領域時。單一個主管管不動那麼多人。",
+    lose:"人數少的時候完全不需要。<b>一般人做的東西幾乎用不到這種</b>，先當作知道有這回事就好。",
+    cost:"最複雜也最難debug。每多一層，錯誤就多一層可以躲的地方。" },
+};
+
+const card = document.getElementById("card");
+document.querySelectorAll(".part").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const w = WAYS[btn.dataset.p];
+    document.querySelectorAll(".part").forEach(x=>x.classList.toggle("on", x === btn));
+    card.innerHTML = `
+      <div class="d-top"><span class="d-name">${w.n}</span><span class="d-tag">${w.en}</span></div>
+      <div class="d-shape">${w.shape}</div>
+      <p class="d-lede">${w.how}</p>
+      <div class="d-grid">
+        <div class="d-cell"><dt>什麼時候贏</dt><dd>${w.win}</dd></div>
+        <div class="d-cell"><dt>什麼時候別用</dt><dd>${w.lose}</dd></div>
+        <div class="d-cell"><dt>大概多貴</dt><dd>${w.cost}</dd></div>
+      </div>
+      ${w.more ? `<div class="callout ok" style="margin-top:14px">${w.more}</div>` : ""}`;
+    if(window.matchMedia("(max-width:860px)").matches)
+      card.scrollIntoView({block:"nearest", behavior:"smooth"});
+  });
+});
+</script>

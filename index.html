@@ -33,7 +33,7 @@ h1.home{font-size:clamp(38px,8vw,64px)}
 }
 .card ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:5px}
 .card li{font-size:13.5px; color:var(--ink-2); padding-left:15px; position:relative}
-.card li::before{content:"—"; position:absolute; left:0; color:var(--ink-3)}
+.card li::before{content:"·"; position:absolute; left:0; color:var(--ink-3)}
 .how{padding:44px 0 0; border-top:1px solid var(--line); margin-top:52px}
 .soon{
   font-size:13.5px; color:var(--ink-3);
@@ -49,6 +49,10 @@ h1.home{font-size:clamp(38px,8vw,64px)}
     <a href="request.html">按鈕之旅</a>
     <a href="project.html">專案資料夾</a>
     <a href="skills.html">Claude 技能</a>
+    <a href="agents.html">AI 大軍</a>
+    <a href="sysdesign.html">系統設計</a>
+    <a href="mlsystem.html">ML 系統</a>
+    <a href="mldesign.html">面試怎麼答</a>
   </div>
 </div></nav>
 
@@ -57,8 +61,6 @@ h1.home{font-size:clamp(38px,8vw,64px)}
 <header class="home">
   <div class="eyebrow">給看不懂術語的人</div>
   <h1 class="home">tech-notes</h1>
-  <p class="sub">IT 的東西不是難，是<b>沒人用你聽得懂的話講過一次</b>。<br>
-  這裡每一頁只解決一個「我看不懂」的具體場面。</p>
 </header>
 
 <div class="cards">
@@ -122,6 +124,58 @@ h1.home{font-size:clamp(38px,8vw,64px)}
       <li>15 分鐘做出第一個 skill，指令可複製</li>
       <li>打包成 plugin 放 GitHub 給別人裝</li>
       <li>五個一定會踩的坑</li>
+    </ul>
+  </a>
+
+  <a class="card wide" href="agents.html">
+    <div class="card-n">06</div>
+    <h2>幾個 AI 一起做事，有幾種組法</h2>
+    <p class="pain">「大家都說要派很多 AI，但到底怎麼派？」</p>
+    <ul>
+      <li>八種組法：接力、分流、分頭做、投票</li>
+      <li>主管派工、辯論、寫手加評審、層級</li>
+      <li>兩套最常被比的做法，差在賭什麼</li>
+      <li>好 90.2%，但吃 15 倍（Anthropic 實測）</li>
+      <li>四種情況派再多人也沒用</li>
+    </ul>
+  </a>
+
+  <a class="card wide" href="sysdesign.html">
+    <div class="card-n">07</div>
+    <h2>系統設計的基本元件與取捨</h2>
+    <p class="pain">「大家都說要加快取加佇列，但什麼時候該加？」</p>
+    <ul>
+      <li>從一台機器到五億使用者，八次撞牆</li>
+      <li>每次撞牆加什麼零件、為什麼是這時候</li>
+      <li>四個要先做的取捨</li>
+      <li>短網址／聊天室／動態牆／通知系統</li>
+      <li>估算時記起來很好用的十個數字</li>
+    </ul>
+  </a>
+
+  <a class="card" href="mlsystem.html">
+    <div class="card-n">08</div>
+    <h2>一個 AI 產品，從資料到上線</h2>
+    <p class="pain">「聽得懂每個字，但不知道它們怎麼串起來」</p>
+    <ul>
+      <li>可以點的 ML 系統架構圖</li>
+      <li>離線訓練與線上服務兩條線</li>
+      <li>六個要先做的取捨</li>
+      <li>RAG 六站流程，每站會出什麼錯</li>
+      <li>30+ 名詞解碼器</li>
+    </ul>
+  </a>
+
+  <a class="card" href="mldesign.html">
+    <div class="card-n">09</div>
+    <h2>ML System Design 的 45 分鐘</h2>
+    <p class="pain">「知道要答什麼，但不知道怎麼開場」</p>
+    <ul>
+      <li>45 分鐘五段怎麼分配</li>
+      <li>開場一定要問的八個問題</li>
+      <li>容量估算，算式可以直接抄</li>
+      <li>六題常考的完整答法</li>
+      <li>最常被追問的六題怎麼答</li>
     </ul>
   </a>
 

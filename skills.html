@@ -94,7 +94,7 @@
 }
 .pick ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:5px}
 .pick li{font-size:13.5px; color:var(--ink-2); padding-left:15px; position:relative; line-height:1.6}
-.pick li::before{content:"—"; position:absolute; left:0; color:var(--ink-3)}
+.pick li::before{content:"·"; position:absolute; left:0; color:var(--ink-3)}
 .pick .eg{font-size:12.5px; color:var(--ink-3); border-top:1px solid var(--line-soft); padding-top:10px; margin-top:auto}
 
 /* ── 04/05 可複製的程式碼 ── */
@@ -153,6 +153,10 @@
     <a href="request.html">按鈕之旅</a>
     <a href="project.html">專案資料夾</a>
     <a href="skills.html" aria-current="page">Claude 技能</a>
+    <a href="agents.html">AI 大軍</a>
+    <a href="sysdesign.html">系統設計</a>
+    <a href="mlsystem.html">ML 系統</a>
+    <a href="mldesign.html">面試怎麼答</a>
   </div>
 </div></nav>
 
@@ -161,13 +165,11 @@
 <header>
   <div class="eyebrow">Claude 技能</div>
   <h1>自己做一個 Claude 技能</h1>
-  <p class="sub">你有沒有跟 AI 重複交代過同一件事三次以上？「不要用 emoji」「先問我再動手」——<b>這種話可以只講一次</b>。<br>
-  方法是幫它寫一份「技能」。技能不是程式，<b>是一個純文字檔，用記事本就能寫</b>。</p>
 </header>
 
 <section>
   <div class="sec-head"><span class="sec-num">01</span><h2>一個外掛裡面，最多只有五種零件</h2></div>
-  <p class="sec-lede">名字看起來很多：skill、command、agent、hook、MCP。<b>它們的差別只有一個——誰去叫它。</b>點左邊任何一個看說明。</p>
+  <p class="sec-lede">名字看起來很多：skill、command、agent、hook、MCP。<b>它們的差別只有一個：誰去叫它。</b>點左邊任何一個看說明。</p>
 
   <div class="split">
     <div class="parts" id="parts">
@@ -200,13 +202,124 @@
 
   <div class="callout" style="margin-top:24px">
     <b>一句話分辨：</b>skill 是<b>知識</b>（要用的時候自己想起來）、command 是<b>按鈕</b>（你按才動）、agent 是<b>員工</b>（派出去自己做完）、hook 是<b>鬧鐘</b>（時間到自己響）、MCP 是<b>插座</b>（接外面的東西）。<br>
-    <b>plugin（外掛）不是第六種零件</b>——它只是一個把上面五種裝在一起、可以整包送人的資料夾。
+    <b>plugin（外掛）不是第六種零件</b>，它只是一個把上面五種裝在一起、可以整包送人的資料夾。
+  </div>
+
+  <h3 style="font-size:17px;margin:30px 0 8px">那它們實際上住在哪？</h3>
+  <p class="what" style="margin-bottom:14px">五種零件不是抽象概念，<b>每一種都是硬碟上一個看得到的檔案</b>。下面就是實際的 <code>~/.claude/</code> 資料夾長什麼樣。<b>前三種各有自己的資料夾，後兩種是寫進設定檔裡的一段文字。</b></p>
+
+  <div class="panel-grid">
+    <div class="tree">~/.claude/              <i>← 個人設定，所有專案通用</i>
+├── <b>skills/</b>            <i>← skill 全部放這裡</i>
+│   └── tw-tech-blog-voice/  <i>← 一個技能 ＝ 一個資料夾</i>
+│       ├── SKILL.md         <i>← 檔名固定，全大寫</i>
+│       └── word-swaps.md    <i>← 要查才讀的長資料</i>
+│
+├── <b>commands/</b>          <i>← command 全部放這裡</i>
+│   └── review-code.md   <i>← 打 /review-code 跑的就是它</i>
+│
+├── <b>agents/</b>            <i>← agent 全部放這裡</i>
+│   └── coder.md         <i>← 派出去寫程式的那個分身</i>
+│
+└── <b>settings.json</b>      <i>← hook 寫在這個檔案裡面</i>
+
+專案資料夾/
+└── <b>.mcp.json</b>          <i>← MCP 接哪些外部服務，寫這裡</i></div>
+
+    <div class="read">
+      <h3>看這張圖要抓三件事</h3>
+      <p><b>一、skill 是資料夾，command 跟 agent 是單一檔案。</b>所以 skill 可以帶著附件（像上面的 <code>word-swaps.md</code>），另外兩個不行，只能一個 <code>.md</code> 寫完。</p>
+      <p><b>二、hook 跟 MCP 沒有自己的資料夾。</b>它們是設定檔裡的一段文字，不是獨立檔案。這也是為什麼它們最容易寫錯又最難查，因為錯了不會有檔案不見，只是安靜地不動作。</p>
+      <p style="margin-bottom:0"><b>三、放在 <code>~/.claude/</code> 是全域，放在專案裡的 <code>.claude/</code> 是只有那個專案有。</b>兩邊結構一模一樣。自己的習慣放全域，跟團隊共用的規矩放專案裡跟著 Git 走。</p>
+    </div>
+  </div>
+
+  <h3 style="font-size:17px;margin:30px 0 8px">agent 要怎麼做？跟 skill 一樣嗎？</h3>
+  <p class="what" style="margin-bottom:14px">寫法幾乎一樣，都是一個純文字檔加上開頭那塊標籤。<b>差別只有兩個：多一行 <code>tools</code>，以及內文是寫給「另一個新開的 Claude」看的。</b></p>
+
+  <div class="panel-grid">
+    <div class="tree"><b>---</b>
+<b>name:</b> coder
+<b>description:</b> 要新建或修改程式碼    <i>← 跟 skill 一樣</i>
+  的任務都派給它。
+<b>tools:</b> Read, Write, Edit, Bash    <i>← skill 沒有這行</i>
+<b>---</b>
+
+你是本團隊的工程師，務實、直言、    <i>← 這裡開始是</i>
+極度重視程式碼品質⋯⋯              <i>   它的角色設定</i>
+
+<i>存成 ~/.claude/agents/coder.md，重開就生效</i></div>
+
+    <div class="read">
+      <h3>最重要的是 tools 那行</h3>
+      <p><b>agent 給它什麼工具，它就只能用什麼。</b>上面這個有 <code>Write</code> 跟 <code>Edit</code>，所以它改得動檔案。如果你做一個只負責查資料的 agent，就<b>不要給它 Write</b>，那它連想改也改不了。</p>
+      <p><b>這是 skill 做不到的事。</b>skill 是規則，規則可以被說服；agent 沒有那個工具就是沒有，講什麼都沒用。</p>
+      <p style="margin-bottom:0"><b>另一個差別是記憶。</b>skill 在你現在的對話裡，看得到前面聊過什麼。agent 是<b>開一個全新的</b>，只看得到你派給它的那段話，做完只回報結論。好處是過程不佔你的畫面，壞處是<b>你要交代得夠清楚</b>，它沒辦法回頭問你。</p>
+    </div>
   </div>
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">02</span><h2>拆三個真的來看</h2></div>
-  <p class="sec-lede">下面三個是網路上抓得到的現成技能，任何人都能裝。<b>我把資料夾打開數過——檔案數和行數都是真的。</b>它們剛好代表三種完全不同的做法。</p>
+  <div class="sec-head"><span class="sec-num">02</span><h2>常見的 Skill 架構</h2></div>
+  <p class="sec-lede">常見的技能架構大致有四種，差別在於<b>除了規則以外還帶了什麼</b>。</p>
+
+  <div class="picks" style="grid-template-columns:repeat(2,1fr)">
+    <div class="pick">
+      <div class="lv">最常見</div>
+      <h3>只有規則</h3>
+      <div class="when">資料夾裡就一個 <code>SKILL.md</code>，沒有別的</div>
+      <ul>
+        <li>它不「做」事，只是規定 Claude 要怎麼做</li>
+        <li>可以寫得很長，最長的一個 <b>1465 行</b>，一行程式都沒有</li>
+        <li>沒有程式，所以不會壞、不用維護</li>
+      </ul>
+      <div class="eg">例：<code>imagegen-frontend-web</code>（987 行，規定網頁設計稿長什麼樣）、<code>ponytail</code>（100 行，逼它寫最少的程式）</div>
+    </div>
+
+    <div class="pick">
+      <div class="lv">內容太多時</div>
+      <h3>規則 ＋ 查表</h3>
+      <div class="when">多一個 <code>references/</code> 資料夾</div>
+      <ul>
+        <li>常用的規則寫在 <code>SKILL.md</code>，<b>厚重的對照表另外放</b></li>
+        <li>要查的時候才去讀，平常不佔位子</li>
+        <li>怎麼分？這份資料你自己也不會背，只會查，那就放這裡</li>
+      </ul>
+      <div class="eg">例：<code>elon-musk-perspective</code>（429 行規則 ＋ 6 個檔的訪談語料）、<code>3-statement-model</code>（408 行 ＋ 財報範本）</div>
+    </div>
+
+    <div class="pick">
+      <div class="lv">不能靠猜時</div>
+      <h3>規則 ＋ 程式</h3>
+      <div class="when">多一個 <code>scripts/</code> 資料夾</div>
+      <ul>
+        <li>裡面是真的會被執行的程式碼</li>
+        <li>用在<b>不能靠猜的事</b>：算數字、轉檔、抓網頁</li>
+        <li>代價是它會壞，環境變了要修</li>
+      </ul>
+      <div class="eg">例：<code>watch</code>（下載影片、切影格、抓字幕）、<code>dcf-model</code>（1264 行 ＋ 驗算程式）</div>
+    </div>
+
+    <div class="pick">
+      <div class="lv">最進階</div>
+      <h3>會派分身</h3>
+      <div class="when">內容裡會叫 Claude 開別的 Claude 去做</div>
+      <ul>
+        <li>把大工作拆給好幾個分身<b>同時做</b></li>
+        <li>每個分身只回報結論，不佔你的畫面</li>
+        <li>用在「同一件事要做很多次」或「要交叉驗證」</li>
+      </ul>
+      <div class="eg">例：<code>verify-answers</code>（派一批分身各自重算答案再比對）、<code>faceless-explainer</code>（分鏡、配音、字幕分頭做）</div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin:20px 0 26px">
+    <b>怎麼選：</b>從第一種開始，<b>不夠再往下加</b>。大部分技能到最後都還只是一個 <code>.md</code> 檔，一輩子沒用到後面三種。<br>
+    加東西的順序是固定的：規則寫不清楚 → 加 <code>references/</code>；有事情不能靠猜 → 加 <code>scripts/</code>；同一件事要重複做很多次 → 才需要派分身。
+  </div>
+
+  <h3 style="font-size:17px;margin:0 0 8px">挑三個拆開來看</h3>
+  <p class="what" style="margin-bottom:16px">下面三個是網路上抓得到的現成技能，任何人都能裝。它們剛好一個是「只有規則」，一個是「規則＋程式」，一個是把很多 skill 包成一整包。</p>
 
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" data-t="a" aria-selected="true">imagegen<small>純規則型</small></button>
@@ -234,8 +347,9 @@
         <div class="pre">一個 section（網頁的一個區塊）就出一張圖。
 8 個 section 就是 8 張圖。永不合併成一張。
 這條規則蓋過模型本來想偷懶的預設行為。</div>
-        <p style="margin-top:14px">為什麼要寫得這麼兇？因為 Claude 有自己的懶惰習慣（它會想把 8 個區塊擠成一張長圖）。<b>這種外掛的價值不在功能，在於「把品味變成不能討價還價的條文」</b>——像是「左文字右圖片是最爛的 AI 老套版型，不准當第一選擇」。</p>
-        <div class="steal"><b>你可以偷學：</b>如果你每次都要重複糾正 Claude 同一件事（「不要用 emoji」「表格要有單位」「先問我再動手」），那就是一個 skill，而且你今天就能做完——它就是一個 <code>.md</code> 檔。</div>
+        <p style="margin-top:14px">為什麼要寫得這麼兇？因為 Claude 有自己的懶惰習慣（它會想把 8 個區塊擠成一張長圖）。<b>這種外掛的價值不在功能，在於「把品味變成不能討價還價的條文」</b>，像是「左文字右圖片是最爛的 AI 老套版型，不准當第一選擇」。</p>
+        <div class="steal"><b>你可以偷學：</b>真正值得做成 skill 的，是那種<b>你心裡有一套標準、但每次都要重講一遍</b>的事：做網站的版型品味、影片要抓哪幾種畫面、報告一定要有哪幾段、資料要驗到什麼程度才算數。<br>
+        反過來說，<b>一句話交代得完的小事就不要做成 skill</b>（「這次不要用 emoji」直接講就好）。大概的門檻是：你講過三次以上，而且每次都要講超過五句，才值得寫成一份。</div>
       </div>
     </div>
   </div>
@@ -275,7 +389,7 @@
          用剛剛那些數字當假設去估值
 第 4 步 → 拿兩邊結果互相對照，差太多就回頭查</div>
         <p style="margin-top:14px">為什麼要拆？因為 <b>skill 是可以被重複叫的零件</b>。<code>comps-analysis</code> 這個技能，<code>/dcf</code> 會用、<code>/comps</code> 也會用，寫一次兩邊共用。</p>
-        <p><code>.mcp.json</code> 那 11 筆是外部金融資料服務的網址（S&amp;P、Moody's、PitchBook 這種）。這個檔案就是插座——<b>它自己沒有資料，只是寫下「要錢的話去這些地方拿」</b>。</p>
+        <p><code>.mcp.json</code> 那 11 筆是外部金融資料服務的網址（S&amp;P、Moody's、PitchBook 這種）。這個檔案就是插座。<b>它自己沒有資料，只是寫下「要錢的話去這些地方拿」</b>。</p>
         <div class="steal"><b>你可以偷學：</b>需要多步驟、每步都要你確認的工作，用 command 寫流程；每一步真正的專業知識寫成獨立 skill。<b>流程和知識分開，改一邊不會弄壞另一邊。</b></div>
       </div>
     </div>
@@ -310,7 +424,7 @@
         <h3>程式做苦工，SKILL.md 只寫「怎麼用這些程式」</h3>
         <p>Claude 本身看不到影片。這個外掛是用 Python 程式把影片下載、切成一張張圖片、把聲音轉成文字，<b>再把成果交給 Claude 看</b>。</p>
         <p>所以 268 行的 SKILL.md 幾乎全部在寫操作手冊，例如：「先跑檢查程式，<b>回傳 2 代表工具沒裝、3 代表沒設金鑰、4 代表兩個都缺</b>，各自要做什麼」。<b>真正的活是程式在幹，SKILL.md 只負責看懂回傳值然後決定下一步。</b></p>
-        <p>那個 hook 是 <code>SessionStart</code>（每次開新對話時自動跑），5 秒內檢查 <code>ffmpeg</code> 這些工具在不在。<b>沒問題就完全不出聲</b>——這是好 hook 的樣子，只有壞掉才講話。</p>
+        <p>那個 hook 是 <code>SessionStart</code>（每次開新對話時自動跑），5 秒內檢查 <code>ffmpeg</code> 這些工具在不在。<b>沒問題就完全不出聲</b>，這是好 hook 的樣子，只有壞掉才講話。</p>
         <div class="steal"><b>你可以偷學：</b>會算錯的事情不要交給 Claude 用想的。<b>數字、格式轉換、檔案處理，寫成一支 script 讓它每次跑出一樣的結果</b>，SKILL.md 只寫什麼時候跑、跑完怎麼判讀。</div>
       </div>
     </div>
@@ -319,15 +433,15 @@
 
 <section>
   <div class="sec-head"><span class="sec-num">03</span><h2>你要做哪一種？</h2></div>
-  <p class="sec-lede">不要一開始就蓋大的。<b>從最左邊開始，不夠再往右長。</b>大部分人的需求停在第一格就結束了。</p>
+  <p class="sec-lede"><b>從最左邊開始，不夠再往右長。</b></p>
 
   <div class="picks">
     <div class="pick">
       <div class="lv">Level 1</div>
       <h3>一個 SKILL.md</h3>
-      <div class="when">「我每次都要重複交代同一件事」</div>
+      <div class="when">「有一套標準，但每次都要重講一遍」</div>
       <ul>
-        <li>寫作口氣、格式規定</li>
+        <li>做網站的版型品味</li>
         <li>公司內部的做事規矩</li>
         <li>某個領域的判斷標準</li>
       </ul>
@@ -364,7 +478,40 @@
 
 <section>
   <div class="sec-head"><span class="sec-num">04</span><h2>15 分鐘做出第一個 skill</h2></div>
-  <p class="sec-lede">下面每一段都可以直接複製貼上。做完你就有一個<b>會自己跳出來幫你的</b>技能。</p>
+  <p class="sec-lede">下面每一段都可以直接複製貼上。</p>
+
+  <h3 style="font-size:16px;margin:0 0 10px">先看你等一下會做出什麼</h3>
+  <p class="what" style="margin-bottom:14px">一個技能就是<b>一個資料夾</b>。裡面四種東西，<b>只有 SKILL.md 是必要的</b>，其他三個是東西變多之後才需要。<b>第一次做只會有一個檔案。</b></p>
+
+  <div class="panel-grid" style="margin-bottom:26px">
+    <div class="tree">~/.claude/skills/          <i>← 放這裡的技能，所有專案都用得到</i>
+└── my-first-skill/       <i>← 資料夾名字就是技能的名字</i>
+    ├── <b>SKILL.md</b>          <i>← 唯一必要的檔案。全大寫</i>
+    ├── references/       <i>（選配）查得到就好的長資料</i>
+    │   └── examples.md
+    ├── scripts/          <i>（選配）要算得準、每次一樣的事</i>
+    │   └── check.py
+    └── assets/           <i>（選配）範本、字體、圖檔</i>
+        └── template.docx</div>
+
+    <div class="read">
+      <h3>那個 .md 檔裡面長這樣</h3>
+      <div class="tree" style="margin-bottom:14px"><b>---</b>                           <i>← 三個橫線夾起來的叫 frontmatter</i>
+<b>name:</b> my-first-skill        <i>← 必填。跟資料夾同名</i>
+<b>description:</b> 使用者要寫給客戶  <i>← 必填。這是唯一的開關</i>
+  的信時使用。也在使用者說
+  「幫我寫封信」時使用。
+<b>---</b>                           <i>← frontmatter 到這裡結束</i>
+
+# 寫客戶信                    <i>← 標題，寫給人看的</i>
+
+## 什麼時候用                 <i>← 再講一次觸發時機</i>
+## 規則                       <i>← 你真正想交代的事</i>
+## 產出格式                   <i>← 叫它直接給成品</i></div>
+      <p><b>橫線裡面跟外面，讀的時機完全不一樣。</b>Claude 平常只看得到 frontmatter 那幾行，橫線以下的全文要等它決定「這件事該用這個技能」才會載進去。</p>
+      <p style="margin-bottom:0">所以 <code>description</code> 是整份檔案裡<b>唯一會被無條件讀到的一句話</b>。下面第三步會專門講怎麼寫它。</p>
+    </div>
+  </div>
 
   <div class="steps">
 
@@ -435,7 +582,7 @@ EOF</div>
         <p><b>改完一定要重開 Claude Code</b>，它是開啟時掃一次技能清單，不會邊跑邊發現新檔案。重開後先確認它看得到：</p>
         <div class="pre tpl"><button class="copy" type="button">複製</button><span class="c"># 在 Claude Code 裡面打這行，清單裡要出現 my-first-skill</span>
 /help</div>
-        <p style="margin-top:12px">然後<b>不要直接喊技能名字</b>——那是作弊。講一句真實情境（「幫我寫封信跟客戶說交期要延一週」），看它會不會自己想起來。<b>不會，就是 description 還不夠具體，回上一步改。</b></p>
+        <p style="margin-top:12px">然後<b>不要直接喊技能名字</b>，那是作弊。講一句真實情境（「幫我寫封信跟客戶說交期要延一週」），看它會不會自己想起來。<b>不會，就是 description 還不夠具體，回上一步改。</b></p>
       </div>
     </div>
 
@@ -443,12 +590,13 @@ EOF</div>
       <div class="step-rail"><span class="dot"></span></div>
       <div class="step-body">
         <h3>太長就拆出去<span class="time">之後再說</span></h3>
-        <p>SKILL.md 本文<b>控制在 5000 字以內</b>。超過的部分放進 <code style="font-family:var(--font-mono);font-size:12.5px">references/</code> 資料夾，本文只留一句「詳細對照表看 references/xxx.md」。</p>
-        <div class="pre">my-first-skill/
-├── SKILL.md          <span class="c">← 只留規則和流程</span>
-└── references/
-    └── examples.md   <span class="c">← 20 封範例信，要用才讀</span></div>
-        <p style="margin-top:12px"><b>同一件事不要兩邊都寫。</b>寫在 references 裡就從 SKILL.md 拿掉，不然改了一邊會忘記另一邊。</p>
+        <p>SKILL.md 本文<b>控制在 5000 字以內</b>。太長的東西拆成另一個檔，本文只留一句「詳細對照表看 xxx.md」。</p>
+        <p>舉一個真的會這樣拆的例子。這個技能的工作是讓中文讀起來像台灣人寫的，不像翻譯或 AI 寫的：</p>
+        <div class="pre">tw-tech-blog-voice/
+├── SKILL.md         <span class="c">← 規則本身：口氣、句型、不准用破折號</span>
+└── word-swaps.md    <span class="c">← 80 組中國用語對照表，要查才讀</span></div>
+        <p style="margin-top:12px">為什麼要拆：那 80 組對照表<b>每次都塞進去很浪費</b>，大部分時候根本用不到。所以 SKILL.md 裡只寫「最常漏掉的五個」，剩下留一句「完整對照表看 word-swaps.md」，真的要查的時候它才會去讀。</p>
+        <p style="margin-top:12px"><b>同一件事不要兩邊都寫。</b>寫在另一個檔裡就從 SKILL.md 拿掉，不然改了一邊會忘記另一邊。</p>
       </div>
     </div>
 
@@ -457,7 +605,7 @@ EOF</div>
 
 <section>
   <div class="sec-head"><span class="sec-num">05</span><h2>打包成 plugin，給別人一行指令安裝</h2></div>
-  <p class="sec-lede">skill 只有你自己的電腦有。要送人就得包成 plugin（外掛）——<b>其實就是多兩個 json 檔（一種給機器讀的資料格式）加一個 GitHub repo</b>。</p>
+  <p class="sec-lede">skill 只有你自己的電腦有。要送人就得包成 plugin（外掛）。<b>其實就是多兩個 json 檔（一種給機器讀的資料格式）加一個 GitHub repo</b>。</p>
 
   <div class="steps">
 
@@ -465,7 +613,7 @@ EOF</div>
       <div class="step-rail"><span class="dot"></span><span class="bar"></span></div>
       <div class="step-body">
         <h3>照這個資料夾長相擺<span class="time">5 分鐘</span></h3>
-        <p><b>兩條規則不能破：</b>plugin.json 一定要在 <code style="font-family:var(--font-mono);font-size:12.5px">.claude-plugin/</code> 裡面；其他資料夾一定要在最外層，<b>不能塞進 .claude-plugin/</b>。放錯位置就是整個外掛消失，而且不會報錯。</p>
+        <p><b>兩條規則不能破：</b>plugin.json 一定要在 <code style="font-family:var(--font-mono);font-size:12.5px">.claude-plugin/</code> 裡面；其他資料夾一定要在最外層，<b>不能塞進 .claude-plugin/</b>。放錯位置就是整個外掛消失，而且不會噴任何錯，安安靜靜的。</p>
         <div class="pre">my-plugin/
 ├── .claude-plugin/
 │   ├── plugin.json        <span class="c">← 必要。身分證</span>
@@ -484,7 +632,7 @@ EOF</div>
       <div class="step-rail"><span class="dot"></span><span class="bar"></span></div>
       <div class="step-body">
         <h3>兩個 json 檔<span class="time">3 分鐘</span></h3>
-        <p><b>plugin.json</b> 只有 name 是必填，其他都是給人看的。<b>marketplace.json</b> 是店面目錄——別人是先「加你的店」，再「裝店裡的東西」。</p>
+        <p><b>plugin.json</b> 只有 name 是必填，其他都是給人看的。<b>marketplace.json</b> 是店面目錄，別人是先「加你的店」，再「裝店裡的東西」。</p>
         <div class="pre tpl"><button class="copy" type="button">複製</button><span class="c">// .claude-plugin/plugin.json</span>
 {
   "name": "my-plugin",
@@ -596,7 +744,7 @@ git push -u origin main</div>
         <dt>症狀</dt>
         <dd>Anthropic 官方發布的 <code>financial-analysis</code> 外掛 0.1.1 版，<code>.mcp.json</code> 裡 <code>egnyte</code> 那段結尾少一個逗號，下一段 <code>box</code> 又少一個結尾大括號。整個檔案<b>不是合法 JSON</b>，那 11 個金融資料來源一個都接不上。</dd>
         <dt>原因</dt>
-        <dd>JSON 這種格式，<b>逗號和括號錯一個字元就整份失效</b>，而且它通常不會跳出紅字告訴你——只是安靜地什麼都沒發生。</dd>
+        <dd>JSON 這種格式，<b>逗號和括號錯一個字元就整份失效</b>，而且它通常不會跳出紅字告訴你，只是安靜地什麼都沒發生。</dd>
         <dt>怎麼修</dt>
         <dd class="fix">改完 json 檔就跑一次這行，會直接指出第幾行有問題：
         <div class="pre tpl" style="margin-top:9px"><button class="copy" type="button">複製</button>python3 -m json.tool 你的檔案.json</div></dd>
@@ -611,7 +759,7 @@ git push -u origin main</div>
 </section>
 
 <footer>
-  <p>本頁的檔案結構、行數、外掛版本，都是從<b>這台電腦上實際安裝的外掛</b>數出來的（2026 年 8 月）。<br>
+  <p>本頁的檔案結構、行數、外掛版本，取自<b>實際安裝後的外掛本體</b>（2026 年 8 月）。<br>
   官方外掛會改版，如果你看到的跟這裡不一樣，以你電腦裡的為準。</p>
   <p>字體：資源圓體 Resource Han Rounded TW（思源黑體的圓角繁中版，開源）</p>
   <p class="cred"><a href="https://github.com/hsuiris/tech-notes">github.com/hsuiris/tech-notes</a></p>
@@ -668,8 +816,8 @@ const PARTS = {
     cells: [
       ["長什麼樣", "外掛根目錄一個 .mcp.json，裡面就是一串「服務名字 + 網址」。它自己沒有資料，只是寫下去哪裡拿。"],
       ["跟 skill 差在哪", "skill 是教 Claude 怎麼做事，MCP 是給 Claude 新的手腳。一個是知識，一個是通路。"],
-      ["注意", "多數要登入或 API 金鑰。而且 JSON 格式很脆，逗號漏一個整份失效——官方外掛也發生過（見第 06 節）。"],
-      ["現成的例子", "Notion、Figma、Google Drive 這些服務，都是靠 MCP 接進來的——接好之後你就能叫 AI 去讀你的 Notion 筆記。"]
+      ["注意", "多數要登入或 API 金鑰。而且 JSON 格式很脆，逗號漏一個整份失效，官方外掛也發生過（見第 06 節）。"],
+      ["現成的例子", "Notion、Figma、Google Drive 這些服務，都是靠 MCP 接進來的。接好之後你就能叫 AI 去讀你的 Notion 筆記。"]
     ]
   }
 };

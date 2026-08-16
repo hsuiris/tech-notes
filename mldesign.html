@@ -1,0 +1,357 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面試怎麼答 · tech-notes</title>
+<meta name="description" content="ML System Design 面試的 45 分鐘怎麼分配、一定要先問的問題、容量估算怎麼算，以及推薦系統、文件問答、內容審核、搜尋排序、詐欺偵測、客服 AI 助理六題的完整答法。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
+<link rel="stylesheet" href="assets/base.css">
+<style>
+/* 時間軸 */
+.clock{display:grid; grid-template-columns:repeat(5,1fr); gap:2px; margin-bottom:18px}
+@media (max-width:760px){.clock{grid-template-columns:1fr}}
+.ck{
+  background:var(--paper-2); border:1px solid var(--line); padding:12px 13px;
+  display:flex; flex-direction:column; gap:5px;
+}
+.ck:first-child{border-radius:4px 0 0 4px}
+.ck:last-child{border-radius:0 4px 4px 0}
+@media (max-width:760px){.ck,.ck:first-child,.ck:last-child{border-radius:4px}}
+.ck .m{font-family:var(--font-mono); font-size:11px; color:var(--accent); letter-spacing:.08em}
+.ck .t{font-size:14px; font-weight:700; line-height:1.45}
+.ck .d{font-size:12.5px; color:var(--ink-2); line-height:1.6}
+
+/* 問題清單 */
+.asks{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+@media (max-width:860px){.asks{grid-template-columns:1fr}}
+.ask{
+  border:1px solid var(--line); border-left:3px solid var(--accent);
+  border-radius:4px; background:var(--paper-2); padding:15px 18px 17px;
+}
+.ask h3{font-size:15px; margin-bottom:7px}
+.ask p{margin:0 0 7px; font-size:13.5px; color:var(--ink-2); line-height:1.7}
+.ask p:last-child{margin-bottom:0}
+.ask .why{color:var(--ink-3); font-size:12.5px}
+
+/* 算式 */
+.calc{
+  font-family:var(--font-mono); font-size:12.5px; line-height:2;
+  background:var(--paper-3); padding:15px 17px; border-radius:4px;
+  overflow-x:auto; white-space:pre; color:var(--ink); margin:0 0 14px;
+}
+.calc i{font-style:normal; color:var(--ink-3)}
+.calc b{color:var(--accent); font-weight:700}
+
+/* 三題分頁 */
+.tabs{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px}
+.tab{
+  font-family:var(--font-cn); font-size:13.5px; padding:8px 14px;
+  border:1px solid var(--line); background:var(--paper-2); color:var(--ink-2);
+  border-radius:3px; cursor:pointer; transition:all .13s; line-height:1.4;
+}
+.tab small{display:block; font-size:11px; color:var(--ink-3); margin-top:1px}
+.tab:hover{border-color:var(--accent); color:var(--accent)}
+.tab[aria-selected="true"]{background:var(--accent); border-color:var(--accent); color:var(--on-accent)}
+.tab[aria-selected="true"] small{color:var(--on-accent); opacity:.75}
+.panel[hidden]{display:none}
+.qa{display:flex; flex-direction:column; gap:14px}
+.qa > div{
+  border:1px solid var(--line); border-radius:4px; background:var(--paper-2);
+  padding:15px 18px 17px;
+}
+.qa dt{
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.13em;
+  color:var(--ink-3); text-transform:uppercase; margin-bottom:6px;
+}
+.qa dd{margin:0; font-size:14px; color:var(--ink-2); line-height:1.75}
+.qa dd b{color:var(--ink)}
+.qa dd code{
+  font-family:var(--font-mono); font-size:12.5px; background:var(--paper-3);
+  padding:1px 5px; border-radius:3px; color:var(--ink);
+}
+
+/* 追問 */
+.fu{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); border-radius:4px; overflow:hidden}
+.fu > div{background:var(--paper-2); padding:14px 16px}
+.fu .q{font-size:14.5px; font-weight:700; margin-bottom:6px}
+.fu .a{font-size:13.5px; color:var(--ink-2); line-height:1.7}
+.fu .a b{color:var(--ink)}
+</style>
+
+<nav class="topnav"><div class="topnav-in">
+  <a class="brand" href="./">tech-notes</a>
+  <div class="navlinks">
+    <a href="architecture.html">架構圖</a>
+    <a href="errors.html">錯誤訊息</a>
+    <a href="request.html">按鈕之旅</a>
+    <a href="project.html">專案資料夾</a>
+    <a href="skills.html">Claude 技能</a>
+    <a href="agents.html">AI 大軍</a>
+    <a href="sysdesign.html">系統設計</a>
+    <a href="mlsystem.html">ML 系統</a>
+    <a href="mldesign.html" aria-current="page">面試怎麼答</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">面試怎麼答</div>
+  <h1>ML System Design 的 45 分鐘</h1>
+</header>
+
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><h2>時間怎麼分配</h2></div>
+  <p class="sec-lede">常見的建議是六個階段。以 45 分鐘計算，大致的分法如下。</p>
+
+  <div class="clock">
+    <div class="ck">
+      <span class="m">0 到 8 分</span>
+      <span class="t">問清楚題目</span>
+      <span class="d">先別畫圖。把要做什麼、給誰用、多少量、什麼算成功問清楚。</span>
+    </div>
+    <div class="ck">
+      <span class="m">8 到 15 分</span>
+      <span class="t">資料與特徵</span>
+      <span class="d">資料哪裡來、有沒有標註、要餵哪些欄位給模型。</span>
+    </div>
+    <div class="ck">
+      <span class="m">15 到 25 分</span>
+      <span class="t">模型與評估</span>
+      <span class="d">先講最簡單的做法，再講進階版。說明用什麼指標判斷好壞。</span>
+    </div>
+    <div class="ck">
+      <span class="m">25 到 38 分</span>
+      <span class="t">上線與監控</span>
+      <span class="d">怎麼服務、多快、怎麼確認新版比舊版好、退步了怎麼發現。</span>
+    </div>
+    <div class="ck">
+      <span class="m">38 到 45 分</span>
+      <span class="t">追問</span>
+      <span class="d">留時間給面試官問。這一段常常決定最後評分。</span>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <b>近年的評分重點有變。</b>相較於架構圖畫得漂不漂亮，面試官更在意<b>成本、延遲、安全防護、監控</b>這幾件事有沒有講到。<br>
+    另外，現在很多場次會加一題跟生成式 AI 有關的：用大型語言模型、檢索、或是讓 AI 代替使用者去做事。
+  </div>
+
+  <div class="callout ok" style="margin-top:14px">
+    最常見的扣分有三種。第一種是<b>還沒問清楚就開始畫圖</b>，這個最傷，因為畫出來的可能根本不是對方要的。再來是<b>一開口就講最複雜的做法</b>，正確的順序是先給一個簡單能動的版本，再說什麼情況下要升級。最後一種比較隱形：<b>講完模型就結束了</b>，資料怎麼進來、怎麼監控、退步了怎麼辦，一個字都沒提。這些佔的分數其實不比模型少。
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>開場一定要問的八個問題</h2></div>
+  <p class="sec-lede">這八題問完，整套設計的方向大致就定了。</p>
+
+  <div class="asks">
+    <div class="ask">
+      <h3>1. 這個功能給誰用，長在哪裡？</h3>
+      <p>是 App 首頁的推薦位，還是後台給客服看的清單？</p>
+      <p class="why">用途決定延遲要求。給使用者看的通常要幾百毫秒內，給後台看的可以慢很多。</p>
+    </div>
+    <div class="ask">
+      <h3>2. 成功長什麼樣子？</h3>
+      <p>要拉高點擊率、降低客訴、還是減少人工審核的工時？</p>
+      <p class="why">這決定用什麼指標評估。沒問清楚就會做出「準確率很高但業務沒感覺」的東西。</p>
+    </div>
+    <div class="ask">
+      <h3>3. 多少人用，多久用一次？</h3>
+      <p>日活躍使用者幾萬還是幾千萬，每人每天觸發幾次？</p>
+      <p class="why">這是唯一能把設計從空談變成具體的東西。有數字才算得出要幾台機器。</p>
+    </div>
+    <div class="ask">
+      <h3>4. 可以慢到什麼程度？</h3>
+      <p>要求 100 毫秒內，還是可以等 2 秒？</p>
+      <p class="why">延遲上限直接決定能不能用大模型、要不要先算好。這題不問，後面全部是空的。</p>
+    </div>
+    <div class="ask">
+      <h3>5. 資料現在有什麼？</h3>
+      <p>有沒有現成的使用者行為紀錄、有沒有人標註過答案？</p>
+      <p class="why">如果沒有標註，第一版可能只能用規則或無監督做法，不能一開口就說要訓練模型。</p>
+    </div>
+    <div class="ask">
+      <h3>6. 錯了哪一種比較嚴重？</h3>
+      <p>寧可誤擋好的，還是寧可放過壞的？</p>
+      <p class="why">這兩種錯誤沒辦法同時降到最低。不問清楚就沒辦法決定門檻要調哪邊。</p>
+    </div>
+    <div class="ask">
+      <h3>7. 有沒有合規或隱私限制？</h3>
+      <p>資料能不能離開公司、能不能送給外部的 AI 服務？</p>
+      <p class="why">這題會直接砍掉一整類做法。有限制的話，打外部 API 這條路就不能走。</p>
+    </div>
+    <div class="ask">
+      <h3>8. 多久要上線？</h3>
+      <p>兩週要有東西看，還是有半年可以慢慢做？</p>
+      <p class="why">時間短就要先做規則版或直接接現成服務，不要在面試裡設計一套要做半年的系統。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2>容量估算，照這樣算就好</h2></div>
+  <p class="sec-lede">數字不用精確，重點是<b>算得出數量級</b>，而且過程說得出來。下面的算式可以直接抄。</p>
+
+  <h3 style="font-size:16px;margin:0 0 8px">每秒要處理幾次</h3>
+  <div class="calc">日活躍使用者      1,000 萬  <i>← 面試官給的，或你自己假設</i>
+每人每天觸發      20 次
+─────────────────────────────
+每天總次數        2 億次
+÷ 86,400 秒
+<b>平均每秒          約 2,300 次</b>
+× 尖峰倍數 3      <i>← 大家都在同一個時段用</i>
+<b>尖峰每秒          約 7,000 次</b></div>
+
+  <h3 style="font-size:16px;margin:22px 0 8px">要多少儲存空間</h3>
+  <div class="calc">一筆紀錄大小      1 KB
+每天筆數          2 億筆
+─────────────────────────────
+每天              200 GB
+× 保留 1 年
+<b>總共              約 73 TB</b>   <i>← 這個量級要用物件儲存，不是一般資料庫</i></div>
+
+  <h3 style="font-size:16px;margin:22px 0 8px">延遲預算怎麼分</h3>
+  <div class="calc">產品要求          200 毫秒以內
+─────────────────────────────
+網路來回          50 毫秒
+取特徵            10 毫秒   <i>← 從 Redis 這種地方查</i>
+<b>模型運算          100 毫秒</b>  <i>← 你真正能用的只有這麼多</i>
+其他雜項          40 毫秒</div>
+
+  <div class="callout">
+    這一段不是要你算得準，是要你<b>用數字把設計卡死</b>。<br>
+    算出來模型只剩 100 毫秒可以用，你就可以直接說「所以這裡不能用大模型，要嘛換小的，要嘛先算好存起來」。<br>
+    這種推導過程比任何架構圖都加分，因為它證明你在做工程判斷，不是在背名詞。
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><h2>六題常考的，完整答一次</h2></div>
+  <p class="sec-lede">每一題都照同一個順序走：問清楚、資料、模型、上線、監控。</p>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-t="rec" aria-selected="true">推薦系統<small>最經典</small></button>
+    <button class="tab" role="tab" data-t="rag" aria-selected="false">內部文件問答<small>近年最常考</small></button>
+    <button class="tab" role="tab" data-t="mod" aria-selected="false">內容審核<small>取捨最明顯</small></button>
+    <button class="tab" role="tab" data-t="search" aria-selected="false">搜尋排序<small>兩段式最典型</small></button>
+    <button class="tab" role="tab" data-t="fraud" aria-selected="false">詐欺偵測<small>資料極度不平衡</small></button>
+    <button class="tab" role="tab" data-t="agent" aria-selected="false">客服 AI 助理<small>會動手做事</small></button>
+  </div>
+
+  <div class="panel" data-panel="rec">
+    <div class="qa">
+      <div><dt>題目</dt><dd>「設計一個影片 App 的首頁推薦。」</dd></div>
+      <div><dt>先問清楚</dt><dd>推薦位有幾格？<b>要不要即時反映剛剛看的那支</b>？新使用者要看到什麼？影片庫有幾百萬支還是幾千支？<b>成功指標是看完率還是停留時間</b>？</dd></div>
+      <div><dt>資料</dt><dd>使用者這邊：看過什麼、看多久、有沒有看完、按讚收藏。影片這邊：分類、長度、上架時間、整體受歡迎程度。<b>要特別記錄「推給他但他沒點」的紀錄</b>，這是最有價值的負面資料，很多人會漏掉。</dd></div>
+      <div><dt>模型</dt><dd>標準做法分兩段。<b>第一段 recall</b>（先粗撈）：從幾百萬支裡快速撈出幾百支候選，用簡單快速的方法。<b>第二段 ranking</b>（再細排）：對這幾百支用比較細的模型算分，排出最後要顯示的幾格。<br>兩段的原因是<b>算不完</b>。對幾百萬支逐一精算，時間預算不可能夠。</dd></div>
+      <div><dt>上線</dt><dd>候選清單可以<b>先算好存起來</b>，每小時更新一次；最後排序才即時算。新使用者沒有歷史，先用<b>熱門內容加上註冊時填的偏好</b>撐著，累積幾次行為之後再切換。</dd></div>
+      <div><dt>監控</dt><dd>看點擊率跟看完率有沒有下滑。特別要看<b>推薦有沒有越來越窄</b>，也就是一直推同類型導致使用者膩掉。通常會刻意保留一小部分位置放沒看過的類型。</dd></div>
+    </div>
+  </div>
+
+  <div class="panel" data-panel="rag" hidden>
+    <div class="qa">
+      <div><dt>題目</dt><dd>「設計一個系統，讓員工可以用問的方式查公司內部文件。」</dd></div>
+      <div><dt>先問清楚</dt><dd>文件有多少份、什麼格式（PDF、簡報、網頁）？<b>更新多頻繁</b>？<b>有沒有權限問題</b>，也就是不同部門能看的不一樣？答錯的代價多大？資料<b>可不可以送到外部的 AI 服務</b>？</dd></div>
+      <div><dt>資料</dt><dd>先把文件切成一段一段，再把每一段轉成向量存起來。<b>權限要跟著每一段一起存</b>，查詢時先過濾再比對，不能查完才過濾，不然會從答案裡洩漏出內容。</dd></div>
+      <div><dt>模型</dt><dd>不用自己訓練。流程是<b>查詢轉向量、撈前 50 段、重新排序取前 5 段、送給大型語言模型回答</b>。要求它只根據這 5 段回答，並且標出處。<br>如果內部有大量專有名詞，可以考慮微調 embedding 模型，但那是第二版的事。</dd></div>
+      <div><dt>上線</dt><dd>文件更新要能<b>只重建有改動的那幾份</b>，不能每次全部重來。常見做法是文件系統一有變動就發通知，觸發那一份重新切段建檔。</dd></div>
+      <div><dt>監控</dt><dd><b>兩件事要分開量</b>。第一件：撈回來的段落裡有多少真的相關。第二件：拿到正確段落之後，答案寫得對不對。<br>混在一起看就永遠不知道問題出在哪。另外要記錄<b>使用者按了幾次「這個沒幫助」</b>，那是最直接的訊號。</dd></div>
+    </div>
+  </div>
+
+  <div class="panel" data-panel="mod" hidden>
+    <div class="qa">
+      <div><dt>題目</dt><dd>「設計一個系統，自動找出平台上的違規留言。」</dd></div>
+      <div><dt>先問清楚</dt><dd><b>違規的定義是什麼</b>，有沒有成文規則？每天幾則留言？<b>寧可誤擋還是寧可漏放</b>？有沒有人工審核團隊，能處理多少量？要不要即時擋，還是可以先放出來再回頭撤？</dd></div>
+      <div><dt>資料</dt><dd>過去被檢舉、而且經過人工確認的留言就是現成的標註。<b>但這批資料有偏差</b>：只有被檢舉的才會進來，沒被檢舉的違規內容不在裡面。要另外隨機抽一批請人標，才知道真正的漏放率。</dd></div>
+      <div><dt>模型</dt><dd>先做<b>關鍵字加規則</b>的版本（rule-based），成本低而且馬上能上。第二版才換成語言模型，因為它抓得到「換句話說」的規避寫法。<br>正式系統通常<b>分層</b>：規則先擋掉明顯的，模型處理中間地帶，最不確定的送人工。</dd></div>
+      <div><dt>上線</dt><dd>設<b>兩個門檻</b>而不是一個。分數超過高門檻直接擋，低於低門檻直接放行，<b>中間那段送人工審核</b>。門檻位置由人工團隊的處理量決定，不是由模型決定。</dd></div>
+      <div><dt>監控</dt><dd>誤擋率跟漏放率要<b>分開看</b>，因為調整門檻會讓一個變好、另一個變差。要固定隨機抽樣送人工複核，否則只會看到被檢舉的那部分，永遠不知道漏了多少。</dd></div>
+    </div>
+  </div>
+
+  <div class="panel" data-panel="search" hidden>
+    <div class="qa">
+      <div><dt>題目</dt><dd>「設計一個電商網站的商品搜尋。」</dd></div>
+      <div><dt>先問清楚</dt><dd>商品有幾百萬件？<b>要不要支援錯字跟同義詞</b>（打「筆電」要不要找到「筆記型電腦」）？排序看什麼，銷量、評價、還是相關度？<b>有沒有廣告或贊助位</b>要插進去？多語言嗎？</dd></div>
+      <div><dt>資料</dt><dd>商品這邊：標題、描述、分類、價格、銷量、評價。使用者這邊：搜過什麼、點了第幾個、有沒有下單。<br><b>最有價值的是「搜了但沒點任何一個」的紀錄</b>，那代表這次搜尋整頁都失敗，是最直接的改善訊號。</dd></div>
+      <div><dt>模型</dt><dd>跟推薦系統一樣分兩段。<b>粗撈</b>那段用兩條路並行：關鍵字比對抓精準命中，向量比對抓語意相近（例如「露營用的燈」找到「營燈」）。兩邊的結果合併。<br><b>細排</b>再用細模型算分，把相關度、銷量、評價、庫存綜合起來。</dd></div>
+      <div><dt>上線</dt><dd>熱門搜尋詞的結果<b>直接存起來</b>，因為搜尋詞的分布非常集中，前面少數幾個詞就佔掉大半流量。商品資料變動（缺貨、改價）要能<b>幾分鐘內反映</b>，不能等每天重建。</dd></div>
+      <div><dt>監控</dt><dd>核心指標是<b>零結果率</b>（搜完什麼都沒有的比例）跟<b>無點擊率</b>。這兩個數字最能直接指出哪些搜尋詞需要補同義詞或補商品。另外要看點擊集中在第幾名，如果大家都點第 5 名，代表排序有問題。</dd></div>
+    </div>
+  </div>
+
+  <div class="panel" data-panel="fraud" hidden>
+    <div class="qa">
+      <div><dt>題目</dt><dd>「設計一個系統，在交易當下判斷是不是盜刷。」</dd></div>
+      <div><dt>先問清楚</dt><dd>每秒幾筆交易？<b>必須在幾毫秒內回答</b>（付款流程通常只給 100 毫秒以內）？<b>攔錯一筆正常交易的代價，跟放過一筆盜刷的代價，哪個大</b>？有沒有人工複核團隊？法規上要不要能解釋為什麼被擋？</dd></div>
+      <div><dt>資料</dt><dd>這題最大的特點是<b>資料極度不平衡</b>，盜刷可能只佔千分之一甚至萬分之一。<br>所以<b>準確率這個指標完全沒用</b>：全部猜「正常」就有 99.9% 準確率。要改看抓到的裡面有多少是真的、該抓的抓到多少。<br>另一個坑是<b>答案來得很晚</b>：一筆盜刷可能一個月後才被持卡人申訴，所以訓練資料永遠落後現實。</dd></div>
+      <div><dt>模型</dt><dd>先做<b>規則</b>擋掉明顯的（半夜、異國、金額異常、同卡短時間多筆）。規則的好處是能解釋，法規上常常需要。<br>再加模型處理規則抓不到的。特徵重點在<b>「跟這個人平常比起來」</b>，例如這筆金額是他平均的幾倍、這個地點離他上一筆多遠。</dd></div>
+      <div><dt>上線</dt><dd>用<b>三段門檻</b>：高分直接擋、中間送簡訊二次驗證、低分直接放行。中間那段很重要，因為它把「擋或不擋」的二選一變成「多問一句」，誤判的代價瞬間變小。<br>特徵要即時算，因為「這五分鐘刷了幾筆」這種特徵先算好就沒意義了。</dd></div>
+      <div><dt>監控</dt><dd>因為答案來得晚，要<b>同時看兩組數字</b>：即時能看的（擋掉多少比例、客訴量），以及一個月後才回填的（真正的漏放率）。<br>詐騙手法會一直變，這是典型的<b>規則變了</b>的情境，重訓頻率要比一般系統高很多。</dd></div>
+    </div>
+  </div>
+
+  <div class="panel" data-panel="agent" hidden>
+    <div class="qa">
+      <div><dt>題目</dt><dd>「設計一個客服 AI，它不只回答問題，還能幫使用者查訂單、改地址、辦退貨。」</dd></div>
+      <div><dt>先問清楚</dt><dd><b>它能做到哪一步</b>，只能查，還是可以真的改資料？<b>哪些動作一定要人工確認</b>（退款金額上限多少）？答錯或做錯的代價多大？要接哪些既有系統？<b>要不要留下完整紀錄供事後追查</b>？</dd></div>
+      <div><dt>資料</dt><dd>兩種來源分開處理。<b>知識類</b>（退貨政策、運費規則）走檢索，做成前面 RAG 那一套。<b>動作類</b>（查訂單、改地址）走系統介面，不要讓 AI 去猜資料，一律去真實系統查。<br>另外要準備<b>過去的客服對話紀錄</b>，用來知道使用者實際上都問什麼。</dd></div>
+      <div><dt>模型</dt><dd>核心是一個大型語言模型加上一組工具。設計重點<b>不在模型，在工具怎麼給</b>：<br>一、<b>唯讀跟可寫要分開</b>。查詢類的工具隨便用，會改資料的要另外把關。<br>二、<b>每個工具的說明要寫得非常清楚</b>，這是實務上最常見的失敗來源，說明含糊它就會走錯路。<br>三、<b>可以做的事情要列白名單</b>，不在名單上的一律轉人工。</dd></div>
+      <div><dt>上線</dt><dd>分階段放行。<b>第一階段只讓它回答，不讓它動手</b>；第二階段開放唯讀查詢；第三階段才開放會改資料的動作，而且先設很低的金額上限。<br>所有會改資料的動作都要<b>可以還原</b>，並且記錄是哪一次對話觸發的。</dd></div>
+      <div><dt>監控</dt><dd>除了答對率，還要看<b>轉人工的比例</b>（太高代表沒用，太低可能代表它在硬答）、<b>動作執行的成功率</b>、以及<b>使用者事後反悔的比例</b>。<br>要做 <b>red team</b> 測試（專門找人攻擊它）：專門找人想辦法騙它做出不該做的事，上線前跑一輪，上線後定期再跑。</dd></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">05</span><h2>最常被追問的六題</h2></div>
+
+  <div class="fu">
+    <div>
+      <div class="q">「如果資料量再大一百倍呢？」</div>
+      <div class="a">先講<b>哪一站會先撐不住</b>，通常是即時算特徵那一段。然後給兩個方向：把能先算好的改成先算好、把查詢按使用者分散到多台機器。<b>不要說「加機器就好」</b>，要說明加在哪一站、為什麼是那一站。</div>
+    </div>
+    <div>
+      <div class="q">「怎麼知道新模型真的比較好？」</div>
+      <div class="a">離線先用留著沒看過的資料測一次，這是門檻不是結論。真正的答案是<b>線上 A/B 測試</b>：一半使用者看新版、一半看舊版，比較真正在意的業務指標。更保守的做法是<b>先讓新版跟著跑但不給使用者看</b>，只比對結果。</div>
+    </div>
+    <div>
+      <div class="q">「模型突然變差了，你怎麼查？」</div>
+      <div class="a">照順序：一、有沒有剛好上線什麼東西。二、進來的資料分布有沒有變。三、<b>訓練跟服務算特徵的方式是不是不一樣了</b>，這是最常見也最難發現的。四、世界的規則是不是變了。<br>先做的事永遠是<b>換回舊版</b>，再慢慢查。</div>
+    </div>
+    <div>
+      <div class="q">「怎麼壓成本？」</div>
+      <div class="a">四個方向由易到難：<b>能先算好的就不要即時算</b>、<b>簡單的用小模型擋掉</b>、<b>重複的問題把答案存起來</b>、把模型壓縮變小。<br>先講前兩個，那是投報率最高的。</div>
+    </div>
+    <div>
+      <div class="q">「新使用者完全沒資料怎麼辦？」</div>
+      <div class="a">分三段講：<b>剛註冊</b>用熱門內容加上註冊時填的偏好。<b>用過幾次</b>之後開始混入個人化結果。<b>累積夠了</b>就完全切到個人化。<br>要說明「累積夠了」的判斷依據，例如互動次數達到某個數量。</div>
+    </div>
+    <div>
+      <div class="q">「如果 AI 講錯話造成問題呢？」</div>
+      <div class="a">這題近年幾乎必問。答法是<b>層層防守</b>：輸出前先過一道檢查、要求標出處讓人可以查證、高風險的情況直接不回答並轉人工、記錄每一次回答方便事後追查。<br>並且明講<b>沒有任何方法能保證百分之百</b>，所以要設計「出事之後怎麼收拾」，不是只設計「怎麼避免」。</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>整頁其實就一句話：先問清楚，再用數字把設計卡死，最後一定要講到上線之後怎麼辦。<br>
+  架構圖只是把這三件事畫出來而已。系統本身長什麼樣，看 <a href="mlsystem.html">ML 系統那一頁</a>。</p>
+  <p>快取、佇列、sharding 這些一般 IT 元件，還有短網址、聊天室、動態牆這類經典題，看 <a href="sysdesign.html">一般系統設計</a>。</p>
+  <p class="cred"><a href="./">← 回目錄</a></p>
+</footer>
+
+</div>
+
+<script>
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click", ()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected", String(x === t)));
+    document.querySelectorAll(".panel").forEach(p=>{
+      p.hidden = p.dataset.panel !== t.dataset.t;
+    });
+  });
+});
+</script>

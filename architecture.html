@@ -112,6 +112,10 @@
     <a href="request.html">按鈕之旅</a>
     <a href="project.html">專案資料夾</a>
     <a href="skills.html">Claude 技能</a>
+    <a href="agents.html">AI 大軍</a>
+    <a href="sysdesign.html">系統設計</a>
+    <a href="mlsystem.html">ML 系統</a>
+    <a href="mldesign.html">面試怎麼答</a>
   </div>
 </div></nav>
 
@@ -124,14 +128,14 @@
 
 <section>
   <div class="sec-head"><span class="sec-num">01</span><h2>技術之間只有六種關係</h2></div>
-  <p class="sec-lede">下次看到不認識的名字，不要問「這是什麼」，先問<b>「它跟我知道的東西是哪一種關係」</b>。六種而已，看完這一段你就有一套通用的問法。</p>
+  <p class="sec-lede">看到不認識的名字，先問<b>「它跟我知道的東西是哪一種關係」</b>。常見的關係有六種。</p>
 
   <div class="rels" id="rels"></div>
 </section>
 
 <section>
   <div class="sec-head"><span class="sec-num">02</span><h2>拆一張架構圖給你看</h2></div>
-  <p class="sec-lede">架構圖只有<b>五種符號</b>。先認符號，再看圖，就不會被嚇到。下面是一張很典型的網頁服務架構——<b>點任何一個方塊</b>，會告訴你它是什麼、為什麼要有它、沒有它會怎樣。</p>
+  <p class="sec-lede">架構圖常用的符號有五種。下面是一張典型的網頁服務架構，<b>點任何一個方塊</b>，會說明它是什麼、為什麼要有它、沒有它會怎樣。</p>
 
   <div class="legend">
     <div class="lg">
@@ -248,7 +252,7 @@
 
 <section>
   <div class="sec-head"><span class="sec-num">03</span><h2>名詞解碼器</h2></div>
-  <p class="sec-lede">看不懂的名詞，通常不是因為它難，是因為<b>沒人告訴你會在哪裡遇到它</b>。所以這裡不按字母排，按「你在哪看到它」分類。</p>
+  <p class="sec-lede">這裡不按字母排，按<b>「你會在哪裡看到它」</b>分類。</p>
 
   <div class="tools">
     <input class="search" id="q" type="search" placeholder="搜尋，例如 cache" aria-label="搜尋名詞">
@@ -274,7 +278,7 @@
 
 <footer>
   <p><b>整份文件只有一個用法：</b>看到不懂的名詞，先問「它是六種關係裡的哪一種」，再問「它在哪一層」。<br>
-  問完這兩題，九成的名詞就不可怕了——剩下那一成，是你真的需要動手做才會懂的。</p>
+  問完這兩題，九成的名詞就不可怕了。剩下那一成，是你真的需要動手做才會懂的。</p>
   <p class="cred">字體：資源圓體 Resource Han Rounded TW（思源黑體的圓角繁中版，開源）</p>
 </footer>
 
@@ -291,14 +295,14 @@ const RELS = [
     def:"兩個東西<b>站在同一個位子上搶同一份工作</b>。選一個就好，不用兩個都學。這是最容易誤會成「都要會」的關係。",
     says:["A vs B","該用 A 還是 B","A 的替代品","A 的競品"],
     egs:[["React","｜","Vue ｜ Svelte"],["PostgreSQL","｜","MySQL"],["Vite","｜","Webpack"]],
-    why:"判斷法：如果你看到一篇文章在「比較」它們，它們就是這種關係——挑一個就好。" },
+    why:"很好認：只要你看到一篇文章在「比較」它們，它們就是這種關係，挑一個就好。" },
   { n:"需要", sym:"A → 需要 B",
     def:"沒有 B，A <b>根本啟動不了</b>。安裝的時候會炸在這裡，這是新手最常撞牆的地方。",
     says:["依賴 / dependency","要先裝 B","requires Node 18+","peer dependency"],
     egs:[["Next.js","需要","Node.js"],["React Three Fiber","需要","React + Three.js"],["幾乎所有前端工具","需要","Node.js"]],
     why:"最常出事的是版本。「需要 Node 18 以上」這種話講的就是這件事。" },
   { n:"講話", sym:"A ──協定──▶ B", key:1,
-    def:"兩個<b>各自獨立</b>的東西，透過某個規矩互相傳資料。<b>架構圖上的箭頭，九成是這一種。</b>箭頭方向＝誰主動去找誰。",
+    def:"兩個<b>各自獨立</b>的東西，講好一套規矩互相傳資料。<b>架構圖上的箭頭，九成是這一種。</b>箭頭方向＝誰主動去找誰。",
     says:["打 API","呼叫 / call","送請求","串接","request"],
     egs:[["瀏覽器","──HTTPS──▶","伺服器"],["後端","──SQL──▶","資料庫"],["前端","──WebSocket──▶","即時伺服器"]],
     why:"線上寫的那個字最重要，它就是「這兩邊用什麼語言講話」。看不懂那個字，就看不懂那條線。" },
@@ -340,7 +344,7 @@ RELS.forEach((r,i)=>{
 /* ══════════ 02 架構圖 ══════════ */
 const ARCH = {
   browser:{ n:"瀏覽器", tag:"使用者這邊",
-    l:"使用者真正看得到、摸得到的地方。你寫的 React、Three.js 全部在這裡執行——不是在你的伺服器上。",
+    l:"使用者真正看得到、摸得到的地方。你寫的 React、Three.js 全部在這裡執行，不是在你的伺服器上。",
     why:"這是唯一「不是你的機器」的地方。使用者可以打開開發者工具看光你送過去的東西，所以密碼、金鑰絕對不能放這裡。",
     without:"沒有這一塊就不是網頁了。",
     real:"Chrome / Safari / Edge。你的 JS 在 V8 引擎裡跑。" },
@@ -352,7 +356,7 @@ const ARCH = {
   web:{ n:"前端伺服器", tag:"你的伺服器",
     l:"負責「把網頁組好送出去」的程式。它可以在伺服器上先把畫面算好（SSR，Server-Side Rendering，伺服器端渲染），也可以只送一個空殼讓瀏覽器自己畫（CSR，Client-Side Rendering，瀏覽器端渲染）。",
     why:"先組好再送，Google 才看得到你的內容（SEO，Search Engine Optimization，搜尋引擎最佳化），使用者也不用盯著白畫面等。",
-    without:"純靜態網站可以沒有它——直接把檔案丟 CDN 就好。有登入、有個人化內容才需要。",
+    without:"純靜態網站可以沒有它，直接把檔案丟 CDN 就好。有登入、有個人化內容才需要。",
     real:"Next.js、Nuxt、SvelteKit。它們同時是框架也是伺服器。" },
   api:{ n:"後端 API", tag:"你的伺服器", full:"Application Programming Interface，應用程式介面",
     l:"真正處理業務邏輯的地方：驗證你是誰、算錢、決定你能看到什麼。前端只是門面，這裡才是大腦。",
@@ -360,7 +364,7 @@ const ARCH = {
     without:"任何需要「儲存資料」或「不能被作弊」的功能都做不了。",
     real:"Node.js、Python (FastAPI)、Go。小專案可以跟前端伺服器合在一起。" },
   db:{ n:"資料庫", tag:"你的伺服器",
-    l:"資料真正躺著的地方。程式重開、伺服器重灌，資料都還在——這是它跟「記憶體」最大的差別。",
+    l:"資料真正躺著的地方。程式重開、伺服器重灌，資料都還在，這是它跟「記憶體」最大的差別。",
     why:"因為程式的記憶體一關就清空。要讓資料活過重開機，就必須寫進資料庫。",
     without:"使用者一登出東西就不見了。",
     real:"PostgreSQL（最通用）、SQLite（整個資料庫就一個檔案，小專案超好用）、MySQL。" },
@@ -368,9 +372,9 @@ const ARCH = {
     l:"把常被問到的答案先記在記憶體裡，下次直接給，不用再去問資料庫。讀取速度差距大概是一百倍。",
     why:"資料庫查詢很貴。同一個熱門頁面被一萬個人打開，沒有快取就要查一萬次。",
     without:"流量一大資料庫先倒。小專案沒流量的話，其實可以先不加。",
-    real:"Redis 幾乎是預設答案。麻煩的是「資料改了要記得清掉舊快取」，這是工程界公認最難的事情之一。" },
+    real:"Redis 幾乎是預設答案。麻煩的是「資料改了要記得清掉舊快取」。工程師圈有個老笑話說，電腦科學只有兩件難事，其中一件就是這個。" },
   third:{ n:"第三方服務", tag:"別人的伺服器",
-    l:"別人已經做好的功能，你付錢用。AI、金流、寄信、簡訊、地圖——這些自己做要花好幾個月。",
+    l:"別人已經做好的功能，你付錢用。AI、金流、寄信、簡訊、地圖，這些自己做要花好幾個月。",
     why:"因為不是你的核心價值。你不會為了收錢自己去接銀行，你會用 Stripe。",
     without:"什麼都自己做，然後三年後才上線。",
     real:"Claude API（AI）、Stripe（金流）、Resend（寄信）。要注意兩件事：<b>它掛掉你也會掛</b>，還有<b>用量會計費</b>。" },
@@ -410,7 +414,7 @@ const TERMS = [
   ["API Gateway","架構圖","所有請求的總入口。負責檢查身分、擋流量、分派到對的服務。","Application Programming Interface Gateway，應用程式介面閘道"],
   ["Reverse Proxy","架構圖","站在伺服器前面代收請求的中間人，順便處理加密和分流。Nginx 最常見。","反向代理"],
   ["Worker","架構圖","在背景默默做事的程式，不直接面對使用者。負責處理佇列裡的工作。","背景工作程式"],
-  ["Webhook","架構圖","「有事發生時你打給我」。跟 API 方向相反——不是你去問，是對方主動通知你。","網頁回呼"],
+  ["Webhook","架構圖","「有事發生時你打給我」。跟 API 方向相反，不是你去問，是對方主動通知你。","網頁回呼"],
   ["Microservice","架構圖","把一個大程式拆成很多小程式各管各的。大團隊才划算，小專案會被拆到死。","微服務"],
   ["Monolith","架構圖","全部寫在一起沒有拆。聽起來土，但小專案這樣最好。","單體式架構"],
   ["Object Storage","架構圖","放檔案的雲端空間，圖片影片丟這裡。S3、R2 都是。","物件儲存"],
@@ -469,7 +473,7 @@ const TERMS = [
   ["CRUD","行話","增、查、改、刪。任何管理資料的功能都逃不出這四個動作。","Create Read Update Delete，新增／讀取／更新／刪除"],
   ["cache invalidation","行話","資料改了要記得把舊快取丟掉。工程界公認最難的兩件事之一（另一件是命名）。","快取失效"],
   ["race condition","行話","兩件事同時發生、順序不確定，所以有時對有時錯。最難抓的 bug 之一。","競爭條件"],
-  ["latency","行話","從你送出請求到收到回應的時間。跟「頻寬」不同——頻寬是水管粗細，延遲是水管長度。","延遲"],
+  ["latency","行話","從你送出請求到收到回應的時間。跟「頻寬」不同：頻寬是水管粗細，延遲是水管長度。","延遲"],
   ["idempotent","行話","同一個動作做一次跟做十次結果一樣。付款 API 一定要做到，不然重送會扣兩次錢。","冪等"],
   ["environment variable","行話","放在程式外面的設定值，換環境就換一份，不用改程式碼。","環境變數"],
   ["breaking change","行話","升級之後舊寫法會壞掉。版本號第一碼跳號就是在警告這個。","破壞性變更"],
@@ -484,13 +488,13 @@ const LAYERS = [
   { name:"硬體", techs:[
     { n:"CPU", full:"Central Processing Unit，中央處理器",
       l:"一次專心做一件事，但很聰明。你的程式邏輯在這裡跑。",
-      down:"實體晶片，最底層", up:"所有東西", vs:"—", meet:"「跑很慢」通常是這裡塞住" },
+      down:"實體晶片，最底層", up:"所有東西", vs:"無", meet:"「跑很慢」通常是這裡塞住" },
     { n:"GPU", full:"Graphics Processing Unit，圖形處理器",
-      l:"一次做幾千件簡單的事。畫圖跟跑 AI 都靠它——那兩件事本質都是「同一個算式重複幾百萬次」。",
-      down:"實體晶片", up:"WebGL、排版引擎", vs:"—", meet:"3D、影片、AI 都在搶它" },
+      l:"一次做幾千件簡單的事。畫圖跟跑 AI 都靠它，那兩件事本質都是「同一個算式重複幾百萬次」。",
+      down:"實體晶片", up:"WebGL、排版引擎", vs:"無", meet:"3D、影片、AI 都在搶它" },
     { n:"實體機器", full:"伺服器主機",
       l:"真的有一台電腦擺在某個機房裡。所謂「雲端」，只是別人幫你顧的機器。",
-      down:"—", up:"作業系統", vs:"自己買機器 ｜ 租雲端", meet:"「伺服器掛了」講的就是它" },
+      down:"無", up:"作業系統", vs:"自己買機器 ｜ 租雲端", meet:"「伺服器掛了」講的就是它" },
     { n:"作業系統", full:"Operating System，OS",
       l:"管理硬體、分配資源的底層軟體。伺服器上幾乎都是 Linux。",
       down:"CPU ＋ 實體機器", up:"Node.js、Python、Docker", vs:"Linux ｜ Windows ｜ macOS", meet:"部署時會遇到" },
@@ -514,7 +518,7 @@ const LAYERS = [
       l:"一塊空白畫布，可以自由畫線畫圖。畫完就是一張圖，沒有「元素」的概念。",
       down:"Blink ＋ GPU", up:"Chart.js、小遊戲", vs:"DOM、WebGL", meet:"圖表、簽名板、小遊戲" },
     { n:"WebGL", full:"Web Graphics Library，網頁圖形函式庫",
-      l:"直接叫顯示卡畫東西的介面。低階到幾乎沒人直接寫——畫一個三角形要一百行。",
+      l:"直接叫顯示卡畫東西的介面。低階到幾乎沒人直接寫，畫一個三角形要一百行。",
       down:"GPU", up:"Three.js、Babylon.js", vs:"Canvas 2D、WebGPU", meet:"所有網頁 3D 的底層" },
     { n:"WebGPU", full:"網頁圖形處理器介面",
       l:"WebGL 的接班人。更快、也能拿來跑 AI 運算。",
@@ -529,7 +533,7 @@ const LAYERS = [
   { name:"語言", techs:[
     { n:"JavaScript", full:"",
       l:"瀏覽器唯一原生看得懂的語言。所有其他選擇最後都要變成它。",
-      down:"V8", up:"全部", vs:"—（瀏覽器裡沒對手）", meet:"到處都是" },
+      down:"V8", up:"全部", vs:"無（瀏覽器裡沒對手）", meet:"到處都是" },
     { n:"TypeScript", full:"",
       l:"JavaScript 加上型別檢查。打錯字、傳錯資料，寫的當下就被抓出來。最後還是編譯成 JS。",
       down:"JavaScript", up:"大部分現代專案", vs:"純 JavaScript", meet:"看到 .ts / .tsx 就是它" },
@@ -579,7 +583,7 @@ const LAYERS = [
       l:"React 的「完整版」。多了路由、伺服器渲染、API。React 只管畫面，它管整個網站。",
       down:"React ＋ Node.js", up:"Vercel", vs:"Nuxt、SvelteKit、Remix", meet:"大部分正式 React 專案" },
     { n:"Astro", full:"",
-      l:"專做內容型網站——部落格、文件站。預設不送 JS 到瀏覽器，所以極快。",
+      l:"專做內容型網站，像部落格、文件站。預設不送 JS 到瀏覽器，所以極快。",
       down:"Vite", up:"CDN", vs:"Next.js、Hugo", meet:"部落格、文件、行銷頁" },
     { n:"Express", full:"",
       l:"寫後端 API 最常見的小工具。負責「有人打這個網址時，執行這段程式」。",
@@ -597,7 +601,7 @@ const LAYERS = [
       down:"Node.js", up:"所有專案", vs:"yarn、bun", meet:"你每天都在打 npm install" },
     { n:"Git", full:"",
       l:"記錄每一次改動，隨時可以退回去。GitHub 是放 Git 的網站，兩個不是同一個東西。",
-      down:"作業系統", up:"GitHub、CI/CD", vs:"—", meet:"所有專案的標配" },
+      down:"作業系統", up:"GitHub、CI/CD", vs:"無", meet:"所有專案的標配" },
     { n:"Docker", full:"",
       l:"把「程式 ＋ 它需要的環境」打包成一個盒子。解決「我電腦跑得起來啊」這個千古難題。",
       down:"Linux", up:"Vercel、雲端平台", vs:"直接裝在機器上", meet:"部署後端時" },
@@ -610,13 +614,13 @@ const LAYERS = [
 /* 洋蔥圖：四條真實的「包住」鏈，最外面是你寫的，最裡面是硬體 */
 const OWN = {
   "你寫的元件":{ full:"你自己的程式碼", l:"你實際打字寫出來的那幾個檔案。整條鏈只有這一層是你的，其他每一層都是別人寫好的。",
-    down:"Next.js", up:"—（最外層）", vs:"—", meet:"你的專案資料夾裡" },
+    down:"Next.js", up:"無（最外層）", vs:"無", meet:"你的專案資料夾裡" },
   "你寫的場景":{ full:"你自己的程式碼", l:"你擺的相機位置、燈光、模型。你只寫這些，剩下的交給下面幾層。",
-    down:"React Three Fiber", up:"—（最外層）", vs:"—", meet:"你的專案資料夾裡" },
+    down:"React Three Fiber", up:"無（最外層）", vs:"無", meet:"你的專案資料夾裡" },
   "你寫的 API":{ full:"你自己的程式碼", l:"你定義的規則：誰能看什麼、資料怎麼算。這是整個服務真正的價值所在。",
-    down:"Express", up:"—（最外層）", vs:"—", meet:"你的專案資料夾裡" },
+    down:"Express", up:"無（最外層）", vs:"無", meet:"你的專案資料夾裡" },
   "你的網站":{ full:"打包完的成品", l:"build 之後產生的那一堆檔案。你不用手改它，它是被產生出來的。",
-    down:"Vercel", up:"—（最外層）", vs:"—", meet:"dist 或 build 資料夾" },
+    down:"Vercel", up:"無（最外層）", vs:"無", meet:"dist 或 build 資料夾" },
 };
 
 const CHAINS = [
@@ -675,10 +679,10 @@ function show(t, box){
     ${t.full ? `<p class="d-full">（${esc(t.full)}）</p>` : ""}
     <p class="d-lede">${t.l}</p>
     <div class="d-grid">
-      <div class="d-cell"><dt>它包住誰</dt><dd>${esc(t.down || "—")}</dd></div>
-      <div class="d-cell"><dt>誰包住它</dt><dd>${esc(t.up || "—")}</dd></div>
-      <div class="d-cell"><dt>同層對手</dt><dd>${esc(t.vs || "—")}</dd></div>
-      <div class="d-cell"><dt>你會在哪遇到</dt><dd>${esc(t.meet || "—")}</dd></div>
+      <div class="d-cell"><dt>它包住誰</dt><dd>${esc(t.down || "無")}</dd></div>
+      <div class="d-cell"><dt>誰包住它</dt><dd>${esc(t.up || "無")}</dd></div>
+      <div class="d-cell"><dt>同層對手</dt><dd>${esc(t.vs || "無")}</dd></div>
+      <div class="d-cell"><dt>你會在哪遇到</dt><dd>${esc(t.meet || "無")}</dd></div>
     </div>`;
   // 窄螢幕時卡片在洋蔥圖下方，捲過去才看得到
   if(window.matchMedia("(max-width:860px)").matches){
