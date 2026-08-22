@@ -10,7 +10,6 @@
 |---|---|
 | [看懂架構圖](https://hsuiris.github.io/tech-notes/architecture.html) | 看到方塊跟箭頭的圖就腦袋一片空白 |
 | [看懂錯誤訊息](https://hsuiris.github.io/tech-notes/errors.html) | 跳出一大串紅字，不知道要看哪一行 |
-| [按鈕之旅](https://hsuiris.github.io/tech-notes/request.html) | 知道有前端後端，但中間到底發生什麼 |
 | [看懂專案資料夾](https://hsuiris.github.io/tech-notes/project.html) | 打開別人的 repo，滿滿的檔案不敢碰 |
 | [自己做一個 Claude 技能](https://hsuiris.github.io/tech-notes/skills.html) | 每次都要跟 AI 重複交代同一件事 |
 | [幾個 AI 一起做事，有幾種組法](https://hsuiris.github.io/tech-notes/agents.html) | 大家都說要派很多 AI，但到底怎麼派 |

@@ -1,7 +1,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>系統設計 · tech-notes</title>
-<meta name="description" content="一個網站從一台機器開始，每次撞牆加一個零件，一路長到五億使用者。四個要先做的取捨，以及短網址、聊天室、動態牆、通知系統四題經典題的答法。">
+<meta name="description" content="一個網站從一台機器開始，每次撐不住就加一個零件，一路長到五億使用者。四個要先做的取捨，以及短網址、聊天室、動態牆、通知系統四題經典題的答法。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
 <link rel="stylesheet" href="assets/base.css">
 <style>
@@ -118,7 +118,6 @@
   <div class="navlinks">
     <a href="architecture.html">架構圖</a>
     <a href="errors.html">錯誤訊息</a>
-    <a href="request.html">按鈕之旅</a>
     <a href="project.html">專案資料夾</a>
     <a href="skills.html">Claude 技能</a>
     <a href="agents.html">AI 大軍</a>
@@ -130,6 +129,15 @@
 
 <div class="wrap">
 
+<svg class="figdefs" width="0" height="0" aria-hidden="true" focusable="false"
+     style="position:absolute;overflow:hidden"><defs>
+  <marker id="fa" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto">
+    <path d="M0 0 L10 4 L0 8 Z" fill="var(--ink-3)"/></marker>
+  <marker id="fac" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto">
+    <path d="M0 0 L10 4 L0 8 Z" fill="var(--accent)"/></marker>
+</defs></svg>
+
+
 <header>
   <div class="eyebrow">系統設計</div>
   <h1>系統設計的基本元件與取捨</h1>
@@ -137,19 +145,24 @@
 
 <section>
   <div class="sec-head"><span class="sec-num">01</span><h2>一個網站是怎麼一步一步長大的</h2></div>
-  <p class="sec-lede">從一台機器開始。每一站都是「撞到什麼牆，所以加了什麼」。<b>點任何一站</b>，右邊會說明當時發生什麼事、加了什麼、加完之後圖長什麼樣。</p>
+  <p class="sec-lede">從一台機器開始。每一站都是「哪裡先撐不住，所以加了什麼零件」。<b>點任何一站</b>，右邊會說明當時發生什麼事、怎麼解決的、加完之後架構圖變成什麼樣子。</p>
 
   <div class="split">
     <div class="line" id="line"></div>
     <div class="detail sticky" id="card">
-      <p class="placeholder">← 點左邊任何一站，這裡會說明撞到什麼牆、加了什麼。</p>
+      <p class="placeholder">← 點左邊任何一站，這裡會說明那時候發生什麼事、怎麼解決的。</p>
     </div>
   </div>
 
   <div class="callout" style="margin-top:24px">
     這個順序幾乎每家公司都差不多。快取幾乎都是第一個加的，因為便宜、效果又立刻看得到。Sharding 通常排最後，不是因為它不好，是因為<b>拆開之後有代價</b>：一堆本來一句話查得到的東西會變麻煩。所以要等其他方法都不夠用了，確定資料量真的到那個程度，再來拆。<br>
-    說真的，零件本身不難懂，難的是<b>什麼時候該加</b>。還沒撞牆就先加，只是提早承受複雜度，一點好處都換不到。
+    說真的，零件本身不難懂，難的是<b>什麼時候該加</b>。還沒遇到問題就先加，只是提早承受複雜度，換不到什麼好處。
   </div>
+
+<figure class="fig">
+<svg viewBox="0 0 520 234" role="img" aria-label="replication 每台存完整的一份，sharding 每台只存一部分"><text class="f-hd" x="2" y="12">REPLICATION</text><text class="f-l" x="100" y="12">每一台都存完整的一份</text><rect x="2" y="24" width="148" height="54" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="76" y="49" text-anchor="middle">A B C D</text><text class="f-l" x="76" y="64" text-anchor="middle">機器 1</text><rect x="186" y="24" width="148" height="54" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="260" y="49" text-anchor="middle">A B C D</text><text class="f-l" x="260" y="64" text-anchor="middle">機器 2</text><rect x="370" y="24" width="148" height="54" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="444" y="49" text-anchor="middle">A B C D</text><text class="f-l" x="444" y="64" text-anchor="middle">機器 3</text><text class="f-l" x="2" y="98">三台一起分擔讀取，任何一台壞掉資料都還在。</text><line x1="2" y1="114" x2="518" y2="114" stroke="var(--line-soft)" stroke-width="1"/><text class="f-hd" x="2" y="140">SHARDING</text><text class="f-l" x="82" y="140">每一台只存一部分</text><rect x="2" y="152" width="148" height="54" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="76" y="177" text-anchor="middle">A B</text><text class="f-l" x="76" y="192" text-anchor="middle">機器 1</text><rect x="186" y="152" width="148" height="54" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="260" y="177" text-anchor="middle">C D</text><text class="f-l" x="260" y="192" text-anchor="middle">機器 2</text><rect x="370" y="152" width="148" height="54" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="444" y="177" text-anchor="middle">E F</text><text class="f-l" x="444" y="192" text-anchor="middle">機器 3</text><text class="f-l" x="2" y="226">資料太多、一台放不下的時候才拆。拆完之後，要跨機器的查詢會變麻煩。</text></svg>
+<figcaption>兩個都是「多加幾台機器」，但解決的是<b>不同的問題</b>。讀不完加 replication，放不下才做 sharding。</figcaption>
+</figure>
 </section>
 
 <section>
@@ -196,6 +209,12 @@
       還沒有量就先拆成很多台，只是提早把複雜度扛在身上，什麼好處都還沒換到。</p>
     </div>
   </div>
+
+<figure class="fig">
+<svg viewBox="0 0 520 238" role="img" aria-label="當場做完要等三秒，丟進佇列 0.2 秒就回應"><text class="f-hd" x="2" y="12">當場做完</text><rect x="2" y="24" width="86" height="30" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="45" y="44" text-anchor="middle">按下註冊</text><line x1="90" y1="39" x2="100" y2="39" stroke="var(--ink-3)" stroke-width="1.3" marker-end="url(#fa)"/><rect x="102" y="24" width="86" height="30" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="145" y="44" text-anchor="middle">寫資料庫</text><line x1="190" y1="39" x2="200" y2="39" stroke="var(--ink-3)" stroke-width="1.3" marker-end="url(#fa)"/><rect x="202" y="24" width="86" height="30" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="245" y="44" text-anchor="middle">寄歡迎信</text><line x1="290" y1="39" x2="300" y2="39" stroke="var(--ink-3)" stroke-width="1.3" marker-end="url(#fa)"/><rect x="302" y="24" width="86" height="30" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="345" y="44" text-anchor="middle">產生縮圖</text><line x1="390" y1="39" x2="400" y2="39" stroke="var(--ink-3)" stroke-width="1.3" marker-end="url(#fa)"/><rect x="402" y="24" width="86" height="30" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="445" y="44" text-anchor="middle">顯示成功</text><text class="f-l" x="2" y="76">四件事全部做完才回應。使用者盯著轉圈圈三秒，以為壞了就再按一次。</text><line x1="2" y1="94" x2="518" y2="94" stroke="var(--line-soft)" stroke-width="1"/><text class="f-hd" x="2" y="120">丟進佇列</text><rect x="2" y="132" width="86" height="30" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="45" y="152" text-anchor="middle">按下註冊</text><line x1="90" y1="147" x2="100" y2="147" stroke="var(--ink-3)" stroke-width="1.3" marker-end="url(#fa)"/><rect x="102" y="132" width="86" height="30" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="145" y="152" text-anchor="middle">寫資料庫</text><line x1="190" y1="147" x2="200" y2="147" stroke="var(--ink-3)" stroke-width="1.3" marker-end="url(#fa)"/><rect x="202" y="132" width="86" height="30" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="245" y="152" text-anchor="middle">顯示成功</text><line x1="145" y1="164" x2="145" y2="184" stroke="var(--ink-3)" stroke-width="1.3" marker-end="url(#fa)"/><rect x="102" y="188" width="86" height="28" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="145" y="207" text-anchor="middle">佇列</text><line x1="190" y1="202" x2="200" y2="202" stroke="var(--ink-3)" stroke-width="1.3" marker-end="url(#fa)"/><rect x="204" y="188" width="210" height="28" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="309" y="207" text-anchor="middle">工人：寄信、產生縮圖</text><text class="f-l" x="420" y="206">背景慢慢做</text><text class="f-l" x="2" y="234">只做非做不可的那一件，其他丟進隊伍。使用者 0.2 秒就看到成功。</text></svg>
+<figcaption>差別不在做的事變少，是<b>使用者要等的事變少</b>。</figcaption>
+</figure>
+
 </section>
 
 <section>
@@ -215,7 +234,7 @@
       <div><dt>先問清楚</dt><dd>每天產生幾條短網址？<b>短網址要不要可以自訂</b>？要不要過期？<b>需不需要統計點擊次數</b>？短碼可不可以被猜到（有些場景不能）？</dd></div>
       <div><dt>估量</dt><dd>假設每天新增 100 萬條、每條被點 100 次。<b>讀寫比是 100 比 1</b>，這個數字決定了整套設計往「讀」的方向優化。<br>五年下來約 18 億條，每條約 500 位元組，總共不到 1 TB，<b>單一台資料庫其實裝得下</b>。</dd></div>
       <div><dt>資料怎麼存</dt><dd>核心就一張表：短碼、原始網址、建立時間。<br><b>短碼怎麼生</b>是這題的重點。最乾淨的做法是<b>用遞增的號碼轉成 62 進位</b>（0 到 9、a 到 z、A 到 Z）。七位數就能表示 3.5 兆個，永遠夠用。<br>不要用「把網址算成雜湊值」的做法，因為會撞到，還要另外處理。</dd></div>
-      <div><dt>怎麼撐大</dt><dd>讀多寫少，所以<b>快取就能解決九成的問題</b>。熱門的短網址放記憶體，命中率通常很高。<br>轉址的時候用 <code>301</code> 還是 <code>302</code>，這個一定會被追問。301 的意思是「永久搬家」，瀏覽器會自己記住，之後就不再問你的伺服器了，很省流量，可是<b>你就統計不到點擊數</b>。要統計的話就得用 302。</dd></div>
+      <div><dt>怎麼撐大</dt><dd>讀多寫少，所以<b>光是加快取就能解決大部分的問題</b>。熱門的短網址放記憶體，命中率通常很高。<br>轉址的時候用 <code>301</code> 還是 <code>302</code>，這個一定會被追問。301 的意思是「永久搬家」，瀏覽器會自己記住，之後就不再問你的伺服器了，很省流量，可是<b>你就統計不到點擊數</b>。要統計的話就得用 302。</dd></div>
       <div><dt>會在哪裡壞</dt><dd><b>號碼產生器變成單點</b>。如果所有機器都跟同一個地方要號碼，那裡掛了全部停擺。做法是<b>一次配一批號碼給每台機器</b>，各自慢慢用。<br>另一個是<b>有人拿去放釣魚網站</b>，要有黑名單跟檢舉機制。</dd></div>
     </div>
   </div>
@@ -236,7 +255,12 @@
       <div><dt>題目</dt><dd>「設計一個像 IG 首頁的動態牆。」</dd></div>
       <div><dt>先問清楚</dt><dd>按時間排還是<b>依演算法排</b>？要不要插廣告？<b>一個人最多追蹤幾個帳號</b>？名人帳號有幾千萬粉絲要怎麼處理？看到新貼文可以延遲多久？</dd></div>
       <div><dt>估量</dt><dd>假設 3 億日活、每人每天看 10 次動態牆，就是每天 30 億次讀取。發文遠少於這個。<br><b>讀寫比極度懸殊</b>，所以這題的所有設計都是在犧牲寫入速度、換取讀取速度。</dd></div>
-      <div><dt>資料怎麼存</dt><dd>這題的核心叫<b>推還是拉</b>。<br><b>推</b>：有人發文的時候，馬上把它塞進每個粉絲的動態牆清單裡。讀取超快，直接拿現成的。<br><b>拉</b>：使用者打開的時候，才去把他追蹤的每個人的最新貼文撈出來排序。寫入很輕，但讀取很慢。</dd></div>
+      <div><dt>資料怎麼存</dt><dd>這題的核心叫<b>推還是拉</b>。<br><b>推</b>：有人發文的時候，馬上把它塞進每個粉絲的動態牆清單裡。讀取超快，直接拿現成的。<br><b>拉</b>：使用者打開的時候，才去把他追蹤的每個人的最新貼文撈出來排序。寫入很輕，但讀取很慢。
+<figure class="fig">
+<svg viewBox="0 0 520 248" role="img" aria-label="推是發文當下就塞進每個粉絲的清單，拉是打開的時候才去撈"><text class="f-hd" x="2" y="12">推</text><text class="f-l" x="46" y="12">FAN-OUT ON WRITE</text><rect x="2" y="28" width="112" height="44" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="58" y="55" text-anchor="middle">阿明發文</text><path d="M140 24 V 76" stroke="var(--accent)" stroke-width="1.4" fill="none"/><path d="M116 50 H140" stroke="var(--accent)" stroke-width="1.4" fill="none"/><line x1="140" y1="24" x2="184" y2="24" stroke="var(--accent)" stroke-width="1.4" marker-end="url(#fac)"/><line x1="140" y1="50" x2="184" y2="50" stroke="var(--accent)" stroke-width="1.4" marker-end="url(#fac)"/><line x1="140" y1="76" x2="184" y2="76" stroke="var(--accent)" stroke-width="1.4" marker-end="url(#fac)"/><rect x="188" y="12" width="188" height="24" rx="3" fill="var(--paper)" stroke="var(--line)" stroke-width="1.3"/><text class="f-s" x="282" y="28" text-anchor="middle">粉絲 A 的動態牆清單</text><rect x="188" y="38" width="188" height="24" rx="3" fill="var(--paper)" stroke="var(--line)" stroke-width="1.3"/><text class="f-s" x="282" y="54" text-anchor="middle">粉絲 B 的動態牆清單</text><rect x="188" y="64" width="188" height="24" rx="3" fill="var(--paper)" stroke="var(--line)" stroke-width="1.3"/><text class="f-s" x="282" y="80" text-anchor="middle">粉絲 C 的動態牆清單</text><text class="f-l" x="386" y="54">發文當下就先塞好</text><text class="f-l" x="2" y="104">打開的時候直接拿現成的，很快。但名人一發文，要塞進三千萬份清單。</text><line x1="2" y1="120" x2="518" y2="120" stroke="var(--line-soft)" stroke-width="1"/><text class="f-hd" x="2" y="146">拉</text><text class="f-l" x="46" y="146">FAN-OUT ON READ</text><rect x="2" y="162" width="112" height="44" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="58" y="189" text-anchor="middle">你打開 App</text><path d="M140 158 V 210" stroke="var(--ink-3)" stroke-width="1.4" fill="none"/><line x1="186" y1="158" x2="144" y2="158" stroke="var(--ink-3)" stroke-width="1.3" marker-end="url(#fa)"/><line x1="186" y1="184" x2="144" y2="184" stroke="var(--ink-3)" stroke-width="1.3" marker-end="url(#fa)"/><line x1="186" y1="210" x2="144" y2="210" stroke="var(--ink-3)" stroke-width="1.3" marker-end="url(#fa)"/><line x1="140" y1="184" x2="118" y2="184" stroke="var(--ink-3)" stroke-width="1.3" marker-end="url(#fa)"/><rect x="188" y="146" width="188" height="24" rx="3" fill="var(--paper)" stroke="var(--line)" stroke-width="1.3"/><text class="f-s" x="282" y="162" text-anchor="middle">追蹤的人 A 的貼文</text><rect x="188" y="172" width="188" height="24" rx="3" fill="var(--paper)" stroke="var(--line)" stroke-width="1.3"/><text class="f-s" x="282" y="188" text-anchor="middle">追蹤的人 B 的貼文</text><rect x="188" y="198" width="188" height="24" rx="3" fill="var(--paper)" stroke="var(--line)" stroke-width="1.3"/><text class="f-s" x="282" y="214" text-anchor="middle">追蹤的人 C 的貼文</text><text class="f-l" x="386" y="188">打開才去撈</text><text class="f-l" x="2" y="238">寫入很輕，名人發文也不用塞。但每次打開都要重撈一次、重排一次。</text></svg>
+<figcaption>實務上兩種混用：一般帳號用推，粉絲數超過門檻的名人改用拉，打開的時候<b>當場撈進來合併</b>。</figcaption>
+</figure>
+</dd></div>
       <div><dt>怎麼撐大</dt><dd><b>正解是混用</b>，這是這題的標準答案。業界叫這個 <b>fan-out</b>：推是 fan-out on write，拉是 fan-out on read。<br>一般帳號用<b>推</b>：粉絲不多，塞得起。<br>名人帳號用<b>拉</b>：一個人發文要塞進三千萬個清單，會直接把系統打垮。所以名人的貼文不推，等使用者打開動態牆時<b>當場撈進來跟推好的合併</b>。<br>判斷是不是名人，就設一個粉絲數門檻。</dd></div>
       <div><dt>會在哪裡壞</dt><dd><b>剛追蹤的人的舊貼文不會出現</b>，因為推的時候他還不是粉絲。要另外補一次回填。<br><b>刪文之後還留在別人的清單裡</b>。清單是複製出來的，原文刪了要一個個去清，通常改成讀取時再過濾一次。</dd></div>
       <div><dt>真實案例</dt><dd>這題業界有個外號叫「<b>Justin Bieber 問題</b>」。2011 年他在 Instagram 發第一張照片，幾百萬粉絲同時湧進來按讚留言，<b>直接把 Instagram 的伺服器打掛</b>。Instagram 共同創辦人後來說，他把 Bieber 帳號在資料庫裡的編號背得滾瓜爛熟，因為出問題的常常就是那個帳號。<br>Twitter 後來公開的做法就是上面講的混用：一般人的推文用推的，塞進粉絲的清單；<b>粉絲超過某個門檻的名人改用拉的</b>，使用者打開的時候才當場撈進來合併。</dd></div>
@@ -353,9 +377,9 @@ STOPS.forEach((s,i)=>{
     card.innerHTML = `
       <div class="d-top"><span class="d-name">${s.add}</span><span class="d-tag">第 ${i+1} 站</span></div>
       <div class="ba">
-        <div class="no"><span class="lab">撞到什麼牆</span><p>${s.wall}</p></div>
+        <div class="no"><span class="lab">當時發生什麼事</span><p>${s.wall}</p></div>
         <div class="arrow">↓ 所以</div>
-        <div class="yes"><span class="lab">加了什麼</span><p>${s.fix}</p></div>
+        <div class="yes"><span class="lab">怎麼解決的</span><p>${s.fix}</p></div>
       </div>
       <div class="d-shape">${s.shape}</div>
       <div class="d-grid">

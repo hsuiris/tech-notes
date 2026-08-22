@@ -150,7 +150,6 @@
   <div class="navlinks">
     <a href="architecture.html">架構圖</a>
     <a href="errors.html">錯誤訊息</a>
-    <a href="request.html">按鈕之旅</a>
     <a href="project.html">專案資料夾</a>
     <a href="skills.html" aria-current="page">Claude 技能</a>
     <a href="agents.html">AI 大軍</a>
@@ -161,6 +160,15 @@
 </div></nav>
 
 <div class="wrap">
+
+<svg class="figdefs" width="0" height="0" aria-hidden="true" focusable="false"
+     style="position:absolute;overflow:hidden"><defs>
+  <marker id="fa" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto">
+    <path d="M0 0 L10 4 L0 8 Z" fill="var(--ink-3)"/></marker>
+  <marker id="fac" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto">
+    <path d="M0 0 L10 4 L0 8 Z" fill="var(--accent)"/></marker>
+</defs></svg>
+
 
 <header>
   <div class="eyebrow">Claude 技能</div>
@@ -200,8 +208,12 @@
     </div>
   </div>
 
+<figure class="fig">
+<svg viewBox="0 0 560 252" role="img" aria-label="五種零件的差別在於誰去啟動它"><text class="f-hd" x="2" y="14">差別只有一個：誰去叫它</text><rect x="2" y="30" width="116" height="28" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="60" y="49" text-anchor="middle">你</text><text class="f-s" x="160" y="39" text-anchor="middle">打 /名字</text><line x1="122" y1="44" x2="194" y2="44" stroke="var(--accent)" stroke-width="1.4" marker-end="url(#fac)"/><rect x="198" y="30" width="112" height="28" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="254" y="49" text-anchor="middle">command</text><text class="f-l" x="320" y="48">你打  /名字 才會跑</text><rect x="2" y="68" width="116" height="28" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="60" y="87" text-anchor="middle">Claude</text><text class="f-s" x="160" y="77" text-anchor="middle">自己判斷</text><line x1="122" y1="82" x2="194" y2="82" stroke="var(--accent)" stroke-width="1.4" marker-end="url(#fac)"/><rect x="198" y="68" width="112" height="28" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="254" y="87" text-anchor="middle">skill</text><text class="f-l" x="320" y="86">判斷「這件事用得到」，自己想起來</text><rect x="2" y="106" width="116" height="28" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="60" y="125" text-anchor="middle">Claude</text><text class="f-s" x="160" y="115" text-anchor="middle">派出去</text><line x1="122" y1="120" x2="194" y2="120" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="198" y="106" width="112" height="28" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="254" y="125" text-anchor="middle">agent</text><text class="f-l" x="320" y="124">派另一個 Claude 去做，做完只回報結論</text><rect x="2" y="144" width="116" height="28" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="60" y="163" text-anchor="middle">時機到了</text><text class="f-s" x="160" y="153" text-anchor="middle">自動</text><line x1="122" y1="158" x2="194" y2="158" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="198" y="144" width="112" height="28" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="254" y="163" text-anchor="middle">hook</text><text class="f-l" x="320" y="162">固定時機自己跑，跟你想不想要無關</text><rect x="2" y="182" width="116" height="28" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="60" y="201" text-anchor="middle">外面的服務</text><text class="f-s" x="160" y="191" text-anchor="middle">需要時</text><line x1="122" y1="196" x2="194" y2="196" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="198" y="182" width="112" height="28" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="254" y="201" text-anchor="middle">MCP</text><text class="f-l" x="320" y="200">要外面的資料或工具，從這裡拿</text><text class="f-l" x="2" y="240">plugin 不是第六種零件，它只是一個把上面五種裝在一起、可以整包送人的資料夾。</text></svg>
+</figure>
+
   <div class="callout" style="margin-top:24px">
-    <b>一句話分辨：</b>skill 是<b>知識</b>（要用的時候自己想起來）、command 是<b>按鈕</b>（你按才動）、agent 是<b>員工</b>（派出去自己做完）、hook 是<b>鬧鐘</b>（時間到自己響）、MCP 是<b>插座</b>（接外面的東西）。<br>
+    換成生活裡的東西：skill 是<b>知識</b>（要用的時候自己想起來）、command 是<b>按鈕</b>（你按才動）、agent 是<b>員工</b>（派出去自己做完）、hook 是<b>鬧鐘</b>（時間到自己響）、MCP 是<b>插座</b>（接外面的東西）。<br>
     <b>plugin（外掛）不是第六種零件</b>，它只是一個把上面五種裝在一起、可以整包送人的資料夾。
   </div>
 
@@ -559,7 +571,12 @@ EOF</div>
       <div class="step-rail"><span class="dot"></span><span class="bar"></span></div>
       <div class="step-body">
         <h3>description 是唯一的開關<span class="time">最重要的一步</span></h3>
-        <p>Claude 平常<b>只看得到 name 和 description</b>，本文要等它決定「這件事該用這個技能」才會讀進去。這叫 progressive disclosure（漸進式揭露，用到才載入，省記憶體）。<b>所以 description 寫壞，你整份技能就永遠不會被叫到。</b></p>
+        <p>Claude 平常<b>只看得到 name 和 description</b>，本文要等它決定「這件事該用這個技能」才會讀進去。<b>所以 description 寫壞，你整份技能就永遠不會被叫到。</b></p>
+<figure class="fig">
+<svg viewBox="0 0 520 250" role="img" aria-label="平常只載入 name 和 description，判斷要用了才讀本文，本文叫它才去讀附檔"><text class="f-hd" x="2" y="12">平常</text><rect x="2" y="20" width="250" height="38" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="127" y="37" text-anchor="middle">name ＋ description</text><text class="f-l" x="127" y="52" text-anchor="middle">兩行，很短</text><text class="f-l" x="264" y="44">隨時都佔著位子，所以要短</text><line x1="127" y1="62" x2="127" y2="84" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><text class="f-l" x="137" y="78">你說的話對上 description，才往下</text><text class="f-hd" x="2" y="104">這時候才載入</text><rect x="2" y="112" width="250" height="38" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="127" y="129" text-anchor="middle">SKILL.md 本文</text><text class="f-l" x="127" y="144" text-anchor="middle">幾十行到幾百行</text><text class="f-l" x="264" y="136">用到才讀進來</text><line x1="127" y1="154" x2="127" y2="176" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><text class="f-l" x="137" y="170">本文寫「要做 X 就去看 Y」，才往下</text><text class="f-hd" x="2" y="196">再往下</text><rect x="2" y="204" width="250" height="38" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="127" y="221" text-anchor="middle">references/、腳本</text><text class="f-l" x="127" y="236" text-anchor="middle">可以很長</text><text class="f-l" x="264" y="228">平常完全不佔空間</text></svg>
+<figcaption>這種一層一層才載入的做法叫 <b>progressive disclosure</b>（漸進式揭露）。description 沒寫好，後面兩層就永遠不會被打開。</figcaption>
+</figure>
+
         <div class="vs">
           <div class="bad">
             <div class="lab">寫成這樣 → 不會觸發</div>

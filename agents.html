@@ -130,7 +130,6 @@
   <div class="navlinks">
     <a href="architecture.html">架構圖</a>
     <a href="errors.html">錯誤訊息</a>
-    <a href="request.html">按鈕之旅</a>
     <a href="project.html">專案資料夾</a>
     <a href="skills.html">Claude 技能</a>
     <a href="agents.html" aria-current="page">AI 大軍</a>
@@ -141,6 +140,15 @@
 </div></nav>
 
 <div class="wrap">
+
+<svg class="figdefs" width="0" height="0" aria-hidden="true" focusable="false"
+     style="position:absolute;overflow:hidden"><defs>
+  <marker id="fa" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto">
+    <path d="M0 0 L10 4 L0 8 Z" fill="var(--ink-3)"/></marker>
+  <marker id="fac" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto">
+    <path d="M0 0 L10 4 L0 8 Z" fill="var(--accent)"/></marker>
+</defs></svg>
+
 
 <header>
   <div class="eyebrow">AI 大軍</div>
@@ -193,7 +201,7 @@
   </div>
 
   <div class="callout" style="margin-top:24px">
-    <b>一句話分辨：</b>接力是<b>生產線</b>、分流是<b>櫃檯</b>、分頭做是<b>分組報告</b>、投票是<b>問三個醫生</b>、主管派工是<b>專案經理</b>、辯論是<b>法庭</b>、寫手加評審是<b>編輯台</b>、層級是<b>整間公司</b>。
+    用生活裡看得到的東西對照一次，會好記很多。接力是<b>生產線</b>，分流是<b>櫃檯</b>，分頭做是<b>分組報告</b>，投票是<b>問三個醫生</b>，主管派工是<b>專案經理</b>，辯論是<b>法庭</b>，寫手加評審是<b>編輯台</b>，層級是<b>一整間公司</b>。
   </div>
 </section>
 
@@ -204,34 +212,28 @@
     <div>
       <div class="lab">做法 A · 分頭做 ＋ 接力</div>
       <h3>收完資料就往下游送</h3>
-      <div class="d-shape">六個同時收資料
-      ↓
-   整合成一份
-      ↓
-    分析
-      ↓
-    寫結論</div>
+<figure class="fig narrow">
+<svg viewBox="0 0 300 212" role="img" aria-label="六個同時收資料，整合成一份，再分析，再寫結論"><rect x="4" y="10" width="42" height="22" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="25" y="26" text-anchor="middle">●</text><rect x="52" y="10" width="42" height="22" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="73" y="26" text-anchor="middle">●</text><rect x="100" y="10" width="42" height="22" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="121" y="26" text-anchor="middle">●</text><rect x="148" y="10" width="42" height="22" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="169" y="26" text-anchor="middle">●</text><rect x="196" y="10" width="42" height="22" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="217" y="26" text-anchor="middle">●</text><rect x="244" y="10" width="42" height="22" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="265" y="26" text-anchor="middle">●</text><text class="f-s" x="150" y="48" text-anchor="middle">六個同時收資料</text><line x1="150" y1="54" x2="150" y2="70" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="80" y="74" width="140" height="28" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="150" y="93" text-anchor="middle">整合成一份</text><line x1="150" y1="104" x2="150" y2="120" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="80" y="124" width="140" height="28" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="150" y="143" text-anchor="middle">分析</text><line x1="150" y1="154" x2="150" y2="170" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="80" y="174" width="140" height="28" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="150" y="193" text-anchor="middle">寫結論</text></svg>
+</figure>
+
       <dl>
         <div><dt>成立的前提</dt><dd>這套能不能成，全看<b>題目切得乾不乾淨</b>。六個人負責的領域要剛好不重疊，收回來的東西拼起來才會是全貌。</dd></div>
-        <div><dt>什麼時候贏</dt><dd>資料來源明確、彼此不相干、要快。收集是整件事裡最花時間的一段，六個同時做就是六倍快。</dd></div>
-        <div><dt>什麼時候輸</dt><dd>切不乾淨的時候。<b>兩個人做了同一件事，有些角落又沒人管</b>，麻煩的是後面沒有任何一關會發現。前面漏掉的，後面就全部照著錯下去。</dd></div>
+        <div><dt>什麼時候該用它</dt><dd>資料來源明確、彼此不相干、要快。收集是整件事裡最花時間的一段，六個同時做就是六倍快。</dd></div>
+        <div><dt>什麼時候會出事</dt><dd>切不乾淨的時候。<b>兩個人做了同一件事，有些角落又沒人管</b>，麻煩的是後面沒有任何一關會發現。前面漏掉的，後面就全部照著錯下去。</dd></div>
       </dl>
     </div>
 
     <div>
       <div class="lab">做法 B · 分頭做 ＋ 辯論</div>
       <h3>各自寫完再互相打</h3>
-      <div class="d-shape">六個各寫一份報告
-      ↓
-  互相看對方的
-      ↓
-  反駁、修正
-      ↓
-   收斂成結論</div>
+<figure class="fig narrow">
+<svg viewBox="0 0 300 212" role="img" aria-label="六個各寫一份，互相看互相挑錯，最後收斂成結論"><rect x="6" y="8" width="84" height="24" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="48" y="25" text-anchor="middle">報告 A</text><rect x="108" y="8" width="84" height="24" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="150" y="25" text-anchor="middle">報告 B</text><rect x="210" y="8" width="84" height="24" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="252" y="25" text-anchor="middle">報告 C</text><line x1="48" y1="36" x2="48" y2="54" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><line x1="150" y1="36" x2="150" y2="54" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><line x1="252" y1="36" x2="252" y2="54" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="6" y="58" width="288" height="30" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="5 3"/><text class="f-t" x="150" y="77" text-anchor="middle">互相看、互相挑錯、修正</text><text class="f-s" x="150" y="104" text-anchor="middle">這一輪可能跑好幾次，每一輪都要再花一次錢</text><line x1="150" y1="112" x2="150" y2="130" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="80" y="134" width="140" height="28" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="150" y="153" text-anchor="middle">收斂成結論</text><text class="f-s" x="150" y="186" text-anchor="middle">多一道互相檢查，也多一輪成本</text></svg>
+</figure>
+
       <dl>
         <div><dt>成立的前提</dt><dd><b>總會有人抓到別人的錯</b>。同一件事六個角度看過一遍，錯的說法應該撐不過互相檢查。</dd></div>
-        <div><dt>什麼時候贏</dt><dd>題目有爭議、答案不只一種、錯了代價很高。多一道互相檢查，比多收一倍資料有用。</dd></div>
-        <div><dt>什麼時候輸</dt><dd>它<b>最貴也最慢</b>，每多一輪就多燒一輪。而且有一種失敗很陰險：六個人可能<b>互相說服到一起錯</b>，最後很有自信地給你一個錯的答案，你還看不出來。</dd></div>
+        <div><dt>什麼時候該用它</dt><dd>題目有爭議、答案不只一種、錯了代價很高。多一道互相檢查，比多收一倍資料有用。</dd></div>
+        <div><dt>什麼時候會出事</dt><dd>它<b>最貴也最慢</b>，每多一輪就多燒一輪。而且有一種失敗很陰險：六個人可能<b>互相說服到一起錯</b>，最後很有自信地給你一個錯的答案，你還看不出來。</dd></div>
       </dl>
     </div>
   </div>
@@ -256,9 +258,9 @@
      ↓
 數哪個答案最多</div>
       <dl>
-        <div><dt>從頭到尾</dt><dd>三個人<b>不知道別人寫什麼</b>。</dd></div>
+        <div><dt>會不會互相看到</dt><dd>不會。三個人<b>從頭到尾都不知道別人寫什麼</b>。</dd></div>
         <div><dt>成立的前提</dt><dd>多數人不會剛好一起錯。</dd></div>
-        <div><dt>它怕的是</dt><dd>怕題目剛好有個常見的陷阱，三個人<b>一起掉進去</b>，投出來三票都是錯的，而且沒有人會發現。</dd></div>
+        <div><dt>會在哪裡失敗</dt><dd>怕題目剛好有個常見的陷阱，三個人<b>一起掉進去</b>，投出來三票都是錯的，而且沒有人會發現。</dd></div>
       </dl>
     </div>
     <div>
@@ -274,9 +276,9 @@
      ↓
 來回幾輪，最後才收斂</div>
       <dl>
-        <div><dt>多出來的那段</dt><dd><b>看到別人的答案，然後可以改</b>。這一段投票沒有。</dd></div>
+        <div><dt>會不會互相看到</dt><dd>會。<b>看得到別人的答案，而且看完可以改自己的</b>。這一段投票沒有。</dd></div>
         <div><dt>成立的前提</dt><dd>三個人裡面，總有一個會看出那是陷阱。</dd></div>
-        <div><dt>它怕的是</dt><dd>怕第一個開口的人講得很有自信，把其他人<b>說服到一起錯</b>。這點投票反而沒問題，因為大家互相看不到。</dd></div>
+        <div><dt>會在哪裡失敗</dt><dd>怕第一個開口的人講得很有自信，把其他人<b>說服到一起錯</b>。這點投票反而沒問題，因為大家互相看不到。</dd></div>
       </dl>
     </div>
   </div>
@@ -588,11 +590,11 @@ document.querySelectorAll(".part").forEach(btn=>{
       <div class="d-shape">${w.shape}</div>
       <p class="d-lede">${w.how}</p>
       <div class="d-grid">
-        <div class="d-cell"><dt>什麼時候贏</dt><dd>${w.win}</dd></div>
-        <div class="d-cell"><dt>什麼時候別用</dt><dd>${w.lose}</dd></div>
-        <div class="d-cell"><dt>大概多貴</dt><dd>${w.cost}</dd></div>
+        <div class="d-cell"><dt>適合什麼題目</dt><dd>${w.win}</dd></div>
+        <div class="d-cell"><dt>什麼情況不要用</dt><dd>${w.lose}</dd></div>
+        <div class="d-cell"><dt>成本怎麼算</dt><dd>${w.cost}</dd></div>
       </div>
-      ${w.src ? `<div class="origin"><dt>前身</dt><dd>${w.src}</dd></div>` : ""}
+      ${w.src ? `<div class="origin"><dt>這個想法從哪來</dt><dd>${w.src}</dd></div>` : ""}
       ${w.more ? `<div class="callout ok" style="margin-top:14px">${w.more}</div>` : ""}`;
     if(window.matchMedia("(max-width:860px)").matches)
       card.scrollIntoView({block:"nearest", behavior:"smooth"});

@@ -1,7 +1,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>看懂錯誤訊息 · tech-notes</title>
-<meta name="description" content="一大串紅字裡，只有三行要看。15 個最常見錯誤的白話翻譯，以及貼給 AI 的正確方式。">
+<meta name="description" content="一大串紅字裡，只有兩行要看。16 個最常見錯誤的白話翻譯，以及貼給 AI 的正確方式。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
 <link rel="stylesheet" href="assets/base.css">
 <style>
@@ -44,17 +44,17 @@
   border:1px solid var(--line); padding:1px 7px; border-radius:3px;
   margin-left:8px; white-space:nowrap; display:inline-block; vertical-align:2px;
 }
-.err dl{margin:0; display:flex; flex-direction:column; gap:9px}
-.err dt{
-  font-family:var(--font-mono); font-size:10px; letter-spacing:.13em;
+.ebody{display:flex; flex-direction:column; gap:9px}
+.lab{
+  display:block; font-family:var(--font-mono); font-size:10px; letter-spacing:.13em;
   color:var(--ink-3); text-transform:uppercase; margin-bottom:2px;
 }
-.err dd{margin:0; font-size:14px; color:var(--ink-2); line-height:1.7}
-.err dd code{
+.txt{margin:0; font-size:14px; color:var(--ink-2); line-height:1.7}
+.txt code{
   font-family:var(--font-mono); font-size:12.5px; background:var(--paper-3);
   padding:1px 6px; border-radius:3px; color:var(--ink); word-break:break-word;
 }
-.err .fix dd{color:var(--ink)}
+.row.fix .txt{color:var(--ink)}
 
 /* ── 04 模板 ── */
 .tpl{position:relative}
@@ -72,7 +72,6 @@
   <div class="navlinks">
     <a href="architecture.html">架構圖</a>
     <a href="errors.html" aria-current="page">錯誤訊息</a>
-    <a href="request.html">按鈕之旅</a>
     <a href="project.html">專案資料夾</a>
     <a href="skills.html">Claude 技能</a>
     <a href="agents.html">AI 大軍</a>
@@ -83,6 +82,15 @@
 </div></nav>
 
 <div class="wrap">
+
+<svg class="figdefs" width="0" height="0" aria-hidden="true" focusable="false"
+     style="position:absolute;overflow:hidden"><defs>
+  <marker id="fa" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto">
+    <path d="M0 0 L10 4 L0 8 Z" fill="var(--ink-3)"/></marker>
+  <marker id="fac" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto">
+    <path d="M0 0 L10 4 L0 8 Z" fill="var(--accent)"/></marker>
+</defs></svg>
+
 
 <header>
   <div class="eyebrow">錯誤訊息</div>
@@ -111,14 +119,14 @@
   </div>
 
   <div class="callout" style="margin-top:24px">
-    記一句話就好：看<b>第一行</b>知道「發生什麼事」，看<b>有你檔名的那一行</b>知道「在哪裡發生」。<br>
+    看<b>第一行</b>知道發生什麼事，看<b>有你檔名的那一行</b>知道在哪裡發生。<br>
     其他行有 <code style="font-family:var(--font-mono);font-size:12.5px">node_modules</code> 這個字的，一律跳過。
   </div>
 </section>
 
 <section>
   <div class="sec-head"><span class="sec-num">02</span><h2>16 個最常見的錯誤</h2></div>
-  <p class="sec-lede">直接搜尋你看到的關鍵字。每一個都寫了<b>意思、通常是什麼原因、先試什麼</b>。</p>
+  <p class="sec-lede">把你看到的關鍵字貼進搜尋框就會篩出來。每一則的重點放在<b>它在說什麼</b>，以及<b>你下一步先動哪裡</b>。</p>
 
   <div class="tools">
     <input class="search" id="q" type="search" placeholder="貼上關鍵字，例如 undefined" aria-label="搜尋錯誤訊息">
@@ -147,6 +155,9 @@ npm run dev</div>
       <div class="step-body">
         <h3>看更早的那個紅字<span class="time">30 秒</span></h3>
         <p>你看到的紅字，常常<b>不是第一個</b>錯誤，只是最後倒下的那個。在瀏覽器按 <code>F12</code>（Mac 是 <code>Cmd</code>＋<code>Option</code>＋<code>I</code>）打開 Console，<b>往上捲到最上面</b>，第一個紅字才是元兇。</p>
+<figure class="fig">
+<svg viewBox="0 0 520 176" role="img" aria-label="Console 裡第一個紅字才是原因，後面的都是被連累的"><text class="f-hd" x="2" y="14">CONSOLE</text><rect x="86" y="24" width="300" height="26" rx="3" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.3"/><text class="f-s" x="98" y="41">✕  第 1 個紅字</text><text class="f-l" x="396" y="41">真正的原因</text><rect x="86" y="56" width="300" height="26" rx="3" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.3"/><text class="f-s" x="98" y="73">✕  第 2 個紅字</text><text class="f-l" x="396" y="73">被前一個連累</text><rect x="86" y="88" width="300" height="26" rx="3" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.3"/><text class="f-s" x="98" y="105">✕  第 3 個紅字</text><text class="f-l" x="396" y="105">被前一個連累</text><rect x="86" y="120" width="300" height="26" rx="3" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.3"/><text class="f-s" x="98" y="137">✕  最後一個紅字</text><text class="f-l" x="396" y="137">你最先看到的</text><path d="M40 133 V 37" stroke="var(--accent)" stroke-width="1.4" fill="none" marker-end="url(#fac)"/><text class="f-s" x="14" y="152">往上捲</text><text class="f-l" x="2" y="172">第一個倒下的才是原因。你最先看到的那個，通常只是最後倒下的那一個。</text></svg>
+</figure>
       </div>
     </div>
     <div class="step">
@@ -253,72 +264,79 @@ document.querySelectorAll(".z").forEach(btn=>{
 });
 
 /* ══════════ 02 常見錯誤 ══════════ */
-// [訊息, 分類, 意思, 通常是, 先試什麼]
+// {m:錯誤訊息, c:分類, b:[[小標, 內容], ...]}
+// 小標寫 null 就只出現一段話，不加標籤。最後一段會用比較深的字色。
 const ERRORS = [
-  ["Cannot read properties of undefined (reading 'xxx')","畫面",
-   "你想從一個「還不存在的東西」裡面拿 xxx。程式裡的 <code>undefined</code> 就是「這個位子是空的」。",
-   "資料還在載入中，你就先拿來用了。或是打錯欄位名字（<code>titel</code> 而不是 <code>title</code>）。",
-   "在用之前先擋一下：<code>data?.title</code>。那個問號的意思是「如果沒有就算了，不要爆炸」。"],
-  ["Maximum update depth exceeded","畫面",
-   "畫面更新引發更新，無限迴圈停不下來，瀏覽器只好把它掐掉。",
-   "<code>useEffect</code> 裡面改了它自己正在監聽的那個東西。",
-   "看 <code>useEffect</code> 第二個參數（那個中括號）裡放了什麼，是不是跟裡面改的東西同一個。"],
-  ["Hydration failed because the initial UI does not match","畫面",
-   "伺服器先畫好的畫面，跟瀏覽器後來畫的<b>對不起來</b>。",
-   "用了 <code>new Date()</code>、<code>Math.random()</code> 或 <code>window.xxx</code>，這些東西伺服器跟瀏覽器算出來本來就不一樣。",
-   "把那段改成只在瀏覽器跑（放進 <code>useEffect</code> 裡面）。"],
-  ["Each child in a list should have a unique \"key\" prop","畫面",
-   "你用迴圈畫了一串東西，但沒給每一個身分證，React 分不出誰是誰。",
-   "<code>.map()</code> 忘了加 <code>key</code>。",
-   "加 <code>key={資料的 id}</code>。<b>不要</b>用陣列順序當 key，順序一變就出錯。"],
-  ["Objects are not valid as a React child","畫面",
-   "你想把一整包資料直接印在畫面上，但畫面只吃文字。",
-   "忘了寫欄位名，直接寫了整包。",
-   "確認你印的是 <code>user.name</code> 而不是 <code>user</code>。"],
-  ["Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON","網路",
-   "你以為會拿到資料，結果拿到<b>一整個網頁</b>。<code>&lt;!DOCTYPE</code> 是 HTML 的開頭。",
-   "網址打錯，伺服器回了一個 404 找不到頁面給你。",
-   "把那個網址直接貼到瀏覽器打開，看看到底出現什麼。九成是網址錯。"],
-  ["CORS policy: No 'Access-Control-Allow-Origin' header","網路",
-   "後端沒把你的網站放進允許名單。瀏覽器為了安全，直接幫你擋掉了。",
-   "前端在一個網址、後端在另一個網址，後端沒把你加進白名單。",
-   "<b>這要改後端設定，前端怎麼改都沒用。</b>不要浪費時間在前端試。"],
-  ["401 Unauthorized","網路",
-   "你沒證明你是誰。伺服器不認識你。",
-   "token（代表身分的那串密碼）沒帶、過期了、或格式錯了（少了 <code>Bearer </code> 開頭）。",
-   "重新登入拿一個新的 token 試試。"],
-  ["403 Forbidden","網路",
-   "知道你是誰，但<b>你沒權限</b>看這個。跟 401 差在這裡。",
-   "帳號等級不夠，或後端的權限規則寫錯。",
-   "換一個有權限的帳號試。能過就是權限設定問題，不能過就是程式問題。"],
-  ["500 Internal Server Error","網路",
-   "後端自己爆了，而且它也不知道為什麼。",
-   "跟你的前端<b>完全無關</b>。錯在伺服器那邊。",
-   "不要在前端找原因，找到天亮也沒有。去看伺服器的 log（執行紀錄），真正的錯誤訊息在那裡。"],
-  ["Module not found: Can't resolve 'xxx'","安裝",
-   "找不到叫 xxx 的東西。",
-   "忘了 <code>npm install</code>；或名字打錯；或檔案路徑寫錯。",
-   "先 <code>npm install xxx</code>。還是不行就檢查<b>大小寫</b>。你的 Mac 不分大小寫，伺服器會分。"],
-  ["EADDRINUSE: address already in use :::3000","安裝",
-   "3000 這個門牌已經有程式佔著了，新的擠不進去。",
-   "上一次沒關乾淨，舊的還在背景偷偷跑。",
-   "<code>lsof -ti:3000 | xargs kill</code>（把佔著 3000 的程式關掉），再重跑。"],
-  ["npm ERR! code ERESOLVE","安裝",
-   "套件之間版本打架，npm 不知道該聽誰的。",
-   "某個套件太舊，跟你的 React 版本合不來。",
-   "<code>npm install --legacy-peer-deps</code>（叫 npm 別管這個衝突，先裝再說）。"],
-  ["ENOENT: no such file or directory","安裝",
-   "找不到這個檔案。<code>ENOENT</code> ＝ Error NO ENTry。",
-   "路徑打錯，或檔案真的不在那裡。",
-   "把訊息裡那個路徑複製起來，在終端機打 <code>ls 那個路徑</code>，看它到底存不存在。"],
-  ["Type 'string' is not assignable to type 'number'","型別",
-   "TypeScript 說你把<b>文字</b>塞進了只能放<b>數字</b>的地方。",
-   "從網址、表單、輸入框拿到的東西<b>一律是文字</b>，就算它長得像數字。",
-   "用 <code>Number(那個值)</code> 轉成數字再用。"],
-  ["SyntaxError: Unexpected end of JSON input","網路",
-   "你想把一段文字當成資料來讀，但那段文字是空的或斷在一半。",
-   "API 回傳了空白，或網路斷在中途。",
-   "先把拿到的東西原封不動印出來看看（<code>console.log</code>），確認到底收到什麼。"],
+  { m:"Cannot read properties of undefined (reading 'xxx')", c:"畫面", b:[
+    [null,"你拿了一個還沒有值的東西，去讀它裡面的 xxx。像是畫面上寫 <code>data.title</code>，但這個時候 <code>data</code> 還是 <code>undefined</code>（空的），程式就停在這一行。"],
+    [null,"最常見的原因是資料還沒載入完成，或者欄位名稱打錯了，例如把 <code>title</code> 寫成 <code>titel</code>。"],
+    ["先試什麼","如果這個欄位本來就可能沒有值，先寫成 <code>data?.title</code>。<code>?.</code> 的意思是：有 <code>data</code> 就繼續讀，沒有就回傳 undefined，不要讓整支程式停掉。"]]},
+
+  { m:"Maximum update depth exceeded", c:"畫面", b:[
+    ["這行在說什麼","畫面更新又引發下一次更新，一直繞不出來，瀏覽器只好把它停掉。"],
+    [null,"幾乎都是同一個原因：<code>useEffect</code> 裡面改了它自己正在監聽的那個值。"],
+    ["先看哪裡","看 <code>useEffect</code> 第二個參數（那個中括號）裡放了什麼，跟裡面改的是不是同一個東西。"]]},
+
+  { m:"Hydration failed because the initial UI does not match", c:"畫面", b:[
+    [null,"這代表伺服器產生的 HTML，跟瀏覽器接手之後算出來的結果不一樣。"],
+    [null,"例如畫面裡直接用了 <code>new Date()</code>、<code>Math.random()</code> 或 <code>window.xxx</code>。伺服器和瀏覽器執行的時間、亂數或環境不同，最後產生的內容就對不起來。"],
+    ["先試什麼","如果這段程式只能在瀏覽器執行，把它移到 <code>useEffect</code> 裡面。"]]},
+
+  { m:'Each child in a list should have a unique "key" prop', c:"畫面", b:[
+    [null,"用迴圈畫出一串東西的時候，React 需要一個固定的標記才分得出誰是誰。<code>.map()</code> 裡忘了加 <code>key</code> 就會看到這一行。"],
+    ["先試什麼","加上 <code>key={資料的 id}</code>。不要用陣列順序當 key，順序一變就會出錯。"]]},
+
+  { m:"Objects are not valid as a React child", c:"畫面", b:[
+    ["這行在說什麼","你把一整包資料直接放到畫面上了，但畫面只能顯示文字。"],
+    ["先試什麼","確認你印出來的是 <code>user.name</code>，而不是 <code>user</code>。"]]},
+
+  { m:'Unexpected token \'<\', "<!DOCTYPE "... is not valid JSON', c:"網路", b:[
+    [null,"程式想把回應當成資料來讀，結果拿到的是一整頁網頁。<code>&lt;!DOCTYPE</code> 就是網頁的開頭。"],
+    [null,"通常是網址打錯，伺服器回了一頁「找不到」給你。"],
+    ["先試什麼","把那個網址直接貼到瀏覽器打開，看它到底回什麼。大多數情況都是網址錯。"]]},
+
+  { m:"CORS policy: No 'Access-Control-Allow-Origin' header", c:"網路", b:[
+    [null,"前端在一個網址、後端在另一個網址，後端沒有把你的網站加進允許名單，瀏覽器為了安全就替你擋下來了。"],
+    ["先試什麼","這要改後端設定，前端怎麼改都沒有用。不要花時間在前端試。"]]},
+
+  { m:"401 Unauthorized", c:"網路", b:[
+    ["這行在說什麼","你沒有證明你是誰，伺服器不認識你。"],
+    ["通常是因為","token（代表你身分的那串密碼）沒帶、過期了，或格式錯了（少了 <code>Bearer </code> 開頭）。"],
+    ["先試什麼","重新登入拿一張新的 token 再試一次。"]]},
+
+  { m:"403 Forbidden", c:"網路", b:[
+    [null,"伺服器知道你是誰，但你沒有權限看這個。跟 401 的差別就在這裡：401 是不認識你，403 是認識你，但不給你看。"],
+    ["先試什麼","換一個權限比較高的帳號試。能過就是權限設定的問題，不能過就是程式的問題。"]]},
+
+  { m:"500 Internal Server Error", c:"網路", b:[
+    [null,"後端自己出錯了，而且它也說不出原因。這跟你的前端沒有關係。"],
+    ["先試什麼","不要在前端找原因。去看伺服器的 log（執行紀錄），真正的錯誤訊息在那裡面。"]]},
+
+  { m:"SyntaxError: Unexpected end of JSON input", c:"網路", b:[
+    [null,"程式想把一段文字當成資料來讀，但那段文字是空的，或是斷在一半。API 回了空白、網路斷在中途，都會這樣。"],
+    ["先試什麼","先把收到的東西原封不動印出來看（<code>console.log</code>），確認到底拿到了什麼。"]]},
+
+  { m:"Module not found: Can't resolve 'xxx'", c:"安裝", b:[
+    ["這行在說什麼","找不到叫 xxx 的東西。"],
+    ["通常是因為","忘了 <code>npm install</code>、名字打錯，或路徑寫錯。"],
+    ["先試什麼","先跑 <code>npm install xxx</code>。還是不行就檢查大小寫，你的 Mac 不分大小寫，伺服器會分。"]]},
+
+  { m:"EADDRINUSE: address already in use :::3000", c:"安裝", b:[
+    [null,"3000 這個門牌已經被別的程式佔住，新的擠不進去。通常是上一次沒有關乾淨，舊的還在背景跑。"],
+    ["先試什麼","<code>lsof -ti:3000 | xargs kill</code> 把佔住 3000 的程式關掉，再重跑一次。"]]},
+
+  { m:"npm ERR! code ERESOLVE", c:"安裝", b:[
+    [null,"套件之間的版本對不上，npm 不知道要聽誰的。多半是某個套件太舊，跟你現在的 React 版本合不來。"],
+    ["先試什麼","<code>npm install --legacy-peer-deps</code>，意思是叫 npm 先別管這個衝突，裝了再說。"]]},
+
+  { m:"ENOENT: no such file or directory", c:"安裝", b:[
+    [null,"找不到這個檔案。<code>ENOENT</code> 是 Error NO ENTry 的縮寫，路徑打錯或檔案真的不在那裡都會看到。"],
+    ["先試什麼","把訊息裡那個路徑複製起來，在終端機打 <code>ls 那個路徑</code>，看它到底存不存在。"]]},
+
+  { m:"Type 'string' is not assignable to type 'number'", c:"型別", b:[
+    ["這行在說什麼","TypeScript 說你把文字塞進了只能放數字的地方。"],
+    [null,"從網址、表單、輸入框拿到的東西一律是文字，就算它長得像數字也一樣。"],
+    ["先試什麼","用 <code>Number(那個值)</code> 轉成數字再用。"]]},
 ];
 
 const ECATS = ["全部","畫面","網路","安裝","型別"];
@@ -341,16 +359,16 @@ const errsEl = document.getElementById("errs"), noneEl = document.getElementById
 function draw(){
   const f = eQ.trim().toLowerCase();
   const rows = ERRORS.filter(e =>
-    (eCat === "全部" || e[1] === eCat) &&
-    (!f || e.join(" ").toLowerCase().includes(f)));
+    (eCat === "全部" || e.c === eCat) &&
+    (!f || (e.m + " " + e.c + " " + e.b.map(r=>r.join(" ")).join(" ")).toLowerCase().includes(f)));
   errsEl.innerHTML = rows.map(e => `
     <div class="err">
-      <div class="err-msg">${esc(e[0])}<span class="err-cat">${esc(e[1])}</span></div>
-      <dl>
-        <div><dt>意思</dt><dd>${e[2]}</dd></div>
-        <div><dt>通常是</dt><dd>${e[3]}</dd></div>
-        <div class="fix"><dt>先試什麼</dt><dd>${e[4]}</dd></div>
-      </dl>
+      <div class="err-msg">${esc(e.m)}<span class="err-cat">${esc(e.c)}</span></div>
+      <div class="ebody">${e.b.map(([lab, html], k) => `
+        <div class="row${k === e.b.length - 1 ? " fix" : ""}">
+          ${lab ? `<span class="lab">${esc(lab)}</span>` : ""}
+          <p class="txt">${html}</p>
+        </div>`).join("")}</div>
     </div>`).join("");
   noneEl.hidden = rows.length > 0;
 }

@@ -199,3 +199,24 @@ footer{padding:46px 0 76px; color:var(--ink-3); font-size:13.5px; line-height:1.
 footer b{color:var(--ink)}
 footer a{color:var(--ink-2)}
 footer .cred{margin-top:20px; font-size:12px; font-family:var(--font-mono)}
+
+/* ── 圖解 ── */
+.fig{
+  margin:26px 0; border:1px solid var(--line-soft); border-radius:4px;
+  background:var(--paper); padding:20px 18px 8px; overflow-x:auto;
+}
+.fig>svg{display:block; width:560px; max-width:100%; min-width:430px; height:auto; margin:0 auto}
+.fig text{font-family:var(--font-cn); fill:var(--ink)}
+.fig .f-t{font-size:13px; font-weight:700}
+.fig .f-s{font-size:11px; fill:var(--ink-2); font-family:var(--font-mono)}
+.fig .f-l{font-size:11px; fill:var(--ink-3)}
+.fig .f-c{font-size:11.5px; fill:var(--ink-2)}
+.fig .f-hd{font-size:11.5px; font-weight:700; fill:var(--ink-2); letter-spacing:.06em}
+.fig figcaption{
+  margin:12px auto 6px; max-width:560px; font-size:13px; color:var(--ink-3);
+  line-height:1.8; text-align:center;
+}
+.fig figcaption b{color:var(--ink-2); font-weight:700}
+.fig.narrow>svg{width:290px; min-width:0}
+.fig.incard{margin:16px 0 0; padding:14px 12px 6px}
+.fig.incard>svg{width:100%; min-width:0; max-width:400px}

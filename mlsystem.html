@@ -71,7 +71,6 @@
   <div class="navlinks">
     <a href="architecture.html">架構圖</a>
     <a href="errors.html">錯誤訊息</a>
-    <a href="request.html">按鈕之旅</a>
     <a href="project.html">專案資料夾</a>
     <a href="skills.html">Claude 技能</a>
     <a href="agents.html">AI 大軍</a>
@@ -82,6 +81,15 @@
 </div></nav>
 
 <div class="wrap">
+
+<svg class="figdefs" width="0" height="0" aria-hidden="true" focusable="false"
+     style="position:absolute;overflow:hidden"><defs>
+  <marker id="fa" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto">
+    <path d="M0 0 L10 4 L0 8 Z" fill="var(--ink-3)"/></marker>
+  <marker id="fac" viewBox="0 0 10 8" refX="9" refY="4" markerWidth="7" markerHeight="6" orient="auto">
+    <path d="M0 0 L10 4 L0 8 Z" fill="var(--accent)"/></marker>
+</defs></svg>
+
 
 <header>
   <div class="eyebrow">ML 系統</div>
@@ -209,9 +217,14 @@
   </div>
 
   <div class="callout" style="margin-top:22px">
-    整張圖記一件事就好：上面那條線<b>慢慢做，做出一個模型</b>；下面那條線<b>在使用者等的那幾十毫秒內把答案生出來</b>。<br>
+    整張圖其實只有兩條線。上面那條<b>慢慢做，做出一個模型</b>；下面那條<b>要在使用者等的那幾十毫秒內把答案生出來</b>。<br>
     兩條線共用中間那兩個倉庫。ML 系統絕大多數的怪問題，說穿了都是「兩邊拿到的東西不一樣」。
   </div>
+
+<figure class="fig">
+<svg viewBox="0 0 520 200" role="img" aria-label="訓練時和上線時如果用不同的算法整理特徵，模型就會慢慢變笨"><text class="f-hd" x="2" y="12">訓練時（慢慢做）</text><rect x="2" y="24" width="124" height="34" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="64" y="46" text-anchor="middle">歷史資料</text><line x1="130" y1="41" x2="166" y2="41" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="170" y="24" width="150" height="34" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="245" y="39" text-anchor="middle">整理成特徵</text><text class="f-l" x="245" y="54" text-anchor="middle">批次、可以慢慢算</text><line x1="324" y1="41" x2="360" y2="41" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="364" y="24" width="152" height="34" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="440" y="46" text-anchor="middle">模型學起來</text><text class="f-hd" x="2" y="84">上線時（幾十毫秒內）</text><rect x="2" y="96" width="124" height="34" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="64" y="118" text-anchor="middle">這一刻的資料</text><line x1="130" y1="113" x2="166" y2="113" stroke="var(--accent)" stroke-width="1.4" marker-end="url(#fac)"/><rect x="170" y="96" width="150" height="34" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="245" y="111" text-anchor="middle">整理成特徵</text><text class="f-l" x="245" y="126" text-anchor="middle">即時、另一段程式</text><line x1="324" y1="113" x2="360" y2="113" stroke="var(--accent)" stroke-width="1.4" marker-end="url(#fac)"/><rect x="364" y="96" width="152" height="34" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="440" y="118" text-anchor="middle">模型回答</text><path d="M245 62 V 92" stroke="var(--accent)" stroke-width="1.3" stroke-dasharray="4 3" fill="none"/><text class="f-s" x="255" y="80">這兩段只要算得不一樣⋯⋯</text><text class="f-l" x="2" y="164">⋯⋯模型上線後就會慢慢變笨。而且它不會報錯，只有指標一路往下掉。</text><text class="f-l" x="2" y="188">這個問題有名字，叫 training-serving skew（訓練跟上線算出來的東西對不起來）。</text></svg>
+<figcaption>兩條線<b>共用中間那個倉庫</b>，就是為了避免這件事：特徵只算一次、存一份，兩邊都去同一個地方拿。</figcaption>
+</figure>
 </section>
 
 <section>
@@ -235,7 +248,7 @@
         <div class="side"><b>小模型</b><span>快又便宜，但差一點</span></div>
       </div>
       <p class="rule">常見的做法是<b>兩個都用</b>：先讓小模型把明顯的處理掉，只有它拿不定主意的才丟給大模型。<br>
-      要決定怎麼分，先去量「有多少比例是簡單的」。如果九成都很簡單，那九成的量根本不需要大模型。</p>
+      要決定怎麼分，先去量有多少比例是簡單的。如果十筆裡有九筆都很單純，那這九筆本來就不需要動用大模型。</p>
     </div>
 
     <div class="to">
@@ -292,9 +305,14 @@
   </div>
 
   <div class="callout warn" style="margin-top:22px">
-    RAG 答錯的時候，八成不是 AI 笨，是<b>它根本沒拿到正確的段落</b>。<br>
-    所以要分開檢查：查到的段落對不對是一件事，拿到段落之後答得好不好是另一件事。這兩件混在一起看，你永遠找不到問題出在哪。
+    RAG 答錯的時候，多半不是 AI 笨，而是<b>它根本沒拿到正確的段落</b>。<br>
+    所以要分開檢查：查到的段落對不對是一件事，拿到段落之後答得好不好是另一件事。
   </div>
+
+<figure class="fig">
+<svg viewBox="0 0 520 172" role="img" aria-label="RAG 分成檢索和生成兩段，要分開檢查"><rect x="2" y="30" width="104" height="40" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="54" y="55" text-anchor="middle">使用者的問題</text><line x1="110" y1="50" x2="146" y2="50" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="150" y="30" width="104" height="40" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="202" y="48" text-anchor="middle">檢索</text><text class="f-l" x="202" y="63" text-anchor="middle">去文件裡撈段落</text><line x1="258" y1="50" x2="294" y2="50" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="298" y="30" width="104" height="40" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="350" y="55" text-anchor="middle">撈到的段落</text><line x1="406" y1="50" x2="442" y2="50" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="446" y="30" width="72" height="40" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="482" y="48" text-anchor="middle">生成</text><text class="f-l" x="482" y="63" text-anchor="middle">AI 寫答案</text><path d="M150 76 H 402" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="4 3" fill="none"/><path d="M150 76 V 84 M402 76 V 84" stroke="var(--accent)" stroke-width="1.2" fill="none"/><text class="f-s" x="276" y="100" text-anchor="middle">第一段：段落撈對了嗎</text><path d="M446 76 H 518 M482 76 V 84" stroke="var(--ink-3)" stroke-width="1.2" stroke-dasharray="4 3" fill="none"/><text class="f-s" x="482" y="100" text-anchor="middle">第二段</text><text class="f-l" x="2" y="132">這兩段要分開量。段落撈錯，後面寫得再好也是錯的；段落撈對了還答錯，才是模型的問題。</text><text class="f-l" x="2" y="158">混在一起看，你永遠找不到問題出在哪一段。</text></svg>
+<figcaption>先看撈回來的段落裡<b>到底有沒有答案</b>，再去看 AI 有沒有好好用它。</figcaption>
+</figure>
 </section>
 
 <section>
@@ -343,7 +361,7 @@ const NODES = {
   fstore:{ n:"特徵倉庫", tag:"兩邊共用", full:"feature store",
     l:"專門存特徵的地方，分成兩半：<b>離線那半</b>存歷史，給訓練用；<b>線上那半</b>存最新值，給服務用，通常是 Redis 這種查很快的東西。",
     why:"為了讓兩邊算出來的特徵<b>一模一樣</b>。如果訓練時「過去 30 天次數」是用一套程式算的，上線時又用另一套算，兩邊差一點點，模型就會表現得莫名其妙。",
-    bad:"這正是 ML 系統<b>第一名的靜默錯誤</b>，叫 <b>training-serving skew</b>（訓練時跟上線時算出來的東西不一樣）。它不會噴錯，只會讓準確率慢慢掉，而且沒人知道為什麼。" },
+    bad:"這正是 ML 系統<b>第一名的靜默錯誤</b>，叫 <b>training-serving skew</b>（訓練時跟上線時算出來的東西不一樣）。它不會報錯，只會讓準確率慢慢往下掉，而且沒人知道為什麼。" },
 
   mstore:{ n:"模型倉庫", tag:"兩邊共用", full:"model registry",
     l:"存放訓練好的模型檔，每一版都有編號、訓練用了哪些資料、當時測出來幾分。",
@@ -366,8 +384,8 @@ const NODES = {
     bad:"<b>直接把新模型全量換上去</b>。新版有問題的話，全部使用者一起受害。正式做法是先給 1% 的人用，看數字沒掉再慢慢放大。" },
 
   mon:{ n:"監控", tag:"線上",
-    l:"持續看兩件事：<b>系統有沒有壞</b>（回應變慢、開始噴錯），以及<b>模型有沒有變笨</b>（點擊率掉了、投訴變多）。",
-    why:"模型會隨時間退步，因為真實世界一直在變。這叫 <b>drift</b>（模型跟現實慢慢脫節）。它不會噴錯，只會讓效果慢慢變差。",
+    l:"持續看兩件事：<b>系統有沒有壞</b>（回應變慢、開始出現錯誤），以及<b>模型有沒有變笨</b>（點擊率掉了、投訴變多）。",
+    why:"模型會隨時間退步，因為真實世界一直在變。這叫 <b>drift</b>（模型跟現實慢慢脫節）。它不會報錯，只會讓效果慢慢變差。",
     bad:"<b>只監控系統，沒監控效果</b>。伺服器一切正常、零錯誤，但模型早就不準了，三個月後才被業務端發現。" },
 };
 
