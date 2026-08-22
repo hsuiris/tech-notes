@@ -4,41 +4,59 @@
 
 /* ── 顏色與字體 ── */
 :root{
-  --paper:#EAEDEB; --paper-2:#F5F8F6; --paper-3:#DDE4E1;
-  --ink:#0E1B1C; --ink-2:#4A6362; --ink-3:#7B918F;
-  --line:#C2CFCC; --line-soft:#D7E0DD;
-  --d0:#0B3238; --d1:#12474F; --d2:#1E5D66; --d3:#2A7079;
-  --d4:#3D858C; --d5:#559AA0; --d6:#75B2B7; --d7:#9AC7CA;
-  --accent:#BC2C5C; --accent-2:#8E1F44; --accent-soft:#F8E3EA; --on-accent:#FFF4F7;
-  --ochre:#9A5F12; --ochre-soft:#F7ECDA;
-  --good:#1F6B4A; --good-soft:#E2F1E9;
+  --paper:#FAF6F1; --paper-2:#FFFFFF; --paper-3:#F0E9E1;
+  --ink:#2A2320; --ink-2:#5C5450; --ink-3:#8F8781;
+  --line:#E6DDD3; --line-soft:#F1EAE3;
+  --c-pink:#E8447D; --c-orange:#E8792E; --c-yellow:#E0A81F; --c-mint:#17A88F;
+  --c-blue:#4470D8; --c-purple:#8158D6;
+  --c-pink-soft:#FBE7EE; --c-orange-soft:#FBEEE1; --c-yellow-soft:#FAF2DA;
+  --c-mint-soft:#DFF3EF; --c-blue-soft:#E7ECFA; --c-purple-soft:#EFE9FA;
+  --c-pink-ink:#C22E62; --c-orange-ink:#B45C13; --c-yellow-ink:#8A6300;
+  --c-mint-ink:#0C7C68; --c-blue-ink:#3055B8; --c-purple-ink:#6742B5;
+  --d0:#E8447D; --d1:#E8792E; --d2:#E0A81F; --d3:#3FBF87;
+  --d4:#17A88F; --d5:#4470D8; --d6:#8158D6; --d7:#B45BD6;
+  --accent:#E8447D; --accent-2:#C22E62; --accent-soft:#FBE7EE; --on-accent:#FFFFFF;
+  --ochre:#E8792E; --ochre-soft:#FBEEE1;
+  --good:#17A88F; --good-soft:#DFF3EF;
   --font-cn:"RHR","PingFang TC","Noto Sans TC",system-ui,sans-serif;
   --font-mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
-  --shadow:0 1px 2px rgba(11,50,56,.06),0 10px 26px -14px rgba(11,50,56,.22);
+  --shadow:0 1px 2px rgba(42,35,32,.05),0 12px 28px -16px rgba(42,35,32,.30);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --paper:#0B1211; --paper-2:#141E1D; --paper-3:#1D2A29;
-    --ink:#E1EAE7; --ink-2:#96AFAC; --ink-3:#6D8584;
-    --line:#28403E; --line-soft:#1F302F;
-    --d0:#3E9AA6; --d1:#4AA6B1; --d2:#57B0BA; --d3:#66BAC3;
-    --d4:#77C4CB; --d5:#8ACDD3; --d6:#9FD6DB; --d7:#B5DFE3;
-    --accent:#F2698F; --accent-2:#FF8FAC; --accent-soft:#301722; --on-accent:#190A10;
-    --ochre:#D9A24E; --ochre-soft:#2B2215;
-    --good:#6FCB9F; --good-soft:#132A22;
-    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 26px -14px rgba(0,0,0,.75);
+    --paper:#171319; --paper-2:#201A22; --paper-3:#2C2532;
+    --ink:#F2EDF2; --ink-2:#ADA4B0; --ink-3:#807784;
+    --line:#332B38; --line-soft:#261F2B;
+    --c-pink:#FF7BA6; --c-orange:#FFA65C; --c-yellow:#F5CE55; --c-mint:#4FD9C0;
+    --c-blue:#7EA1FF; --c-purple:#B692FF;
+    --c-pink-soft:#3B1C28; --c-orange-soft:#382513; --c-yellow-soft:#3A3010;
+    --c-mint-soft:#10332E; --c-blue-soft:#1C2648; --c-purple-soft:#291E41;
+    --c-pink-ink:#FF9BBD; --c-orange-ink:#FFBC82; --c-yellow-ink:#F7DA85;
+    --c-mint-ink:#6FE3CD; --c-blue-ink:#9CB8FF; --c-purple-ink:#C9AEFF;
+    --d0:#FF7BA6; --d1:#FFA65C; --d2:#F5CE55; --d3:#6BE0AC;
+    --d4:#4FD9C0; --d5:#7EA1FF; --d6:#B692FF; --d7:#D49BFF;
+    --accent:#FF7BA6; --accent-2:#FFA3C1; --accent-soft:#3B1C28; --on-accent:#1B0D14;
+    --ochre:#FFA65C; --ochre-soft:#382513;
+    --good:#4FD9C0; --good-soft:#10332E;
+    --shadow:0 1px 2px rgba(0,0,0,.5),0 12px 28px -16px rgba(0,0,0,.85);
   }
 }
 :root[data-theme="dark"]{
-  --paper:#0B1211; --paper-2:#141E1D; --paper-3:#1D2A29;
-  --ink:#E1EAE7; --ink-2:#96AFAC; --ink-3:#6D8584;
-  --line:#28403E; --line-soft:#1F302F;
-  --d0:#3E9AA6; --d1:#4AA6B1; --d2:#57B0BA; --d3:#66BAC3;
-  --d4:#77C4CB; --d5:#8ACDD3; --d6:#9FD6DB; --d7:#B5DFE3;
-  --accent:#F2698F; --accent-2:#FF8FAC; --accent-soft:#301722; --on-accent:#190A10;
-  --ochre:#D9A24E; --ochre-soft:#2B2215;
-  --good:#6FCB9F; --good-soft:#132A22;
-  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 26px -14px rgba(0,0,0,.75);
+  --paper:#171319; --paper-2:#201A22; --paper-3:#2C2532;
+  --ink:#F2EDF2; --ink-2:#ADA4B0; --ink-3:#807784;
+  --line:#332B38; --line-soft:#261F2B;
+  --c-pink:#FF7BA6; --c-orange:#FFA65C; --c-yellow:#F5CE55; --c-mint:#4FD9C0;
+  --c-blue:#7EA1FF; --c-purple:#B692FF;
+  --c-pink-soft:#3B1C28; --c-orange-soft:#382513; --c-yellow-soft:#3A3010;
+  --c-mint-soft:#10332E; --c-blue-soft:#1C2648; --c-purple-soft:#291E41;
+  --c-pink-ink:#FF9BBD; --c-orange-ink:#FFBC82; --c-yellow-ink:#F7DA85;
+  --c-mint-ink:#6FE3CD; --c-blue-ink:#9CB8FF; --c-purple-ink:#C9AEFF;
+  --d0:#FF7BA6; --d1:#FFA65C; --d2:#F5CE55; --d3:#6BE0AC;
+  --d4:#4FD9C0; --d5:#7EA1FF; --d6:#B692FF; --d7:#D49BFF;
+  --accent:#FF7BA6; --accent-2:#FFA3C1; --accent-soft:#3B1C28; --on-accent:#1B0D14;
+  --ochre:#FFA65C; --ochre-soft:#382513;
+  --good:#4FD9C0; --good-soft:#10332E;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 12px 28px -16px rgba(0,0,0,.85);
 }
 
 *{box-sizing:border-box}
@@ -220,3 +238,112 @@ footer .cred{margin-top:20px; font-size:12px; font-family:var(--font-mono)}
 .fig.narrow>svg{width:290px; min-width:0}
 .fig.incard{margin:16px 0 0; padding:14px 12px 6px}
 .fig.incard>svg{width:100%; min-width:0; max-width:400px}
+
+/* ══════════════════════════════════════════════
+   多巴胺配色的彩色點綴與動畫
+   ══════════════════════════════════════════════ */
+
+/* 導覽列底下那條會慢慢流動的彩虹 */
+.topnav{border-bottom:none}
+.topnav::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:3px;
+  background:linear-gradient(90deg,
+    var(--c-pink), var(--c-orange), var(--c-yellow), var(--c-mint),
+    var(--c-blue), var(--c-purple), var(--c-pink));
+  background-size:220% 100%;
+  animation:flow 16s linear infinite;
+}
+@keyframes flow{from{background-position:0 0} to{background-position:220% 0}}
+
+/* 大標題漸層 */
+h1{
+  background:linear-gradient(96deg, var(--c-pink) 0%, var(--c-orange) 45%, var(--c-purple) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  padding-bottom:.08em;
+}
+.eyebrow{color:var(--c-purple)}
+
+/* 章節編號：每一節換一個顏色 */
+.sec-num{
+  padding:3px 10px; border-radius:999px; font-weight:700;
+  color:#150F1C; background:var(--c-pink);
+}
+section:nth-of-type(6n+2) .sec-num{background:var(--c-orange)}
+section:nth-of-type(6n+3) .sec-num{background:var(--c-yellow)}
+section:nth-of-type(6n+4) .sec-num{background:var(--c-mint)}
+section:nth-of-type(6n+5) .sec-num{background:var(--c-blue)}
+section:nth-of-type(6n+6) .sec-num{background:var(--c-purple)}
+
+/* 首頁卡片：每張一個顏色 */
+.card-n{
+  display:inline-block; padding:2px 9px; border-radius:999px;
+  color:#150F1C; background:var(--c-pink-soft);
+}
+.cards .card:nth-child(6n+2) .card-n{background:var(--c-orange-soft)}
+.cards .card:nth-child(6n+3) .card-n{background:var(--c-yellow-soft)}
+.cards .card:nth-child(6n+4) .card-n{background:var(--c-mint-soft)}
+.cards .card:nth-child(6n+5) .card-n{background:var(--c-blue-soft)}
+.cards .card:nth-child(6n+6) .card-n{background:var(--c-purple-soft)}
+.cards .card:nth-child(6n+1):hover{border-color:var(--c-pink)}
+.cards .card:nth-child(6n+2):hover{border-color:var(--c-orange)}
+.cards .card:nth-child(6n+3):hover{border-color:var(--c-yellow)}
+.cards .card:nth-child(6n+4):hover{border-color:var(--c-mint)}
+.cards .card:nth-child(6n+5):hover{border-color:var(--c-blue)}
+.cards .card:nth-child(6n+6):hover{border-color:var(--c-purple)}
+.card:hover .card-n{color:#150F1C}
+
+/* 路線圖的圓點跟時間，一站一個顏色 */
+.step:nth-child(6n+2) .dot{border-color:var(--c-orange)}
+.step:nth-child(6n+3) .dot{border-color:var(--c-yellow)}
+.step:nth-child(6n+4) .dot{border-color:var(--c-mint)}
+.step:nth-child(6n+5) .dot{border-color:var(--c-blue)}
+.step:nth-child(6n+6) .dot{border-color:var(--c-purple)}
+.step:nth-child(6n+2) h3 .time{color:var(--c-orange)}
+.step:nth-child(6n+3) h3 .time{color:var(--c-yellow)}
+.step:nth-child(6n+4) h3 .time{color:var(--c-mint)}
+.step:nth-child(6n+5) h3 .time{color:var(--c-blue)}
+.step:nth-child(6n+6) h3 .time{color:var(--c-purple)}
+
+/* 滑過去的時候浮一下。用 translate 不用 transform，
+   才不會跟下面捲動進場的 transform 打架 */
+.card{transition:border-color .16s, translate .16s, box-shadow .16s}
+.card:hover{transform:none; translate:0 -3px; box-shadow:var(--shadow)}
+.cat{transition:border-color .14s, color .14s, background .14s, translate .14s}
+.cat:hover{translate:0 -1px}
+.term{transition:background .14s}
+.term:hover{background:var(--paper-3)}
+
+/* 捲到哪、哪裡才浮出來。class 由 assets/reveal.js 掛上去，
+   所以沒有 JavaScript、或系統開了「減少動態效果」的時候，
+   這段完全不會生效，內容直接顯示，不會有東西不見。 */
+@media (prefers-reduced-motion:no-preference){
+  .reveal-on .rv{opacity:0; transform:translateY(22px)}
+  .reveal-on .rv.rv-in{
+    opacity:1; transform:none;
+    transition:opacity .55s ease, transform .55s cubic-bezier(.2,.7,.3,1);
+  }
+}
+
+/* ── 卡片裡的小標題：跟內文明顯分開 ── */
+body .d-cell dt, body .rel-box dt, body .origin dt, body .duo dt,
+body .qa dt, body .trap dt, body .kind dt{
+  display:flex; align-items:center; gap:6px;
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.1em;
+  font-weight:700; color:var(--c-pink-ink); margin-bottom:7px;
+}
+body .d-cell dt::before, body .rel-box dt::before, body .origin dt::before,
+body .duo dt::before, body .qa dt::before, body .trap dt::before,
+body .kind dt::before{
+  content:""; width:7px; height:7px; border-radius:2px;
+  background:currentColor; flex:none;
+}
+/* 同一組裡每一格換一個顏色 */
+.d-grid > *:nth-child(2) dt{color:var(--c-blue-ink)}
+.d-grid > *:nth-child(3) dt{color:var(--c-mint-ink)}
+.d-grid > *:nth-child(4) dt{color:var(--c-purple-ink)}
+.d-grid > *:nth-child(5) dt{color:var(--c-orange-ink)}
+body .rel-box dt{color:var(--c-purple-ink)}
+body .origin dt{color:var(--c-orange-ink)}
+body .duo dt{color:var(--c-blue-ink)}
+body .qa dt{color:var(--c-mint-ink)}
+body .trap dt{color:var(--c-orange-ink)}

@@ -1,9 +1,11 @@
+<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>看懂 ML 系統 · tech-notes</title>
 <meta name="description" content="一個 AI 產品從資料到上線有哪些站、六個要先做的取捨、RAG 怎麼運作，以及 embedding、feature store、vector DB 這些名詞在哪裡出現。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
 <link rel="stylesheet" href="assets/base.css">
+<script src="assets/reveal.js" defer></script>
 <style>
 .figure{
   background:var(--paper-2); border:1px solid var(--line); border-radius:5px;
@@ -217,8 +219,8 @@
   </div>
 
   <div class="callout" style="margin-top:22px">
-    整張圖其實只有兩條線。上面那條<b>慢慢做，做出一個模型</b>；下面那條<b>要在使用者等的那幾十毫秒內把答案生出來</b>。<br>
-    兩條線共用中間那兩個倉庫。ML 系統絕大多數的怪問題，說穿了都是「兩邊拿到的東西不一樣」。
+    整張圖分成兩條線。上面那條<b>慢慢做，做出一個模型</b>；下面那條<b>要在使用者等的那幾十毫秒內把答案生出來</b>。<br>
+    兩條線共用中間那兩個倉庫。ML 系統絕大多數的怪問題，原因都是兩條線拿到的東西不一樣。
   </div>
 
 <figure class="fig">
@@ -305,7 +307,7 @@
   </div>
 
   <div class="callout warn" style="margin-top:22px">
-    RAG 答錯的時候，多半不是 AI 笨，而是<b>它根本沒拿到正確的段落</b>。<br>
+    RAG 答錯，多半是因為<b>它沒拿到正確的段落</b>，不是模型本身答不出來。<br>
     所以要分開檢查：查到的段落對不對是一件事，拿到段落之後答得好不好是另一件事。
   </div>
 
@@ -339,7 +341,7 @@
 /* ══════════ 01 架構圖 ══════════ */
 const NODES = {
   src:{ n:"資料來源", tag:"離線",
-    l:"模型要學的東西從哪來。多數公司不是特地去蒐集，而是<b>把本來就有的紀錄拿來用</b>：使用者點過什麼、買過什麼、停留多久。",
+    l:"多數公司訓練模型用的是<b>公司內部本來就有的紀錄</b>：使用者點過什麼、買過什麼、停留多久。這些紀錄從產品上線第一天就在累積，不用另外去蒐集。",
     why:"沒有資料就沒有模型。而且資料的品質決定天花板，換再厲害的模型也補不回爛資料。",
     bad:"最常見的是<b>只留了結果沒留過程</b>。例如只知道使用者最後買了什麼，不知道他之前看過哪些沒買，模型就學不到「為什麼不買」。" },
 

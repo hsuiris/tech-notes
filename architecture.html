@@ -1,9 +1,11 @@
+<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>看懂架構圖 · tech-notes</title>
-<meta name="description" content="技術之間的六種關係。認得關係，架構圖會自己解開，名詞也會自動歸位。">
+<meta name="description" content="各種程式語言的用途、什麼時候學什麼、技術之間的六種關係。認得關係，架構圖會自己解開，名詞也會自動歸位。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
 <link rel="stylesheet" href="assets/base.css">
+<script src="assets/reveal.js" defer></script>
 <style>
 /* ── 01 六種關係 ── */
 .rels{display:grid; gap:16px}
@@ -103,6 +105,65 @@
   font-size:10.5px; color:var(--ink-3); border:1px solid var(--line);
   padding:0 7px; border-radius:3px; white-space:nowrap;
 }
+/* ── 01 各種程式語言的用途 ── */
+.jobs{display:grid; gap:10px}
+.job{
+  display:grid; gap:8px; text-align:left; width:100%; cursor:pointer;
+  font-family:var(--font-cn); font-size:inherit; color:inherit;
+  border:1px solid var(--line); border-radius:4px; background:var(--paper-2);
+  padding:13px 14px 14px; transition:border-color .14s, background .14s, translate .14s;
+}
+.job:hover{border-color:var(--accent); translate:0 -2px}
+.jobs .job:nth-child(6n+2):hover{border-color:var(--c-orange)}
+.jobs .job:nth-child(6n+3):hover{border-color:var(--c-yellow)}
+.jobs .job:nth-child(6n+4):hover{border-color:var(--c-mint)}
+.jobs .job:nth-child(6n+5):hover{border-color:var(--c-blue)}
+.jobs .job:nth-child(6n+6):hover{border-color:var(--c-purple)}
+.job.on{border-color:var(--accent); background:var(--accent-soft)}
+.job:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.job-hd{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
+.job-n{font-size:15.5px; font-weight:700; color:var(--ink)}
+.job-s{font-size:12px; color:var(--ink-3)}
+.job-l{display:flex; flex-wrap:wrap; gap:5px}
+.job-l span{
+  font-family:var(--font-mono); font-size:11.5px; padding:2px 7px;
+  border-radius:3px; background:var(--paper-3); color:var(--ink-2);
+}
+.job-l span.fixed{background:var(--accent); color:var(--on-accent)}
+/* 右欄比較窄，四格改成一欄一格。內容長的時候卡片自己捲，
+   不然黏在畫面上的卡片會比視窗還高，看不到下半截 */
+#jobDetail .d-grid{grid-template-columns:1fr; gap:20px}
+@media (min-width:861px){
+  #jobDetail{max-height:calc(100vh - 96px); overflow-y:auto; overscroll-behavior:contain}
+}
+.detail dd b{color:var(--ink); font-weight:700}
+.detail dd code{
+  font-size:12.5px; background:var(--paper-3); padding:1px 5px;
+  border-radius:3px; color:var(--ink);
+}
+/* ── 02 什麼時候學什麼 ── */
+.road .d-grid{margin-top:11px}
+.road .note{
+  margin-top:10px; font-size:13.5px; line-height:1.75; color:var(--ink-2);
+  border-left:2px solid var(--accent); background:var(--accent-soft);
+  padding:9px 13px; border-radius:0 3px 3px 0;
+}
+.road .note b{color:var(--ink); font-weight:700}
+.skip{
+  border:1px solid var(--line); border-radius:4px; background:var(--paper-2);
+  padding:22px 24px 24px; margin-top:10px;
+}
+.skip h3{font-size:16.5px; margin-bottom:14px}
+.skip ul{margin:0; padding:0; list-style:none; display:grid; gap:11px}
+.skip li{
+  font-size:14px; color:var(--ink-2); line-height:1.75;
+  padding-left:20px; position:relative;
+}
+.skip li::before{
+  content:"×"; position:absolute; left:0; top:0;
+  color:var(--accent); font-weight:700;
+}
+.skip li b{color:var(--ink); font-weight:700}
 
 </style>
 
@@ -137,14 +198,44 @@
 </header>
 
 <section>
-  <div class="sec-head"><span class="sec-num">01</span><h2>技術之間的六種關係</h2></div>
+  <div class="sec-head"><span class="sec-num">01</span><h2>各種程式語言的用途</h2></div>
+  <p class="sec-lede"><b>點任何一個</b>，右邊會說明它在做什麼、使用的語言有哪些、什麼時候需要學它。</p>
+
+  <div class="split">
+    <div class="jobs" id="jobs"></div>
+    <div class="detail sticky" id="jobDetail">
+      <p class="placeholder">← 點左邊任何一種工作，這裡會說明它在做什麼、使用的語言、常用的工具、什麼時候該學。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>什麼時候學什麼</h2></div>
+  <p class="sec-lede">下面六站不用照順序全部學完才能開始做東西。每一站都寫了什麼時候該學它，<b>沒遇到那個情況就先跳過</b>。時間是抓每週投入五到十小時估的，實際會因人差很多。</p>
+
+  <div class="steps road" id="road"></div>
+
+  <div class="skip">
+    <h3>這些現在不用學</h3>
+    <ul>
+      <li><b>做同一件事的第二個</b>。學了 React 就不用再學 Vue，用了 PostgreSQL 就不用再學 MySQL。只要網路上有人在寫文章比較兩個東西，那就代表它們是對手，挑一個就好。</li>
+      <li><b>名字裡有 plugin、loader、-config 的</b>。這些是別人工具的擴充功能，本身不是拿來「學」的，用到再查就好。</li>
+      <li><b>Docker、Kubernetes</b>。在你需要「同一份程式要部署到很多台機器」之前都用不到。個人專案交給 Vercel 這類平台就夠了。</li>
+      <li><b>GraphQL、微服務</b>。這兩個是大團隊拿來解決大團隊問題的做法。小專案照最普通的方式寫，反而比較好維護。</li>
+      <li><b>C++、Rust</b>。除非你要做遊戲引擎、作業系統或很吃效能的工具。看到名字知道它們負責什麼就夠了。</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2>技術之間的六種關係</h2></div>
   <p class="sec-lede">看到不認識的名字，先問它跟你已經知道的東西是哪一種關係。常見的有下面六種。</p>
 
   <div class="rels" id="rels"></div>
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">02</span><h2>拆一張架構圖給你看</h2></div>
+  <div class="sec-head"><span class="sec-num">04</span><h2>拆一張架構圖給你看</h2></div>
   <p class="sec-lede">架構圖常用的符號有五種。下面是一張典型的網頁服務架構，<b>點任何一個方塊</b>，會說明它是什麼、為什麼要有它、沒有它會怎樣。</p>
 
   <div class="legend">
@@ -261,8 +352,8 @@
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">03</span><h2>名詞解碼器</h2></div>
-  <p class="sec-lede">這裡不按字母排，按<b>「你會在哪裡看到它」</b>分類。</p>
+  <div class="sec-head"><span class="sec-num">05</span><h2>名詞解碼器</h2></div>
+  <p class="sec-lede">上面幾段講過的名詞這裡不重複收，只留下比較難、而且上面沒機會講到的。分類不按字母排，按<b>「你會在哪裡看到它」</b>。</p>
 
   <div class="tools">
     <input class="search" id="q" type="search" placeholder="搜尋，例如 cache" aria-label="搜尋名詞">
@@ -273,7 +364,7 @@
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">04</span><h2>洋蔥圖：誰在誰上面</h2></div>
+  <div class="sec-head"><span class="sec-num">06</span><h2>洋蔥圖：誰在誰上面</h2></div>
   <p class="sec-lede">上下層關係畫出來，就是<b>一層疊一層，像洋蔥</b>。<br>
   <b>最外面那層是你寫的</b>，往裡面每一層都是別人已經寫好的。你只碰最外面，但裡面每一層都在跑。<br>
   左邊是四條真實的鏈。<b>點任何一層</b>，右邊卡片會說明它是什麼。</p>
@@ -294,11 +385,11 @@
 
 </div>
 <script>
-/* ══════════ 01 六種關係 ══════════ */
+/* ══════════ 03 六種關係 ══════════ */
 const RELS = [
   { fig:`<svg viewBox="0 0 320 96" role="img" aria-label="A 疊在 B 上面，B 在底下持續運作"><rect x="14" y="12" width="150" height="32" rx="3" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="89" y="33" text-anchor="middle">A</text><rect x="14" y="48" width="150" height="32" rx="3" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="89" y="69" text-anchor="middle">B</text><text class="f-l" x="176" y="32">你直接使用的是這層</text><text class="f-l" x="176" y="68">它在底下一直運作</text></svg>`,
     n:"上下層", sym:"A 底層是 B", key:1,
-    def:"A 是<b>建立在 B 上面</b>的。你使用 A 的功能時，底層其實還是 B 在工作，只是平常不需要直接碰到它。",
+    def:"A 是<b>建立在 B 上面</b>的。你使用 A 的功能時，底層還是 B 在工作，只是平常不需要直接碰到它。",
     says:["A 是基於 B","A 底層是 B","A 封裝了 B","A 是 B 的 wrapper"],
     egs:[["Three.js","建立在","WebGL"],["Next.js","建立在","React"],["axios","建立在","fetch"]],
     why:"會多包一層，通常是因為下層太難用。用 WebGL 畫一個三角形要寫一百行，換成 Three.js 三行就畫得出來。" },
@@ -358,7 +449,7 @@ RELS.forEach((r,i)=>{
   relsEl.appendChild(d);
 });
 
-/* ══════════ 02 架構圖 ══════════ */
+/* ══════════ 04 架構圖 ══════════ */
 const ARCH = {
   browser:{ n:"瀏覽器", tag:"使用者這邊",
     l:"使用者真正看得到、摸得到的地方。你寫的 React、Three.js 全部在這裡執行，不是在你的伺服器上。",
@@ -388,7 +479,7 @@ const ARCH = {
   cache:{ n:"快取", tag:"你的伺服器",
     l:"把常被問到的答案先記在記憶體裡，下次直接給，不用再去問資料庫。讀取速度差距大概是一百倍。",
     why:"資料庫查詢很貴。同一個熱門頁面被一萬個人打開，沒有快取就要查一萬次。",
-    without:"流量一大，資料庫會先撐不住。小專案還沒有流量的話，其實可以先不加。",
+    without:"流量一大，資料庫會先撐不住。小專案還沒有流量的話可以先不加。",
     real:"Redis 幾乎是預設答案。麻煩的是「資料改了要記得清掉舊快取」。工程師圈有個老笑話說，電腦科學只有兩件難事，其中一件就是這個。" },
   third:{ n:"第三方服務", tag:"別人的伺服器",
     l:"別人已經做好的功能，你付錢用。AI、金流、寄信、簡訊、地圖，這些自己做要花好幾個月。",
@@ -420,27 +511,170 @@ document.querySelectorAll("#arch .hot").forEach(g=>{
   });
 });
 
-/* ══════════ 03 名詞解碼器 ══════════ */
+/* ══════════ 01 各種程式語言的用途 ══════════ */
+// fixed:true 代表這種工作只能用特定的語言
+const JOBS = [
+  { n:"網頁排版", sub:"畫面怎麼排", fixed:true, langs:["HTML","CSS"],
+    l:"HTML 標記出文字內容、圖片位置；CSS 負責指定字體大小、顏色、間距。",
+    choice:"HTML 跟 CSS 不算程式語言，它們不會判斷、也不會重複做事。CSS 寫得出「這個按鈕是紅色」，寫不出「如果使用者還沒登入就變灰色」，後面那句要交給 JavaScript。<br><br>CSS 有三個觀念是門檻。<br><br><b>box model</b>：每個方塊由內容、內距（padding）、邊框（border）、外距（margin）四層組成。預設情況下你寫 <code>width:200px</code> 指的只有內容那一層，再加 20px 內距跟 2px 邊框，實際佔的位置是 244px，版面就爆了。解法是全站加一行 <code>*{box-sizing:border-box}</code>，改成「200px 就是含內距和邊框的總寬」。現在的專案幾乎都會加這一行。<br><br><b>Flexbox</b>：一維排版，一次只管一個方向。<code>display:flex</code> 之後，<code>justify-content</code> 控制主軸怎麼分配（靠左、置中、平均分開），<code>align-items</code> 控制另一軸怎麼對齊。導覽列、按鈕列、卡片內部都用它。<br><br><b>Grid</b>：二維排版，同時管列跟欄。<code>grid-template-columns:1fr 1fr 1fr</code> 是切成等寬三欄，<code>repeat(auto-fit,minmax(200px,1fr))</code> 則是「每欄至少 200px，塞得下幾欄就幾欄」，視窗變窄會自己減欄數。整頁的大版面用它。",
+    tools:"<b>Tailwind CSS</b>：把常用樣式包成短名字，在 HTML 裡直接寫 <code>flex gap-4 p-6</code>，等於「橫向排列、間距 16px、內距 24px」。好處是不用另外開 CSS 檔，也不用想 class 名字；代價是 HTML 會變得很長。<br><br><b>Sass</b>：讓 CSS 可以寫變數跟巢狀結構，編譯後變回一般 CSS。這幾年變數功能被原生的 <code>--變數名</code> 取代掉大半，但舊專案還很多，看到 .scss 就是它。<br><br><b>開發者工具</b>：瀏覽器按 F12 打開，Elements 分頁可以看到每個元素的四層盒子各佔多少、樣式是被哪一條規則蓋掉的。畫面歪掉一律先開這個。",
+    when:"最先學，抓兩到三個週末。<br><br>學到「能把一頁排出來」就夠：常用標籤大約二十個（<code>div</code>、<code>p</code>、<code>h1</code>、<code>img</code>、<code>a</code>、<code>button</code>、<code>input</code>、<code>ul</code>、<code>li</code>、<code>table</code>），加上 box model、Flexbox、Grid 這三個觀念。剩下的查得到。",
+    myth:"以為要把幾百個標籤跟屬性背起來。打開任何一個網站按 F12，看到的翻來覆去就那幾個。<br><br>比較該注意的是排版出錯時的找法。一個元素被擠到旁邊，可能是它自己的 margin，可能是父層的 padding，也可能是 Flexbox 的對齊設定。用開發者工具一層一層往上點，比盯著程式碼猜快很多。" },
+
+  { n:"網頁畫面", sub:"瀏覽器裡跑的那一半", fixed:true, langs:["JavaScript"],
+    l:"讓畫面有反應：按鈕按下去改變內容、輸入框即時檢查格式、跟伺服器要資料回來更新畫面。",
+    choice:"瀏覽器原生只看得懂 JavaScript。其他語言想在瀏覽器裡跑，都要先被翻譯成 JavaScript。<br><br><b>TypeScript</b> 是 JavaScript 加上型別檢查，寫完會被轉回 JavaScript 才送出去，不算第二個語言。它的價值在於你寫 <code>user.nmae</code> 的當下編輯器就畫紅線，不用等打開網頁才發現是 undefined。<br><br><b>WebAssembly</b> 是唯一的例外，它讓 C++ 或 Rust 編譯成瀏覽器看得懂的二進位檔，速度接近原生。用在很重的計算上，Figma 的繪圖引擎就是這樣做的，一般網站用不到。",
+    tools:"<b>React ｜ Vue ｜ Svelte ｜ Angular</b>，互相取代的關係，一個專案只用一個。<br><br>它們解決同一個問題：畫面上有一份資料，資料改了畫面要跟著改。沒有它們的時候你得自己寫「找到那個 span、把裡面的文字換掉」，一個畫面十幾處要同步就會亂掉。用了之後你只改資料，畫面自己跟上。<br><br>做法上，React 跟 Vue 會先在記憶體裡放一份畫面的副本（<b>virtual DOM</b>），資料變了就拿新舊兩份比對，只把真的有差的那幾個地方寫回瀏覽器。因為直接操作瀏覽器畫面很慢，比對記憶體裡的物件快得多。Svelte 走另一條路，在打包的時候就先算好哪一行資料對應哪一個位置，所以不需要在瀏覽器裡比對。<br><br>台灣職缺以 React 最多，Vue 次之。另外幾乎一定會搭一個狀態管理工具（Zustand、Pinia），處理「好幾個不相鄰的元件要共用同一份資料」的情況。",
+    when:"想做出「按下去會有反應」的網頁時，抓一到兩個月。<br><br>基本功是變數、判斷、迴圈、陣列、函式。真正的門檻在<b>非同步</b>這一段：<br><br>JavaScript 只有一條執行緒，同一時間只能做一件事。跟伺服器要資料可能要等半秒，這半秒如果卡著不放，整個畫面會凍住，連捲動都不動。所以它的做法是「先掛號，等結果回來再處理」。<br><br><code>fetch()</code> 不會回傳資料，它回傳一個 <b>Promise</b>（一張號碼牌，代表「結果之後會到」）。<code>await</code> 的意思是「等這張號碼牌兌現再往下走」，但等的時候執行緒是放給別人用的，畫面照常運作。<br><br>初學者最常卡在這裡，因為程式碼的閱讀順序跟執行順序不一樣：寫在 <code>fetch</code> 下面那行，可能比 <code>fetch</code> 的結果更早跑完。",
+    myth:"以為 React 跟 Vue 都要會。它們是競爭對手，會一個就夠。<br><br>更常見的是以為學了 React 就不用學 JavaScript。React 噴出來的錯誤訊息全部是 JavaScript 的錯誤訊息，例如 <code>Cannot read properties of undefined</code>（你去拿一個不存在的東西裡面的欄位），JavaScript 不熟的話看到會不知道要往哪裡查。" },
+
+  { n:"後端", sub:"伺服器上跑的那一半", fixed:false, langs:["JavaScript","Python","Go","Java","PHP","C#"],
+    l:"驗證使用者身分、執行業務規則、決定誰能看到哪些資料、把資料存進資料庫。",
+    choice:"每個語言都做得到，差別在生態系跟你身邊誰會。<br><br>已經會 JavaScript 就用 <b>Node.js</b>，前後端同一個語言。<br>專案跟 AI 或資料有關就選 <b>Python</b>，函式庫都在那邊。<br><b>Go</b> 適合「同時服務很多人」，它用自己的輕量執行單位（goroutine），一台機器開幾萬條連線的記憶體成本很低，代價是語法嚴格、寫起來字比較多。<br><br><b>Java</b> 跟 <b>C#</b> 是大公司、銀行、保險業的主力，<b>PHP</b> 是 WordPress 那一掛。這三個你會常看到，但多半不用主動去學。<br><br>為什麼一定要有後端：瀏覽器裡的程式碼使用者按 F12 就看得到也改得動，「這個人是不是管理員」放在前端判斷等於沒有判斷。",
+    tools:"<b>Express</b>、<b>Fastify</b>（Node.js），<b>FastAPI</b>、<b>Django</b>（Python），<b>Gin</b>（Go）。它們把「有人打 /users/123 這個網址就執行這段程式」變成三行設定，你不用自己處理 HTTP 的細節。<br><br><b>ORM</b>（Prisma、Drizzle、SQLAlchemy）讓你寫 <code>user.findMany()</code>，它翻成 SQL 送出去。要注意 <b>N+1 問題</b>：你撈 100 篇文章，再在迴圈裡跟每篇要作者名字，ORM 就發了 101 句查詢。正確做法是一次把作者一起撈回來（Prisma 的 <code>include</code>、SQLAlchemy 的 <code>joinedload</code>）。這是後端最常見的效能問題。<br><br><b>JWT</b> 是登入之後發給使用者的通行證。它由三段組成：標頭、內容（誰、什麼時候過期）、簽章。內容那段是明碼的，任何人都解得開，所以裡面不能放密碼；它的防偽靠簽章，改了內容簽章就對不上。好處是伺服器不用存 session，收到之後自己驗簽章就知道真假，多台機器都能驗。壞處是發出去就收不回來，要提前撤銷得另外做黑名單。",
+    when:"當你需要「資料要存起來」「要有帳號登入」「API 金鑰不能被使用者看到」的時候。純展示的網站不需要。<br><br>抓一到兩個月，包含 SQL。要學會的是：怎麼開一個 API 網址、怎麼讀進來的資料、怎麼把密碼<b>雜湊</b>（hash，用 bcrypt 或 argon2 把密碼變成不可還原的亂碼再存，資料庫外洩也拿不到原密碼）、怎麼發 token 維持登入狀態。",
+    myth:"以為後端語言要學好幾個。一個就夠，而且通常就是你已經會的那個。<br><br>另一個是把檢查寫在前端就以為安全了。前端檢查只是為了使用者體驗，任何人用 curl 或 Postman 直接打你的 API，前端那一層完全不存在。所有跟權限、金額有關的判斷都要在後端再做一次。" },
+
+  { n:"資料庫查詢", sub:"跟資料庫要東西", fixed:true, langs:["SQL"],
+    l:"跟資料庫要資料、把資料寫回去。使用者、訂單、文章、留言都存在這裡。",
+    choice:"不管後端用哪個語言，跟資料庫講話都是 SQL，換語言不用重學。<br><br>它的寫法跟一般程式不一樣：你描述要什麼，資料庫自己決定怎麼拿，不用告訴它一筆一筆怎麼翻。<code>SELECT 名字 FROM 使用者 WHERE 年齡 > 18</code>。<br><br>資料庫本身可以選：<b>PostgreSQL</b>（最通用，新專案的預設）、<b>MySQL</b>（老牌，虛擬主機上很多）、<b>SQLite</b>（整個資料庫就是一個檔案）。三者的 SQL 語法大同小異。<br><br><b>NoSQL</b>（MongoDB、Firebase）是另一類，資料長得像 JSON，欄位可以隨時加。一開始很自由，但資料之間一有關聯就會痛：訂單要接到使用者、使用者要接到公司，這種在 SQL 裡一句 JOIN 解決，在 NoSQL 要嘛自己在程式裡查三次，要嘛把同一份資料複製到很多地方，然後煩惱改一處要同步幾處。",
+    tools:"<b>ORM</b>（Prisma、Drizzle、SQLAlchemy）幫你把程式碼翻成 SQL，少打字，也比較不會踩到 <b>SQL injection</b>。<br><br>SQL injection 是這樣發生的：你把使用者輸入直接黏進查詢字串，對方在輸入框填一段 SQL，你的查詢就被改寫成他要的樣子，整張使用者表被撈走。防法是用<b>參數化查詢</b>，把值跟語句分開送，資料庫就只把它當成值、不當成語法。ORM 預設都是這樣做的。<br><br>另外要會看<b>執行計畫</b>：在查詢前面加 <code>EXPLAIN</code>，資料庫會告訴你它打算怎麼找。看到 Seq Scan（整張表從頭翻）就是該加 index 了。",
+    when:"跟後端同時學。查（SELECT）、增（INSERT）、改（UPDATE）、刪（DELETE）四個動作一天就能開始用。<br><br>接下來兩個觀念要花時間：<br><br><b>JOIN</b>：把兩張表接起來。訂單表裡只存了買家編號，要顯示買家名字就得接到使用者表。常用的是 INNER JOIN（兩邊都有才留）跟 LEFT JOIN（左邊全留，右邊沒有就空白）。<br><br><b>index</b>（索引）：資料庫另外維護一份排好序的目錄，查詢時用二分搜尋直接跳到位置，不用整張表從頭翻。十萬筆資料的差別大約是「翻十萬次」跟「翻十七次」。代價是每次新增和修改都要順便更新索引，而且索引本身佔硬碟，所以只加在真的常用來篩選或排序的欄位上。",
+    myth:"以為 SQL 很難所以想跳過。基本用法比 JavaScript 簡單，一句英文就是一個查詢。<br><br>難的在後面：查詢慢在哪一步、index 該加在哪個欄位、兩張表接起來為什麼變成幾百萬筆（漏了接續條件，變成每一筆都跟每一筆配對）。這些等真的遇到再學。" },
+
+  { n:"AI 與資料分析", sub:"處理大量資料", fixed:true, langs:["Python"],
+    l:"清理資料、跑統計、訓練模型。輸入通常是幾萬到幾百萬列的表格或文字。",
+    choice:"函式庫都長在 Python 這邊，換語言等於重寫別人十年的成果。<br><br><b>R</b> 在統計跟學術圈還很常見，做統計檢定跟畫統計圖比 Python 順手，但要把模型接進產品裡通常還是回到 Python。<br><br>如果你要做的是「叫現成的 AI 幫我做事」而不是「訓練一個 AI」，JavaScript 就夠了，直接打 Claude API 就好。這兩件事常被混為一談，但用到的技能完全不同。",
+    tools:"<b>pandas</b>：把 CSV 或 Excel 讀成程式裡的表格（DataFrame），一行就能篩選、分組、算平均。它跟 Excel 最大的差別是每一步都寫成程式碼，下次換一份資料重跑就好，不用再點一次。<br><br><b>NumPy</b>：在 pandas 底下負責數字運算。它把整欄數字一次算完，而不是用 Python 迴圈一個一個算，速度差幾十倍。<br><br><b>scikit-learn</b>：現成的傳統機器學習模型，分類、迴歸、分群。介面統一成 <code>fit()</code> 訓練、<code>predict()</code> 預測，換模型只要換一行。<br><br><b>PyTorch</b>：訓練深度學習模型用的，影像跟語言那一類。它需要 GPU，因為訓練的本質是同一組矩陣運算重複幾百萬次，而 GPU 剛好擅長這件事。<br><br><b>Jupyter Notebook</b>：一格一格跑、跑到哪看到哪，適合邊試邊改。",
+    when:"當你要自己訓練模型、或處理幾十萬筆資料的時候。<b>只是要串 Claude API 這種現成服務，不需要 Python。</b><br><br>已經會 JavaScript 的話，Python 基本語法兩週上手，pandas 再兩週。<br><br>要理解的核心觀念是「訓練」到底在做什麼：你給模型一堆輸入跟正確答案，它先亂猜，算出猜錯多少（loss），再往「錯得比較少」的方向微調自己的參數，重複幾萬次。所謂訓練好的模型，就是這組調完的參數。",
+    myth:"以為想碰 AI 就一定要先學 Python。很多用現成 API 做出 AI 產品的人完全沒寫過 Python。<br><br>另一個是以為要先把數學補完。用現成函式庫做分類、做推薦不需要自己推導公式；要自己設計模型架構、或看得懂論文在改什麼，才需要線性代數跟微積分。" },
+
+  { n:"手機 App", sub:"從商店裝下來的那種", fixed:false, langs:["Swift","Kotlin","Dart","JavaScript"],
+    l:"從 App Store 或 Google Play 裝下來的程式。能用到相機、GPS、推播通知、離線資料、指紋解鎖。",
+    choice:"兩邊各一套，程式碼不通用。iPhone 是 <b>Swift</b>，Android 是 <b>Kotlin</b>。<br><br>不想寫兩次有兩條路，差別在畫面是誰畫的：<br><br><b>React Native</b>（JavaScript）：你的程式碼跑在一個 JavaScript 引擎裡，畫面則是叫系統原生的元件去畫。所以按鈕的手感跟系統一致，但兩邊的細節會有差，要分開調。<br><br><b>Flutter</b>（Dart）：它帶著自己的繪圖引擎，每個像素都自己畫。兩邊長得一模一樣，也不受系統版本影響，代價是跟系統原生的手感有一點差距，App 檔案也比較大。<br><br>兩條路都有同一個限制：遇到比較深的系統功能，還是得回去寫一段 Swift 或 Kotlin 再接起來。",
+    tools:"<b>SwiftUI</b>（iPhone）跟 <b>Jetpack Compose</b>（Android）是現在官方推的寫法。兩個都是「描述畫面的樣子，資料改了自己更新」，觀念跟 React 一樣，取代了以前那種手動一行一行改畫面的寫法。<br><br>做 iPhone App 一定要 <b>Xcode</b>，而 Xcode 只能在 Mac 上跑，這是很多人第一個卡關的地方。Android 那邊是 <b>Android Studio</b>，Windows 也能跑。<br><br>上架還要處理<b>簽章</b>：每個 App 都要用開發者憑證簽名，系統才肯裝。憑證過期、機器換了、團隊多人共用，都會在這裡卡住，而且錯誤訊息通常看不懂。",
+    when:"確定非做 App 不可的時候。很多需求做成網頁就夠，而且網頁不用等審核、改了立刻上線；App 送審一次要一到三天，被退還要重來。<br><br>抓三到六個月。除了語言之外，上架、簽章、憑證、隱私權說明這些跟寫程式無關的事，通常會吃掉三分之一的時間。",
+    myth:"以為 App 一定比網頁高級。要用到相機、推播、離線的時候才真的需要 App。<br><br>另一個是以為用了 React Native 或 Flutter 就完全不用碰原生。只要接到金流、藍牙、健康資料這類東西，還是會開 Xcode。" },
+
+  { n:"要跑很快的東西", sub:"系統、遊戲、影音", fixed:false, langs:["C","C++","Rust"],
+    l:"作業系統、瀏覽器本身、遊戲引擎、影音轉檔。這類程式慢一點使用者立刻感覺得到。",
+    choice:"它們快在兩件事。<br><br>第一，程式碼在上線前就編譯成機器碼，執行時直接跑；JavaScript 和 Python 是邊跑邊翻譯，中間多一層。<br><br>第二，記憶體管理方式不同。JavaScript、Python、Java 都有<b>垃圾回收</b>（garbage collection），系統會定期停下來清掉沒人用的記憶體，那個暫停對遊戲來說就是掉幀。C 跟 C++ 要你自己配置跟釋放，沒有暫停，但忘記釋放就是漏、釋放兩次就是當掉。<br><br><b>C</b> 最接近硬體，作業系統跟韌體幾乎都是它，語言本身小到一週看得完，難的是完全沒有安全網。<br><br><b>C++</b> 是 C 加上物件導向跟大量功能，遊戲引擎（Unreal）、瀏覽器（Chrome）、影音處理（FFmpeg）都是它，也是公認最複雜的主流語言之一。<br><br><b>Rust</b> 一樣快，但用<b>所有權</b>（ownership）規則在編譯階段就檢查記憶體：同一份資料同一時間只能有一個人可以改，離開範圍就自動釋放。所以它既沒有垃圾回收的暫停，也不會發生用到已釋放記憶體那類錯誤。代價是編譯器很嚴格，初學者常卡在編譯不過。",
+    tools:"<b>Unreal Engine</b>（C++ 的遊戲引擎）、<b>Tauri</b>（Rust 寫的桌面 App 框架，比 Electron 省很多記憶體，因為它用系統內建的瀏覽器核心，不像 Electron 每個 App 都包一份 Chrome）、<b>FFmpeg</b>（幾乎所有影音轉檔背後都是它）。<br><br><b>WebAssembly</b> 讓 C++ 跟 Rust 編譯後能在瀏覽器裡跑。Figma 的繪圖引擎、線上版的 Photoshop 都是這樣來的。",
+    when:"非工程師幾乎不會需要，知道它們存在就夠。<br><br>真的需要的時機很明確：你手上有一段計算跑太慢，而且已經量過，確認慢的是計算本身，不是資料庫查詢也不是網路等待。在量過之前不要碰。",
+    myth:"以為「跑比較快的語言比較厲害，所以應該學那個」。<br><br>快是用寫起來麻煩換來的。一般網站跟 App 的瓶頸幾乎都在資料庫查詢跟網路等待，這種情況換語言一點用都沒有，該做的是加 index 或加快取。" },
+
+  { n:"自動化與小指令", sub:"把重複的事交給電腦", fixed:false, langs:["Bash","Python"],
+    l:"批次改檔名、定時備份資料庫、把一長串指令包成一個檔案執行。",
+    choice:"<b>Bash</b> 是終端機本身的語言。你平常打的 <code>cd</code>、<code>ls</code>、<code>cp</code> 存成一個 .sh 檔就能一次跑完。<br><br>它最擅長把現成的指令串起來，靠兩個符號：<code>|</code>（pipe，把前一個指令印出來的東西直接餵給下一個）跟 <code>></code>（把結果寫進檔案）。例如 <code>ls *.log | wc -l</code> 就是「列出所有 log 檔，數有幾個」。<br><br>寫 Bash 有一個一定要加的東西：檔案開頭寫 <code>set -e</code>。預設情況下前一行失敗了它還是會繼續跑下一行，備份腳本就會變成「壓縮失敗，然後照樣把舊檔刪掉」。<code>set -e</code> 的意思是一出錯就整個停下來。<br><br>只要牽扯到判斷、迴圈、處理 JSON，Bash 的語法就會變得很難讀，而且不同系統的行為還有差。超過大約三十行，或需要「讀檔案、算一算、產生報表」，就換 <b>Python</b>：它有現成的模組處理路徑（pathlib）、CSV、JSON、打 API（requests），寫起來跟一般程式一樣。",
+    tools:"<b>cron</b>：系統內建的排程器。設定檔寫一行 <code>0 3 * * * /path/backup.sh</code>，意思是每天凌晨三點跑一次。前面五個欄位依序是分、時、日、月、星期，星號代表「每一個都算」。Mac 跟 Linux 都內建。<br><br><b>GitHub Actions</b>：把同一件事搬到雲端。專案裡放一個 .yml 檔，寫「每次有人推程式碼上來就自動跑測試」，GitHub 開一台機器跑完再關掉，公開專案免費。它也能排時間跑，所以不想自己顧一台機器的話，定時工作放這裡也行。<br><br><b>Makefile</b>：把一串指令取一個名字，打 <code>make deploy</code> 就等於跑那一串。比 shell script 更適合「這幾件事互相有先後關係」的情況。",
+    when:"當你發現同一串指令打了第五次的時候。一兩個小時的學習可以省掉之後每週的十幾分鐘。<br><br>起手式：開一個檔案，第一行寫 <code>#!/bin/bash</code>（告訴系統這個檔案要用 bash 執行），第二行 <code>set -e</code>，把平常打的指令一行一行貼進去，存成 deploy.sh，再打 <code>chmod +x deploy.sh</code> 給它執行權限。之後打 <code>./deploy.sh</code> 就會跑。",
+    myth:"以為要先學會整個 Linux 才能寫。你打得出來的指令就寫得出腳本。<br><br>要小心的是刪除。腳本裡的 <code>rm</code> 路徑寫錯不會問你，直接刪。而且變數沒設定到的時候會被當成空字串，<code>rm -rf $DIR/</code> 就會變成 <code>rm -rf /</code>。所以牽涉到刪除的腳本，先把 <code>rm</code> 換成 <code>echo rm</code> 跑一次，確認印出來的路徑正確再換回去。" },
+
+  { n:"網頁 3D 與特效", sub:"寫給顯示卡看的", fixed:true, langs:["GLSL"],
+    l:"寫給顯示卡執行的小程式，決定畫面上每一個像素的顏色。發光、扭曲、水面波紋都靠它。",
+    choice:"就是 <b>GLSL</b>，給 WebGPU 用的新版叫 <b>WGSL</b>。<br><br>它分成兩種。<b>vertex shader</b> 負責把 3D 模型的每一個頂點換算成畫面上的位置；<b>fragment shader</b> 負責決定每一個像素的顏色，做特效的時候幾乎都在寫這個。<br><br>它難在思考方式跟一般程式相反。一般程式是「拿一份資料，一步一步處理」；shader 是同一段程式被複製成幾百萬份，每個像素各跑一份，而且它們彼此看不到對方的結果，也不知道自己是第幾個像素以外的任何事。所以你不能寫迴圈去掃鄰居，只能靠數學算出「在這個座標上，顏色應該是多少」。<br><br>資料進出的方式也不同：<b>uniform</b> 是所有像素共用的值（時間、滑鼠位置），<b>varying</b> 是從 vertex shader 傳給 fragment shader、而且會自動在中間插值的值（例如漸層）。",
+    tools:"<b>Three.js</b> 內建大部分常見材質，金屬、玻璃、發光都有現成的，九成的網頁 3D 用內建的就做完了。<br><br>真的要自己寫的時候，Three.js 提供 <code>ShaderMaterial</code>，讓你把自己的 GLSL 塞進去，並且用 <code>uniforms</code> 把時間、滑鼠座標這些值傳進去。<br><br><b>Shadertoy</b> 是主要的練習跟找範例的地方，上面全部是別人寫好的 fragment shader，可以直接改參數看畫面怎麼變。",
+    when:"當內建效果做不出你要的東西時。做網頁 3D 不代表一定要學它。<br><br>順序建議先用 Three.js 內建材質把整個場景做完，缺哪個效果再回來補 GLSL。反過來先學 GLSL 會卡在完全沒有畫面可以看。",
+    myth:"以為做 3D 就要先學 GLSL。九成的情況用 Three.js 內建材質就做完了。<br><br>另一個是以為它跟 JavaScript 差不多。GLSL 是 C 語言家族的語法，每個變數都要標型別，而且<b>沒有 <code>console.log</code></b>。唯一的除錯方式是把某個數值當成顏色輸出（例如把座標值直接畫成紅綠兩色），用眼睛判斷算出來對不對。" },
+];
+
+const jobsEl = document.getElementById("jobs");
+const jobDetail = document.getElementById("jobDetail");
+JOBS.forEach(j=>{
+  const b = document.createElement("button");
+  b.className = "job"; b.type = "button";
+  b.innerHTML = `
+    <span class="job-hd"><span class="job-n">${esc(j.n)}</span><span class="job-s">${esc(j.sub)}</span></span>
+    <span class="job-l">${j.langs.map(x=>
+      `<span class="${j.fixed ? "fixed" : ""}">${esc(x)}</span>`).join("")}</span>`;
+  b.addEventListener("click", ()=>{
+    document.querySelectorAll(".job").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on");
+    jobDetail.innerHTML = `
+      <div class="d-top"><span class="d-name">${esc(j.n)}</span><span class="d-tag">${esc(j.sub)}</span></div>
+      <p class="d-lede">${j.l}</p>
+      <div class="d-grid">
+        <div class="d-cell"><dt>使用的語言</dt><dd>${j.choice}</dd></div>
+        <div class="d-cell"><dt>常用的工具</dt><dd>${j.tools}</dd></div>
+        <div class="d-cell"><dt>什麼時候該學</dt><dd>${j.when}</dd></div>
+        <div class="d-cell"><dt>最常見的誤會</dt><dd>${j.myth}</dd></div>
+      </div>`;
+    if(window.matchMedia("(max-width:860px)").matches){
+      jobDetail.scrollIntoView({block:"nearest", behavior:"smooth"});
+    }
+  });
+  jobsEl.appendChild(b);
+});
+
+/* ══════════ 02 什麼時候學什麼 ══════════ */
+const ROAD = [
+  { n:"HTML ＋ CSS", time:"兩到三個週末",
+    trigger:"一開始。你想做出「看得到的東西」。",
+    level:"能把一張靜態頁面排出來就好。標籤不用背，查得到就行。",
+    can:"一頁個人簡介、一頁作品集，而且可以放到網路上給別人看。",
+    note:"這一站最不需要毅力，因為改一行、存檔、畫面就變了，回饋很快。" },
+  { n:"JavaScript", time:"一到兩個月",
+    trigger:"當你想要「按下去會有反應」，或想把別人的資料抓進自己的頁面。",
+    level:"會變數、判斷、迴圈、陣列、函式，會用 fetch 去別人的 API 拿資料。",
+    can:"會動的網頁、抓公開資料做成小工具、串現成的 AI 服務。",
+    note:"<b>這一站不能跳過。</b>後面的 React、Vue、Node.js 全部建在它上面。這裡沒學好，後面每一站都會卡在同一個地方。" },
+  { n:"挑一個 UI 框架（React 或 Vue）", time:"一個月",
+    trigger:"當你的頁面多到「同一段 HTML 你複製貼上第三次」，或畫面狀態多到自己改到亂掉。",
+    level:"會把畫面拆成元件、會在元件之間傳資料、會處理表單。",
+    can:"有多個頁面、有登入畫面、資料一變畫面就跟著變的完整前端。",
+    note:"那要選哪一個？想要工作機會跟教學資源多就選 React，想快點做出東西、語法好懂就選 Vue。兩個做得出來的網站一模一樣，而且<b>觀念共通，先學哪個都不會白費</b>。" },
+  { n:"TypeScript", time:"一週",
+    trigger:"當你開始因為「傳錯資料」「打錯欄位名字」而抓 bug 抓很久的時候。",
+    level:"會標基本型別就夠了。進階寫法用到再查，不用一次學完。",
+    can:"編輯器會在你打錯的當下就畫紅線，而不是等到打開網頁才發現。",
+    note:"它是 JavaScript 加上型別檢查，不是新的語言，所以不用重學，只是多寫幾個字。" },
+  { n:"Node.js ＋ SQL", time:"一到兩個月",
+    trigger:"當你需要「東西要存起來」「要有帳號登入」「API 金鑰不能被使用者看到」的時候。",
+    level:"會寫幾個自己的 API、會查增改刪四個 SQL 動作、知道密碼不能直接存進資料庫。",
+    can:"一個真正完整的服務：使用者註冊、登入、存自己的資料。",
+    note:"Node.js 用的還是 JavaScript，所以第二站花的時間，在這裡又回收一次。" },
+  { n:"Python（需要才走）", time:"兩週上手",
+    trigger:"要自己訓練模型、做資料分析、寫爬蟲的時候。只是串現成 AI 服務的話，這一站可以不走。",
+    level:"基本語法加上 pandas，就能開始處理資料。",
+    can:"清理幾十萬筆資料、跑統計、訓練小模型。",
+    note:"已經會 JavaScript 的話，Python 的基本語法兩週就能上手，因為觀念是同一套，只是寫法不一樣。" },
+];
+
+const roadEl = document.getElementById("road");
+ROAD.forEach((r,i)=>{
+  const d = document.createElement("div");
+  d.className = "step";
+  d.innerHTML = `
+    <div class="step-rail"><div class="dot"></div><div class="bar"></div></div>
+    <div class="step-body">
+      <h3>${i+1} · ${esc(r.n)}<span class="time">${esc(r.time)}</span></h3>
+      <div class="d-grid">
+        <div class="d-cell"><dt>什麼時候學</dt><dd>${r.trigger}</dd></div>
+        <div class="d-cell"><dt>學到什麼程度就夠</dt><dd>${r.level}</dd></div>
+        <div class="d-cell"><dt>學完能做出什麼</dt><dd>${r.can}</dd></div>
+      </div>
+      <p class="note">${r.note}</p>
+    </div>`;
+  roadEl.appendChild(d);
+});
+
+/* ══════════ 05 名詞解碼器 ══════════ */
 // [名字, 分類, 說明, 全名（沒有就留空）]
 const TERMS = [
   // ── 架構圖上的方塊 ──
-  ["CDN","架構圖","把檔案複製到全世界的機房，使用者從最近的拿。網站在國外也不慢就是靠它。","Content Delivery Network，內容傳遞網路"],
   ["Load Balancer","架構圖","前面站一個門房，把湧進來的人平均分給後面好幾台伺服器。","負載平衡器"],
-  ["Cache","架構圖","把常用的答案先記起來，下次不用重算。Redis 是最常見的。","快取"],
   ["Queue","架構圖","一排等著被處理的工作。寄信、轉檔這種慢工丟進去慢慢做，不要卡住使用者。","佇列"],
   ["API Gateway","架構圖","所有請求的總入口。負責檢查身分、擋流量、分派到對的服務。","Application Programming Interface Gateway，應用程式介面閘道"],
   ["Reverse Proxy","架構圖","站在伺服器前面代收請求的中間人，順便處理加密和分流。Nginx 最常見。","反向代理"],
   ["Worker","架構圖","在背景默默做事的程式，不直接面對使用者。負責處理佇列裡的工作。","背景工作程式"],
-  ["Webhook","架構圖","「有事發生時你打給我」。跟 API 方向相反，不是你去問，是對方主動通知你。","網頁回呼"],
+  ["Webhook","架構圖","跟 API 方向相反：對方那邊有事發生的時候主動打來通知你，不用你一直去問。","網頁回呼"],
   ["Microservice","架構圖","把一個大程式拆成很多小程式各管各的。大團隊才划算，小專案會被拆到死。","微服務"],
   ["Monolith","架構圖","全部寫在一起沒有拆。聽起來土，但小專案這樣最好。","單體式架構"],
   ["Object Storage","架構圖","放檔案的雲端空間，圖片影片丟這裡。S3、R2 都是。","物件儲存"],
   ["WAF","架構圖","擋掉惡意流量的防火牆，站在你的服務最前面。","Web Application Firewall，網頁應用程式防火牆"],
-  ["S3","架構圖","Amazon 的檔案儲存服務，是「物件儲存」的代名詞。","Simple Storage Service，簡易儲存服務"],
   // ── 線上的字（協定）──
   ["HTTPS","線上的字","瀏覽器跟伺服器講話的標準規矩，而且全程加密。網址開頭那個就是。","HyperText Transfer Protocol Secure，加密的超文字傳輸協定"],
   ["HTTP","線上的字","同上，但<b>沒有加密</b>。現在幾乎不該再用。","HyperText Transfer Protocol，超文字傳輸協定"],
-  ["SQL","線上的字","跟資料庫要資料時講的語言。<code>SELECT 名字 FROM 使用者</code> 這種。","Structured Query Language，結構化查詢語言"],
   ["JSON","線上的字","前後端傳資料時最常用的格式，長得像一堆大括號。人看得懂、機器也好讀。","JavaScript Object Notation，JavaScript 物件表示法"],
   ["TCP","線上的字","網路最底層的送信規矩，保證每個封包都會到、而且順序不會亂。","Transmission Control Protocol，傳輸控制協定"],
   ["DNS","線上的字","把網址翻譯成 IP 位址的電話簿。網站連不上有一半是它出事。","Domain Name System，網域名稱系統"],
@@ -458,28 +692,20 @@ const TERMS = [
   [".glb / .gltf","檔名","3D 模型檔，等於 3D 界的 jpg。","GL Transmission Format (Binary)，圖形傳輸格式"],
   [".wasm","檔名","編譯後的檔案，讓 C++／Rust 能在瀏覽器裡跑。","WebAssembly，網頁組合語言"],
   [".gitignore","檔名","列出「不要上傳到 Git 的東西」。node_modules 和 .env 一定要在裡面。",""],
-  ["README.md","檔名","專案說明書。看一個陌生專案先看它。","Markdown 格式的說明檔"],
   // ── 指令 ──
   ["npm install","指令","把 package.json 列的套件全部裝下來。拿到新專案第一件事。","Node Package Manager，Node 套件管理器"],
   ["npm run dev","指令","開發模式啟動。改檔案存檔，畫面自動更新。","development，開發模式"],
   ["npm run build","指令","打包成上線用的版本，產出丟進 dist 資料夾。",""],
-  ["git push","指令","把本機的改動送上遠端（通常是 GitHub）。",""],
-  ["git pull","指令","把遠端別人的改動拉下來。",""],
   ["docker run","指令","啟動一個盒子。盒子裡的環境跟你的電腦完全隔離。",""],
   ["migrate","指令","改資料庫的表格結構，例如加一個欄位。要小心，改壞會遺失資料。","migration，資料庫遷移"],
   ["seed","指令","塞一批假資料進資料庫，方便開發時測試。","種子資料"],
   ["lint","指令","檢查程式碼有沒有寫壞或不符合規矩。上線前跑一次。","靜態檢查"],
   ["deploy","指令","把程式送上正式環境給使用者用。","部署"],
   // ── 行話 ──
-  ["API","行話","一個程式開給別的程式用的窗口。「打 API」＝去呼叫那個窗口拿東西。","Application Programming Interface，應用程式介面"],
   ["endpoint","行話","API 的其中一個具體網址，例如 /users/123。一個 API 有很多 endpoint。","端點"],
   ["SDK","行話","官方寫好的工具包，讓你不用自己手動串 API。裝了就能直接用。","Software Development Kit，軟體開發套件"],
-  ["SSR","行話","網頁在伺服器上先組好才送給你。快、Google 找得到。","Server-Side Rendering，伺服器端渲染"],
-  ["CSR","行話","先送一個空殼過來，JS 載完才把畫面畫出來。會先看到白畫面。","Client-Side Rendering，瀏覽器端渲染"],
-  ["SEO","行話","讓 Google 找得到你、而且排前面的所有做法總稱。","Search Engine Optimization，搜尋引擎最佳化"],
   ["Hydration","行話","伺服器送來的靜態畫面「接上」JavaScript 變成可互動的那一刻。這裡對不起來就是 hydration error。","注水／水合"],
   ["middleware","行話","請求到達目的地之前要經過的一道道關卡，例如檢查有沒有登入。","中介層"],
-  ["runtime","行話","程式實際跑起來的地方。Node.js 就是 JavaScript 的 runtime。","執行環境"],
   ["CI/CD","行話","程式碼一推上去就自動測試、自動上線的流程。GitHub Actions 最常見。","Continuous Integration / Continuous Deployment，持續整合／持續部署"],
   ["dev / staging / production","行話","三套環境：開發用、測試用、真正給使用者用的。改壞了只會壞在前兩個。","development / staging / production，開發／預備／正式"],
   ["rate limit","行話","限制你一分鐘能呼叫幾次。超過就被擋，防止服務被打爆。","速率限制"],
@@ -488,7 +714,6 @@ const TERMS = [
   ["GraphQL","行話","REST 的對手。讓前端自己指定要哪些欄位，後端不用一個個開 API。","Graph Query Language，圖形查詢語言"],
   ["ORM","行話","讓你用寫程式的方式操作資料庫，不用手寫 SQL。Prisma、Drizzle 都是。","Object-Relational Mapping，物件關聯對映"],
   ["CRUD","行話","增、查、改、刪。任何管理資料的功能都逃不出這四個動作。","Create Read Update Delete，新增／讀取／更新／刪除"],
-  ["cache invalidation","行話","資料改了要記得把舊快取丟掉。工程界公認最難的兩件事之一（另一件是命名）。","快取失效"],
   ["race condition","行話","兩件事同時發生、順序不確定，所以有時對有時錯。最難抓的 bug 之一。","競爭條件"],
   ["latency","行話","從你送出請求到收到回應的時間。跟「頻寬」不同：頻寬是水管粗細，延遲是水管長度。","延遲"],
   ["idempotent","行話","同一個動作做一次跟做十次結果一樣。付款 API 一定要做到，不然重送會扣兩次錢。","冪等"],
@@ -497,10 +722,10 @@ const TERMS = [
   ["UI / UX","行話","UI 是使用者看到摸到的介面，UX 是他用起來的整體感受。兩個常被混用但不一樣。","User Interface / User Experience，使用者介面／使用者體驗"],
 ];
 
-const CATS = ["全部","架構圖","線上的字","檔名","指令","行話","分層"];
+const CATS = ["全部","架構圖","線上的字","檔名","指令","行話"];
 let curCat = "全部", curQ = "";
 
-/* ══════════ 04 地層 ══════════ */
+/* ══════════ 06 地層 ══════════ */
 const LAYERS = [
   { name:"硬體", techs:[
     { n:"CPU", full:"Central Processing Unit，中央處理器",
@@ -707,9 +932,8 @@ function show(t, box){
   }
 }
 
-/* ---- 解碼器渲染（含地層技術）---- */
+/* ---- 解碼器渲染 ---- */
 const ALL = TERMS.map(t=>({n:t[0], cat:t[1], l:t[2], full:t[3]||""}));
-LAYERS.forEach(L=>L.techs.forEach(t=>ALL.push({n:t.n, cat:"分層", l:t.l, full:t.full||""})));
 
 const catsEl = document.getElementById("cats");
 CATS.forEach(c=>{

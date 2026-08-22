@@ -1,9 +1,11 @@
+<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>面試怎麼答 · tech-notes</title>
 <meta name="description" content="ML System Design 面試的 45 分鐘怎麼分配、一定要先問的問題、容量估算怎麼算，以及推薦系統、文件問答、內容審核、搜尋排序、詐欺偵測、客服 AI 助理六題的完整答法。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
 <link rel="stylesheet" href="assets/base.css">
+<script src="assets/reveal.js" defer></script>
 <style>
 /* 時間軸 */
 .clock{display:grid; grid-template-columns:repeat(5,1fr); gap:2px; margin-bottom:18px}
@@ -148,7 +150,7 @@
   </div>
 
   <div class="callout ok" style="margin-top:14px">
-    最常見的扣分有三種。第一種是<b>還沒問清楚就開始畫圖</b>，這個最傷，因為畫出來的可能根本不是對方要的。再來是<b>一開口就講最複雜的做法</b>，正確的順序是先給一個簡單能動的版本，再說什麼情況下要升級。最後一種比較隱形：<b>講完模型就結束了</b>，資料怎麼進來、怎麼監控、退步了怎麼辦，一個字都沒提。這些佔的分數其實不比模型少。
+    最常見的扣分有三種。第一種是<b>還沒問清楚就開始畫圖</b>，這個最傷，因為畫出來的可能根本不是對方要的。再來是<b>一開口就講最複雜的做法</b>，正確的順序是先給一個簡單能動的版本，再說什麼情況下要升級。最後一種比較隱形：<b>講完模型就結束了</b>，資料怎麼進來、怎麼監控、退步了怎麼辦，一個字都沒提。這幾項佔的分數不比模型少。
   </div>
 </section>
 
@@ -236,7 +238,7 @@
 
 
   <div class="callout">
-    這一段不是要你算得準，是要你<b>用數字把設計卡死</b>。<br>
+    這一段的目的是<b>用數字把設計卡死</b>，不是要你算得準。<br>
     算出來模型只剩 100 毫秒可以用，你就可以直接說「所以這裡不能用大模型，要嘛換小的，要嘛先算好存起來」。<br>
     這種推導過程比任何架構圖都加分，因為它證明你在做工程判斷，不是在背名詞。
   </div>
@@ -354,8 +356,8 @@
 </section>
 
 <footer>
-  <p>整頁其實就一句話：先問清楚，再用數字把設計卡死，最後一定要講到上線之後怎麼辦。<br>
-  架構圖只是把這三件事畫出來而已。系統本身長什麼樣，看 <a href="mlsystem.html">ML 系統那一頁</a>。</p>
+  <p>整頁就一句話：先問清楚，再用數字把設計卡死，最後一定要講到上線之後怎麼辦。<br>
+  架構圖只是把這三件事畫出來而已。系統本身的結構，看 <a href="mlsystem.html">ML 系統那一頁</a>。</p>
   <p>快取、佇列、sharding 這些一般 IT 元件，還有短網址、聊天室、動態牆這類經典題，看 <a href="sysdesign.html">一般系統設計</a>。</p>
   <p class="cred"><a href="./">← 回目錄</a></p>
 </footer>
