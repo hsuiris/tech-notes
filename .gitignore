@@ -1,7 +1,9 @@
 # 字體原始檔太大（各 9MB），不進版控。
-# 下載方式見 README。瘦身後的 assets/*.woff2 有進版控，網站不靠這些檔案也能跑。
+# 下載方式見 README。建立子集後的 assets/*.woff2 有進版控，網站讀取已建置的網頁字型檔。
 fonts/*.ttf
 fonts/*.otf
 subset.txt
 
 .DS_Store
+
+.venv/

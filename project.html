@@ -1,8 +1,8 @@
 <!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>看懂一個專案資料夾 · tech-notes</title>
-<meta name="description" content="打開別人的 repo，每個檔案跟資料夾各是幹嘛的、哪些能動、哪些千萬別動。">
+<title>認識專案資料夾 · tech-notes</title>
+<meta name="description" content="以常見的網頁專案為例，介紹檔案用途、修改方式，以及版本控制與機密設定的注意事項。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
 <link rel="stylesheet" href="assets/base.css">
 <script src="assets/reveal.js" defer></script>
@@ -63,17 +63,18 @@
 .np .w b{color:var(--ink); font-weight:700}
 </style>
 
-<nav class="topnav"><div class="topnav-in">
+<nav class="topnav">
+<div class="topnav-in">
   <a class="brand" href="./">tech-notes</a>
   <div class="navlinks">
     <a href="architecture.html">架構圖</a>
     <a href="errors.html">錯誤訊息</a>
     <a href="project.html" aria-current="page">專案資料夾</a>
     <a href="skills.html">Claude 技能</a>
-    <a href="agents.html">AI 大軍</a>
+    <a href="agents.html">多代理協作</a>
     <a href="sysdesign.html">系統設計</a>
     <a href="mlsystem.html">ML 系統</a>
-    <a href="mldesign.html">面試怎麼答</a>
+    <a href="mldesign.html">ML 設計面試</a>
   </div>
 </div></nav>
 
@@ -90,39 +91,46 @@
 
 <header>
   <div class="eyebrow">專案資料夾</div>
-  <h1>看懂一個專案資料夾</h1>
+  <h1>認識專案資料夾</h1>
 </header>
 
 <section>
-  <div class="sec-head"><span class="sec-num">01</span><h2>一個典型的專案有哪些東西</h2></div>
-  <p class="sec-lede">這是一個很標準的網頁專案結構。<b>點任何一個檔案或資料夾</b>，右邊會說明它是什麼、能不能改、改了會怎樣。</p>
+  <div class="sec-head"><span class="sec-num">01</span>
+<h2>從檔案樹認識專案結構</h2>
+</div>
+  <p class="sec-lede">以下以使用 React、TypeScript 與 Vite 的網頁專案為例。<b>點選檔案或資料夾</b>，查看用途與修改建議。不同工具的專案結構可能不同。</p>
 
   <div class="split">
     <div class="tree" id="tree"><div class="tree-root">my-app/</div></div>
     <div class="detail sticky" id="card">
-      <p class="placeholder">← 點左邊任何一個檔案，這裡會說明它是什麼、能不能碰。</p>
+      <p class="placeholder">點選檔案樹中的項目，查看說明與修改注意事項。</p>
     </div>
   </div>
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">02</span><h2>只要分成三種就好</h2></div>
-  <p class="sec-lede">看到一個沒見過的檔案，先問一句：<b>這是誰放的？</b>答案只有三個，而且對應三種完全不同的態度。</p>
+  <div class="sec-head"><span class="sec-num">02</span>
+<h2>依檔案的來源判斷修改方式</h2>
+</div>
+  <p class="sec-lede">檔案的來源會影響維護方式。以下分類有助於初步判斷；設定檔與機密資料仍需依專案規則處理。</p>
 
   <div class="kinds">
     <div class="kd" style="--k:var(--accent)">
-      <h3>你寫的</h3>
-      <p class="rule">改這裡。這是你的工作區。</p>
-      <p>你打字打出來的東西。改了會生效、會被 Git 記錄、會被別人看到。</p>
+      <h3>原始檔</h3>
+      <p class="rule">由開發者維護的原始內容。</p>
+      <p>包含程式碼、文件與設定。修改後需測試，並透過 Git 提交要與團隊共享的變更。</p>
       <ul>
-        <li>src/</li><li>public/</li><li>README.md</li>
-        <li>package.json</li><li>各種 .config 設定檔</li>
+        <li>src/</li>
+<li>public/</li>
+<li>README.md</li>
+        <li>package.json</li>
+<li>各種 .config 設定檔</li>
       </ul>
     </div>
     <div class="kd" style="--k:var(--ochre)">
-      <h3>機器產生的</h3>
-      <p class="rule">改了會被蓋掉。白費工。</p>
-      <p>從「你寫的」自動生出來的。你改它就像改影印本，原稿一印，你的改動就沒了。</p>
+      <h3>工具產生的</h3>
+      <p class="rule">通常應修改來源，再重新產生。</p>
+      <p>這些檔案由建置或安裝工具產生。直接修改可能在下次執行工具時被覆寫；鎖定版本的檔案則通常需要納入版本控制。</p>
       <ul>
         <li>dist/ · build/ · .next/</li>
         <li>package-lock.json</li>
@@ -131,9 +139,9 @@
       </ul>
     </div>
     <div class="kd" style="--k:var(--ink-3)">
-      <h3>別人的</h3>
-      <p class="rule">完全不要進去。</p>
-      <p>從網路下載來的套件。你改了，別人重裝就沒有，等於你一個人在演。</p>
+      <h3>工具管理的</h3>
+      <p class="rule">透過管理工具更新，避免直接修改。</p>
+      <p>包含第三方套件與版本控制資料。套件的本機修改不會自動共享；Git 內部資料則應透過 Git 指令管理。</p>
       <ul>
         <li>node_modules/</li>
         <li>vendor/</li>
@@ -143,33 +151,46 @@
   </div>
 
   <div class="callout" style="margin-top:22px">
-    <b>怎麼快速分辨？</b>打開 <code>.gitignore</code>，<b>裡面列出來的，全部都是「產生的」或「別人的」</b>。<br>
-    因為 Git 不記錄它們。不需要記錄的東西，就是不需要你改的東西。
+    <b><code>.gitignore</code> 是輔助線索。</b>它列出 Git 應忽略的未追蹤檔案，可能包含建置產物、本機設定或機密資料。<br>被忽略不代表不需維護。例如 <code>.env</code> 常需要在本機設定，但不應提交含有密鑰的內容。
   </div>
 
 <figure class="fig">
-<svg viewBox="0 0 520 204" role="img" aria-label="src 加上 node_modules 經過 build 產生 dist，上線的是 dist"><rect x="2" y="22" width="150" height="42" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="77" y="41" text-anchor="middle">src/</text><text class="f-l" x="77" y="56" text-anchor="middle">你寫的</text><rect x="2" y="80" width="150" height="42" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="77" y="99" text-anchor="middle">node_modules/</text><text class="f-l" x="77" y="114" text-anchor="middle">別人的</text><path d="M156 43 H 190 M156 101 H 190 M190 43 V 101" stroke="var(--ink-3)" stroke-width="1.3" fill="none"/><line x1="190" y1="72" x2="222" y2="72" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="226" y="52" width="120" height="40" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="286" y="77" text-anchor="middle">npm run build</text><line x1="350" y1="72" x2="384" y2="72" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="388" y="52" width="130" height="40" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="453" y="70" text-anchor="middle">dist/</text><text class="f-l" x="453" y="85" text-anchor="middle">機器產生的</text><text class="f-l" x="2" y="150">你改的是左上角那一格。另外兩格一個是下載來的，一個是自動產生的。</text><text class="f-l" x="2" y="174">上線的時候，伺服器拿的是右邊的 dist/，不是你的 src/。</text><text class="f-l" x="2" y="198">所以直接去改 dist/ 沒有用，下一次 build 就會被整個蓋掉。</text></svg>
-<figcaption>這也是為什麼 <b>.gitignore</b> 裡看得到 node_modules 和 dist：一個載得回來，一個生得出來，都不需要記錄。</figcaption>
+<svg viewBox="0 0 520 204" role="img" aria-label="src 加上 node_modules 經過 build 產生 dist，上線的是 dist"><rect x="2" y="22" width="150" height="42" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="77" y="41" text-anchor="middle">src/</text><text class="f-l" x="77" y="56" text-anchor="middle">原始檔</text><rect x="2" y="80" width="150" height="42" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="77" y="99" text-anchor="middle">node_modules/</text><text class="f-l" x="77" y="114" text-anchor="middle">工具管理的</text><path d="M156 43 H 190 M156 101 H 190 M190 43 V 101" stroke="var(--ink-3)" stroke-width="1.3" fill="none"/><line x1="190" y1="72" x2="222" y2="72" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="226" y="52" width="120" height="40" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="286" y="77" text-anchor="middle">npm run build</text><line x1="350" y1="72" x2="384" y2="72" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="388" y="52" width="130" height="40" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="453" y="70" text-anchor="middle">dist/</text><text class="f-l" x="453" y="85" text-anchor="middle">工具產生的</text><text class="f-l" x="2" y="150">修改 src/ 後，建置工具會結合相依套件產生輸出。</text><text class="f-l" x="2" y="174">這類靜態網頁專案通常部署 dist/ 中的建置結果。</text><text class="f-l" x="2" y="198">直接修改 dist/ 的內容，可能在下一次建置時被覆寫。</text></svg>
+<figcaption><b>node_modules/</b> 通常可依套件清單重新安裝，<b>dist/</b> 可重新建置，因此常不納入 Git。是否提交建置結果，仍依部署流程決定。</figcaption>
 </figure>
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">03</span><h2>拿到一個陌生專案，照這五步</h2></div>
-  <p class="sec-lede">不要一打開就從第一個檔案開始讀。照順序來，<b>15 分鐘就能摸清楚一個中型專案</b>。</p>
+  <div class="sec-head"><span class="sec-num">03</span>
+<h2>熟悉新專案的閱讀順序</h2>
+</div>
+  <p class="sec-lede">先理解專案如何啟動，再追蹤畫面與程式碼的對應關係。以下時間僅供初步瀏覽安排；環境安裝與問題排查可能需要更久。</p>
 
   <div class="steps">
     <div class="step">
-      <div class="step-rail"><div class="dot"></div><div class="bar"></div></div>
+      <div class="step-rail">
+<div class="dot">
+</div>
+<div class="bar">
+</div>
+</div>
       <div class="step-body">
-        <h3>先讀 README.md<span class="time">3 分鐘</span></h3>
-        <p>這是專案的說明書：它是什麼、怎麼跑起來、要先裝什麼。寫得爛的 README 也有資訊，代表這專案可能沒人維護。</p>
+        <h3>先讀 README.md<span class="time">3 分鐘</span>
+</h3>
+        <p>README 通常介紹專案目的、安裝條件與啟動方式。若資訊不足，可搭配設定檔與近期提交紀錄確認，不能只憑文件完整度判斷維護狀況。</p>
       </div>
     </div>
     <div class="step">
-      <div class="step-rail"><div class="dot"></div><div class="bar"></div></div>
+      <div class="step-rail">
+<div class="dot">
+</div>
+<div class="bar">
+</div>
+</div>
       <div class="step-body">
-        <h3>看 package.json 的 scripts<span class="time">2 分鐘</span></h3>
-        <p>這段告訴你<b>這個專案能打哪些指令</b>。冒號左邊是指令名，右邊是它實際會做的事。</p>
+        <h3>看 package.json 的 scripts<span class="time">2 分鐘</span>
+</h3>
+        <p><b>scripts 列出專案定義的指令</b>。冒號左側是名稱，右側是實際執行內容。執行前先確認指令的用途。</p>
         <div class="pre">"scripts": {
   "dev":   "vite",              ← npm run dev  開發模式
   "build": "tsc && vite build", ← npm run build 打包上線
@@ -178,144 +199,253 @@
       </div>
     </div>
     <div class="step">
-      <div class="step-rail"><div class="dot"></div><div class="bar"></div></div>
+      <div class="step-rail">
+<div class="dot">
+</div>
+<div class="bar">
+</div>
+</div>
       <div class="step-body">
-        <h3>找進入點<span class="time">3 分鐘</span></h3>
-        <p>整個程式從哪一行開始跑。通常在 <code>src/</code> 裡面，叫 <code>main</code>、<code>index</code> 或 <code>App</code>。從它往下讀，比隨便亂翻有效十倍。</p>
+        <h3>找進入點<span class="time">3 分鐘</span>
+</h3>
+        <p>找出應用程式的進入點，再沿著匯入關係閱讀。常見名稱有 <code>main</code> 或 <code>index</code>；<code>App</code> 通常是根元件。使用框架時，也可能由框架管理進入點。</p>
       </div>
     </div>
     <div class="step">
-      <div class="step-rail"><div class="dot"></div><div class="bar"></div></div>
+      <div class="step-rail">
+<div class="dot">
+</div>
+<div class="bar">
+</div>
+</div>
       <div class="step-body">
-        <h3>真的把它跑起來<span class="time">5 分鐘</span></h3>
-        <p>讀十遍不如跑一遍。如果需要 <code>.env</code>，看看有沒有 <code>.env.example</code> 可以照抄。</p>
+        <h3>啟動本機開發環境<span class="time">5 分鐘</span>
+</h3>
+        <p>依 README 安裝相依套件並啟動。若需要 <code>.env</code>，可參照 <code>.env.example</code> 建立本機設定，填入自己有權使用的服務資訊。下列指令適用於使用 npm 且定義了 dev script 的專案。</p>
         <div class="pre">npm install
 npm run dev</div>
       </div>
     </div>
     <div class="step">
-      <div class="step-rail"><div class="dot"></div></div>
+      <div class="step-rail">
+<div class="dot">
+</div>
+</div>
       <div class="step-body">
-        <h3>改一個字，確認畫面真的會變<span class="time">2 分鐘</span></h3>
-        <p>隨便找一段畫面上看得到的文字，改掉它，看瀏覽器有沒有跟著變。<b>這一步是在確認「你改的檔案，就是你看到的畫面」</b>。很多人卡好幾小時，最後發現一直在改錯的檔案。</p>
+        <h3>以一處文字修改確認檔案對應<span class="time">2 分鐘</span>
+</h3>
+        <p>找出畫面上的一段文字，修改後檢查瀏覽器是否更新。這能確認目前的檔案、開發伺服器與畫面是否對應。測試完成後，可還原這次修改。</p>
       </div>
     </div>
   </div>
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">04</span><h2>這五個絕對不要動</h2></div>
-  <p class="sec-lede">這五個動了會出事，而且不好救。</p>
+  <div class="sec-head"><span class="sec-num">04</span>
+<h2>修改前需要留意的檔案</h2>
+</div>
+  <p class="sec-lede">以下項目各有管理方式。先確認其用途，能降低覆寫、版本不一致或資料外洩的風險。</p>
 
   <div class="nope">
     <div class="np">
       <div class="n">node_modules/</div>
-      <div class="w">下載來的套件，幾萬個檔案。<b>你改的東西別人完全看不到</b>，因為他重裝就蓋掉了。要改套件行為，用官方提供的設定，不要動原始碼。</div>
+      <div class="w">第三方套件的安裝位置。直接修改不會自動進入團隊的安裝流程，也可能被重新安裝覆寫。優先使用套件設定；若需修補原始碼，應採用可追蹤、可重現的修補流程。</div>
     </div>
     <div class="np">
       <div class="n">package-lock.json</div>
-      <div class="w">手改會讓「鎖版本」失效，導致<b>你的電腦跟伺服器裝到不同版本</b>。那種「我這邊明明好好的」就是這樣來的。要改就改 package.json，然後 <code>npm install</code> 讓它自己更新。</div>
+      <div class="w">記錄相依套件的確切版本與解析結果。通常應交由 npm 更新並提交變更。任意修改或刪除可能改變安裝結果；重現既有環境時，可使用與鎖檔一致的 <code>npm ci</code>。</div>
     </div>
     <div class="np">
       <div class="n">dist/ · build/</div>
-      <div class="w">打包產生的成品。<b>下次 build 會整包蓋掉</b>，你的改動一秒消失。要改就去改 <code>src/</code> 裡的原稿。</div>
+      <div class="w">建置工具產生的輸出。應先修改來源檔，再重新建置。直接修改輸出檔可能在下次建置時被覆寫。</div>
     </div>
     <div class="np">
       <div class="n">.git/</div>
-      <div class="w">Git 的全部歷史紀錄都在這個資料夾裡。<b>刪掉等於所有版本紀錄永久消失</b>，沒有任何辦法救回來。它看起來只是個隱藏資料夾，但它是整個專案的記憶。</div>
+      <div class="w">儲存本機儲存庫的物件、參照與設定。刪除可能失去尚未推送的提交與本機資訊。遠端或備份中的紀錄可能仍可恢復，但不能假設本機內容都有備份。</div>
     </div>
     <div class="np">
-      <div class="n">.env（別人的）</div>
-      <div class="w">裡面是密碼和金鑰。<b>不要上傳、不要貼給任何人、不要放進截圖</b>。真的外洩了，正確做法是去服務商後台把那把金鑰作廢重發，光刪掉檔案沒有用，它已經在 Git 歷史裡了。</div>
+      <div class="n">.env（機密設定）</div>
+      <div class="w">可能包含 API 金鑰、密碼與連線資訊。避免提交或公開分享有效的機密值。若已外洩，應先撤銷並更換憑證，再清理公開內容與相關紀錄；單純刪除檔案無法使舊憑證失效。</div>
     </div>
   </div>
 </section>
 
 <footer>
-  <p><b>一句話帶走：</b>看到不認識的檔案，先打開 <code>.gitignore</code>。<br>
-  在裡面 ＝ 不用管它。不在裡面 ＝ 有人刻意寫的，值得看一眼。</p>
-  <p class="cred"><a href="./">← 回目錄</a></p>
+  <p class="cred">延伸閱讀：<a href="https://git-scm.com/docs/gitignore">Git 忽略規則</a>、<a href="https://docs.npmjs.com/cli/v11/commands/npm-ci/">npm 鎖檔安裝</a>。</p>
+  <p>閱讀新專案時，可從 README 與啟動指令建立方向，再沿著進入點追蹤程式。<br>修改檔案前，確認它的來源、產生方式與版本控制規則。</p>
+  <p class="cred"><a href="./">← 返回首頁</a>
+</p>
 </footer>
 
 </div>
 
 <script>
-const K = { "你寫的":"var(--accent)", "產生的":"var(--ochre)", "別人的":"var(--ink-3)", "設定":"var(--d3)" };
+const K = {"原始檔":"var(--accent)","產生檔":"var(--ochre)","工具管理":"var(--ink-3)","設定":"var(--d3)"};
 
-// [縮排層級, 名字, 是否資料夾, 種類, 說明, 能不能改, 改了會怎樣 / 重點]
+// [縮排層級, 名字, 是否資料夾, 種類, 說明, 修改建議, 改了會怎樣 / 重點]
 const FILES = [
-  [0,"README.md",0,"你寫的",
-   "專案說明書：這是什麼、怎麼跑起來、要先裝什麼。",
-   "可以，而且應該改。",
-   "拿到陌生專案<b>第一個看它</b>。寫得好的 README 可以省你兩小時。"],
-  [0,"package.json",0,"你寫的",
-   "專案的身分證：名字、版本、用了哪些套件、有哪些指令可以跑。",
-   "可以，但改版本號要小心。",
-   "重點看 <code>\"scripts\"</code> 那一段，它列出這個專案<b>能打哪些指令</b>。"],
-  [0,"package-lock.json",0,"產生的",
-   "鎖住每一個套件的<b>確切版本</b>，確保每台電腦裝出來一模一樣。通常好幾千行。",
-   "不要手改。",
-   "它就是為了消滅「我電腦跑得起來啊」而存在的。手改會讓這個保證失效。"],
-  [0,".env",0,"你寫的",
-   "放密碼、API 金鑰、資料庫連線字串的地方。",
-   "可以改，但<b>絕對不能上傳</b>。",
-   "外洩了光刪檔案沒用，要去服務商後台把金鑰<b>作廢重發</b>，因為它已經進 Git 歷史了。"],
-  [0,".env.example",0,"你寫的",
-   "<code>.env</code> 的<b>範本</b>：只寫「需要哪些變數」，不寫真正的值。",
-   "可以改。這個才是要上傳的。",
-   "別人 clone 你的專案，照著這份就知道要準備哪些金鑰。體貼的專案都有這個。"],
-  [0,".gitignore",0,"你寫的",
-   "列出「不要上傳到 Git 的東西」。",
-   "可以改，但少一行可能造成外洩。",
-   "<code>node_modules</code> 和 <code>.env</code> <b>一定要在裡面</b>。想快速分辨哪些檔案不用管，看這份就對了。"],
-  [0,"tsconfig.json",0,"設定",
-   "告訴 TypeScript 要多嚴格、程式在哪、編譯成哪個版本。",
-   "可以，但通常照抄範本就好。",
-   "看不懂沒關係。大部分專案的這一份都是從範本複製來的，很少人從頭寫。"],
-  [0,"vite.config.ts",0,"設定",
-   "打包工具的設定：要裝哪些外掛、路徑別名怎麼對應。",
-   "可以，加外掛時會動到。",
-   "檔名會隨工具變：Webpack 是 <code>webpack.config.js</code>，Next.js 是 <code>next.config.js</code>。"],
-  [0,"node_modules/",1,"別人的",
-   "下載來的套件全堆在這，通常幾百 MB、幾萬個檔案。",
-   "<b>永遠不要進去改。</b>",
-   "改了別人完全看不到，因為他重裝就蓋掉。它也不會上傳到 Git，所以別人 clone 之後要自己 <code>npm install</code>。"],
-  [0,"public/",1,"你寫的",
-   "靜態檔案資料夾。這裡的東西<b>原封不動</b>被送出去，不會被處理。",
-   "可以改。",
-   "網站圖示（favicon）、<code>robots.txt</code>、不需要打包的圖片放這裡。"],
-  [0,"src/",1,"你寫的",
-   "<b>你的程式碼幾乎全部在這。</b>你改東西的時間，絕大部分都花在這個資料夾裡面。",
-   "可以改。這就是你的工作區。",
-   "打開一個陌生專案，如果只能看一個資料夾，看這個。"],
-  [1,"main.tsx",0,"你寫的",
-   "<b>進入點。</b>整個程式從這個檔案的第一行開始跑。",
-   "可以改，但很少需要。",
-   "想知道一個專案怎麼運作，<b>從這裡開始讀</b>，順著它引用的東西往下追。有時叫 <code>index.tsx</code>。"],
-  [1,"App.tsx",0,"你寫的",
-   "最外層的元件。通常放路由（哪個網址對到哪個畫面）跟共用版面。",
-   "可以改。",
-   "要加一個新頁面，通常從這裡開始。"],
-  [1,"components/",1,"你寫的",
-   "可以重複使用的畫面零件：按鈕、卡片、表單、彈窗。",
-   "可以改。",
-   "一個檔案一個元件。檔名通常就是元件名，開頭大寫。"],
-  [1,"lib/",1,"你寫的",
-   "共用的工具函式：日期格式化、呼叫 API 的封裝、常數。",
-   "可以改。",
-   "有時候叫 <code>utils/</code> 或 <code>helpers/</code>，是同一件事。"],
-  [0,"dist/",1,"產生的",
-   "<code>npm run build</code> 產生的成品。<b>真正上線的就是這一包。</b>",
-   "改了會被下次 build 整包蓋掉。",
-   "看到裡面的程式碼擠成一團、變數名都是 a b c，那是正常的，那叫壓縮，為了讓檔案變小。"],
-  [0,".git/",1,"別人的",
-   "Git 存所有歷史紀錄的地方。你每一次 commit 都在這裡面。",
-   "<b>絕對不要動，更不要刪。</b>",
-   "刪掉等於<b>所有版本紀錄永久消失</b>，沒有辦法救。它是整個專案的記憶。"],
-  [0,".github/workflows/",1,"你寫的",
-   "自動化流程設定：程式推上去之後要自動做什麼（跑測試、自動部署）。",
-   "可以改。",
-   "裡面是 <code>.yml</code> 檔，靠縮排表示層次，<b>縮排錯一格就整個不動</b>，這是最常見的坑。"],
+  [
+    0,
+    "README.md",
+    0,
+    "原始檔",
+    "專案文件，通常介紹用途、安裝條件與啟動方式。",
+    "可隨專案變更更新。",
+    "閱讀新專案時先確認這份文件；指令與版本若已變更，文件也需要同步修訂。"
+  ],
+  [
+    0,
+    "package.json",
+    0,
+    "原始檔",
+    "記錄 Node.js 專案的中繼資料、相依套件與可執行指令。",
+    "可修改；套件版本變更後需重新安裝並驗證。",
+    "先閱讀 <code>scripts</code>，確認開發、建置與測試指令的實際內容。"
+  ],
+  [
+    0,
+    "package-lock.json",
+    0,
+    "產生檔",
+    "記錄 npm 解析出的確切套件版本，協助重現相依環境。",
+    "通常由 npm 更新，避免任意手動修改。",
+    "一般應納入 Git。<code>npm ci</code> 會依鎖檔安裝，並檢查它與 package.json 是否一致。"
+  ],
+  [
+    0,
+    ".env",
+    0,
+    "原始檔",
+    "存放本機環境變數，可能包含服務網址、金鑰或資料庫連線資訊。",
+    "可依環境設定；含機密的內容不應提交。",
+    "公開外洩的金鑰應撤銷並更換。前端工具可能把部分環境變數編入網頁，不可因此視為保密。"
+  ],
+  [
+    0,
+    ".env.example",
+    0,
+    "原始檔",
+    "環境變數範本，列出必要的名稱與非機密範例值。",
+    "可修改，通常可納入 Git。",
+    "新增必要變數時同步更新範本，讓其他開發者知道需要準備哪些設定。"
+  ],
+  [
+    0,
+    ".gitignore",
+    0,
+    "原始檔",
+    "定義 Git 應忽略的未追蹤檔案與目錄。",
+    "可依專案需求更新規則。",
+    "加入規則不會自動移除已追蹤的檔案。含機密的 .env 與可重建的 node_modules 通常應被忽略。"
+  ],
+  [
+    0,
+    "tsconfig.json",
+    0,
+    "設定",
+    "設定 TypeScript 的檢查規則、編譯目標與檔案範圍。",
+    "可修改；先理解選項對檢查與建置的影響。",
+    "初學時可從框架建議的設定開始，再依需求調整。"
+  ],
+  [
+    0,
+    "vite.config.ts",
+    0,
+    "設定",
+    "Vite 的建置設定，可配置外掛與路徑別名。",
+    "可依工具文件調整。",
+    "不同工具有不同設定檔，例如 webpack.config.js 或 next.config.js。"
+  ],
+  [
+    0,
+    "node_modules/",
+    1,
+    "工具管理",
+    "npm 等套件管理工具安裝第三方套件的位置。",
+    "避免直接修改；優先使用設定或正式的修補機制。",
+    "通常不提交至 Git。其他開發者依套件清單與鎖檔重建安裝環境。"
+  ],
+  [
+    0,
+    "public/",
+    1,
+    "原始檔",
+    "此類 Vite 專案中，放置不經程式匯入處理、直接複製至輸出的靜態資源。",
+    "可修改；內容可能對網站訪客公開。",
+    "常見項目包括網站圖示與 robots.txt。不要放入機密檔案。"
+  ],
+  [
+    0,
+    "src/",
+    1,
+    "原始檔",
+    "此範例的主要原始碼目錄。",
+    "可修改，完成後需檢查功能與建置結果。",
+    "可從進入點閱讀，再追蹤它匯入的元件與工具函式。"
+  ],
+  [
+    1,
+    "main.tsx",
+    0,
+    "原始檔",
+    "此範例的應用程式進入點，負責初始化並掛載根元件。",
+    "可修改；變更會影響應用程式啟動。",
+    "有些專案使用 index.tsx，或由框架管理進入點。匯入的模組也可能先執行初始化。"
+  ],
+  [
+    1,
+    "App.tsx",
+    0,
+    "原始檔",
+    "常用來放置根元件、共用版面或路由設定。",
+    "可依畫面與路由需求修改。",
+    "新增頁面前先確認專案是否使用檔案式路由，避免只依檔名推測。"
+  ],
+  [
+    1,
+    "components/",
+    1,
+    "原始檔",
+    "放置可重複使用的介面元件，例如按鈕、表單與對話框。",
+    "可修改；共用元件的變更可能影響多個頁面。",
+    "React 元件名稱通常以大寫字母開頭，檔案組織依專案慣例決定。"
+  ],
+  [
+    1,
+    "lib/",
+    1,
+    "原始檔",
+    "常用來放置共用函式或服務整合程式。",
+    "可修改；先確認哪些程式會使用它。",
+    "utils/ 或 helpers/ 也常存放共用函式，實際用途以內容為準。"
+  ],
+  [
+    0,
+    "dist/",
+    1,
+    "產生檔",
+    "此範例執行建置後的輸出，通常用於部署靜態網站。",
+    "應修改來源後重新建置。",
+    "建置工具可能壓縮程式碼與縮短變數名稱，以減少傳輸大小。"
+  ],
+  [
+    0,
+    ".git/",
+    1,
+    "工具管理",
+    "Git 儲存本機版本物件、參照與設定的位置。",
+    "透過 Git 指令管理，避免手動刪改。",
+    "遠端儲存庫未必包含尚未推送的提交。需要搬移或備份專案時，應一併確認本機版本資料。"
+  ],
+  [
+    0,
+    ".github/workflows/",
+    1,
+    "原始檔",
+    "GitHub Actions 的流程設定，可用於自動測試與部署。",
+    "可修改；留意觸發條件、權限與機密引用方式。",
+    "YAML 以縮排表示結構。變更後應檢查語法與流程執行結果。"
+  ]
 ];
 
 const treeEl = document.getElementById("tree");
@@ -336,7 +466,7 @@ FILES.forEach((f, i)=>{
       <div class="d-top"><span class="d-name mono">${esc(name)}</span><span class="d-tag">${esc(kind)}</span></div>
       <p class="d-lede">${l}</p>
       <div class="d-grid">
-        <div class="d-cell"><dt>能不能改</dt><dd>${edit}</dd></div>
+        <div class="d-cell"><dt>修改建議</dt><dd>${edit}</dd></div>
         <div class="d-cell"><dt>重點</dt><dd>${note}</dd></div>
       </div>`;
     if(window.matchMedia("(max-width:860px)").matches)

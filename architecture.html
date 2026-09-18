@@ -1,8 +1,8 @@
 <!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>看懂架構圖 · tech-notes</title>
-<meta name="description" content="各種程式語言的用途、什麼時候學什麼、技術之間的六種關係。認得關係，架構圖會自己解開，名詞也會自動歸位。">
+<title>讀懂網站架構 · tech-notes</title>
+<meta name="description" content="從工作需求認識程式語言與工具，透過互動架構圖、技術關係與名詞索引，理解網站各元件如何配合。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
 <link rel="stylesheet" href="assets/base.css">
 <script src="assets/reveal.js" defer></script>
@@ -10,8 +10,9 @@
 /* ── 01 六種關係 ── */
 .rels{display:grid; gap:16px}
 .rel{
+  min-width:0;
   border:1px solid var(--line); border-radius:4px; background:var(--paper-2);
-  padding:22px 24px; display:grid; grid-template-columns:1fr; gap:14px;
+  padding:22px 24px; display:grid; grid-template-columns:minmax(0,1fr); gap:14px;
 }
 .rel.key{border-color:var(--accent); box-shadow:var(--shadow)}
 .rel-top{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
@@ -34,6 +35,7 @@
 .rel-def b{color:var(--ink); font-weight:700}
 .rel-fig{margin:2px 0 0; padding:12px 14px 6px; width:max-content; max-width:100%}
 .rel-fig>svg{width:352px; min-width:0}
+.rel-grid > *{min-width:0}
 .rel-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px}
 @media (max-width:620px){.rel-grid{grid-template-columns:1fr}}
 .rel-box dt{
@@ -141,7 +143,7 @@
   font-size:12.5px; background:var(--paper-3); padding:1px 5px;
   border-radius:3px; color:var(--ink);
 }
-/* ── 02 什麼時候學什麼 ── */
+/* ── 02 依需求安排學習順序 ── */
 .road .d-grid{margin-top:11px}
 .road .note{
   margin-top:10px; font-size:13.5px; line-height:1.75; color:var(--ink-2);
@@ -167,17 +169,18 @@
 
 </style>
 
-<nav class="topnav"><div class="topnav-in">
+<nav class="topnav">
+<div class="topnav-in">
   <a class="brand" href="./">tech-notes</a>
   <div class="navlinks">
     <a href="architecture.html" aria-current="page">架構圖</a>
     <a href="errors.html">錯誤訊息</a>
     <a href="project.html">專案資料夾</a>
     <a href="skills.html">Claude 技能</a>
-    <a href="agents.html">AI 大軍</a>
+    <a href="agents.html">多代理協作</a>
     <a href="sysdesign.html">系統設計</a>
     <a href="mlsystem.html">ML 系統</a>
-    <a href="mldesign.html">面試怎麼答</a>
+    <a href="mldesign.html">ML 設計面試</a>
   </div>
 </div></nav>
 
@@ -194,70 +197,81 @@
 
 <header>
   <div class="eyebrow">技術關係手冊</div>
-  <h1>看懂架構圖</h1>
+  <h1>讀懂網站架構</h1>
 </header>
 
 <section>
-  <div class="sec-head"><span class="sec-num">01</span><h2>各種程式語言的用途</h2></div>
-  <p class="sec-lede"><b>點任何一個</b>，右邊會說明它在做什麼、使用的語言有哪些、什麼時候需要學它。</p>
+  <div class="sec-head"><span class="sec-num">01</span>
+<h2>各種程式語言的用途</h2>
+</div>
+  <p class="sec-lede">程式語言的選擇與工作內容有關。<b>點選一種工作</b>，查看常用語言、工具與學習起點。</p>
 
   <div class="split">
-    <div class="jobs" id="jobs"></div>
+    <div class="jobs" id="jobs">
+</div>
     <div class="detail sticky" id="jobDetail">
-      <p class="placeholder">← 點左邊任何一種工作，這裡會說明它在做什麼、使用的語言、常用的工具、什麼時候該學。</p>
+      <p class="placeholder">選擇一種工作，查看用途、常見工具與學習建議。</p>
     </div>
   </div>
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">02</span><h2>什麼時候學什麼</h2></div>
-  <p class="sec-lede">下面六站不用照順序全部學完才能開始做東西。每一站都寫了什麼時候該學它，<b>沒遇到那個情況就先跳過</b>。時間是抓每週投入五到十小時估的，實際會因人差很多。</p>
+  <div class="sec-head"><span class="sec-num">02</span>
+<h2>依需求安排學習順序</h2>
+</div>
+  <p class="sec-lede">以下以建立網頁服務為主，列出六個學習階段。可依目前需求選擇，不必全部完成才開始實作。時間是每週投入五至十小時的粗略練習安排，並非熟練程度的保證。</p>
 
-  <div class="steps road" id="road"></div>
+  <div class="steps road" id="road">
+</div>
 
   <div class="skip">
-    <h3>這些現在不用學</h3>
+    <h3>可以依專案需要再深入的主題</h3>
     <ul>
-      <li><b>做同一件事的第二個</b>。學了 React 就不用再學 Vue，用了 PostgreSQL 就不用再學 MySQL。只要網路上有人在寫文章比較兩個東西，那就代表它們是對手，挑一個就好。</li>
-      <li><b>名字裡有 plugin、loader、-config 的</b>。這些是別人工具的擴充功能，本身不是拿來「學」的，用到再查就好。</li>
-      <li><b>Docker、Kubernetes</b>。在你需要「同一份程式要部署到很多台機器」之前都用不到。個人專案交給 Vercel 這類平台就夠了。</li>
-      <li><b>GraphQL、微服務</b>。這兩個是大團隊拿來解決大團隊問題的做法。小專案照最普通的方式寫，反而比較好維護。</li>
-      <li><b>C++、Rust</b>。除非你要做遊戲引擎、作業系統或很吃效能的工具。看到名字知道它們負責什麼就夠了。</li>
+      <li><b>同類工具</b>：先熟悉一個能滿足需求的選擇，再理解其他工具的差異。工具被放在一起比較，不代表功能完全可互換。</li>
+      <li><b>外掛與設定</b>：先認識主要工具，再依使用情境查閱擴充功能與設定。名稱只能提供線索，實際用途仍需查閱文件。</li>
+      <li><b>Docker 與 Kubernetes</b>：前者有助於一致的執行環境，後者管理容器化工作負載。即使只有一台機器，也可能需要 Docker；是否導入應依部署需求決定。</li>
+      <li><b>GraphQL 與微服務</b>：分別涉及資料查詢介面與服務拆分。先理解需求與維運代價，再判斷是否採用，不能僅以團隊規模決定。</li>
+      <li><b>C++ 與 Rust</b>：常見於系統、遊戲與效能敏感的程式。若目前目標是一般網頁，可先理解其用途，遇到需求再深入。</li>
     </ul>
   </div>
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">03</span><h2>技術之間的六種關係</h2></div>
-  <p class="sec-lede">看到不認識的名字，先問它跟你已經知道的東西是哪一種關係。常見的有下面六種。</p>
+  <div class="sec-head"><span class="sec-num">03</span>
+<h2>技術之間的六種關係</h2>
+</div>
+  <p class="sec-lede">理解一項技術時，可把它與已知工具對照。以下六種關係有助於閱讀文件；同一組技術也可能同時存在多種關係。</p>
 
-  <div class="rels" id="rels"></div>
+  <div class="rels" id="rels">
+</div>
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">04</span><h2>拆一張架構圖給你看</h2></div>
-  <p class="sec-lede">架構圖常用的符號有五種。下面是一張典型的網頁服務架構，<b>點任何一個方塊</b>，會說明它是什麼、為什麼要有它、沒有它會怎樣。</p>
+  <div class="sec-head"><span class="sec-num">04</span>
+<h2>沿著請求路徑閱讀架構圖</h2>
+</div>
+  <p class="sec-lede">以下以包含前端、API 與資料庫的服務為例。符號意義以本圖圖例為準。<b>點選元件</b>可查看職責、使用原因，以及簡化架構時的考量。</p>
 
   <div class="legend">
     <div class="lg">
       <svg width="26" height="20" aria-hidden="true"><rect x="1" y="2" width="24" height="16" rx="2" fill="none" stroke="var(--ink-2)" stroke-width="1.5"/></svg>
-      <span><b>實線方框</b>一段會跑的程式</span>
+      <span><b>實線方框</b>應用程式或服務</span>
     </div>
     <div class="lg">
       <svg width="26" height="22" aria-hidden="true"><ellipse cx="13" cy="17" rx="10" ry="3.5" fill="none" stroke="var(--ink-2)" stroke-width="1.5"/><ellipse cx="13" cy="5" rx="10" ry="3.5" fill="none" stroke="var(--ink-2)" stroke-width="1.5"/><line x1="3" y1="5" x2="3" y2="17" stroke="var(--ink-2)" stroke-width="1.5"/><line x1="23" y1="5" x2="23" y2="17" stroke="var(--ink-2)" stroke-width="1.5"/></svg>
-      <span><b>圓柱</b>存資料的地方</span>
+      <span><b>圓柱</b>資料儲存元件</span>
     </div>
     <div class="lg">
       <svg width="26" height="20" aria-hidden="true"><rect x="1" y="2" width="24" height="16" rx="2" fill="none" stroke="var(--ink-3)" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
-      <span><b>虛線大框</b>邊界，框裡歸同一個人管</span>
+      <span><b>虛線大框</b>部署或管理範圍</span>
     </div>
     <div class="lg">
       <svg width="26" height="20" aria-hidden="true"><line x1="2" y1="10" x2="18" y2="10" stroke="var(--ink-2)" stroke-width="1.5"/><path d="M18 6 L25 10 L18 14 Z" fill="var(--ink-2)"/></svg>
-      <span><b>箭頭</b>誰主動去找誰</span>
+      <span><b>箭頭</b>請求或資料流向</span>
     </div>
     <div class="lg">
       <svg width="26" height="20" aria-hidden="true"><text x="13" y="14" text-anchor="middle" font-size="11" font-family="monospace" fill="var(--accent)">SQL</text></svg>
-      <span><b>線上的字</b>兩邊用什麼規矩講話</span>
+      <span><b>線上的字</b>協定或操作方式</span>
     </div>
   </div>
 
@@ -276,7 +290,7 @@
     <g class="hot" data-k="browser" tabindex="0" role="button" aria-label="瀏覽器">
       <rect class="sh" x="56" y="48" width="328" height="50" rx="4" fill="var(--paper-2)" stroke="var(--line)" stroke-width="1.5"/>
       <text class="t-name" x="220" y="70" text-anchor="middle">瀏覽器</text>
-      <text class="t-sub" x="220" y="87" text-anchor="middle">React · Three.js 在這裡跑</text>
+      <text class="t-sub" x="220" y="87" text-anchor="middle">前端互動程式在此執行</text>
     </g>
 
     <line x1="220" y1="114" x2="220" y2="142" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#ah)"/>
@@ -285,15 +299,15 @@
     <g class="hot" data-k="cdn" tabindex="0" role="button" aria-label="CDN">
       <rect class="sh" x="100" y="146" width="240" height="48" rx="4" fill="var(--ochre-soft)" stroke="var(--ochre)" stroke-width="1.5" stroke-dasharray="6 3"/>
       <text class="t-name" x="220" y="167" text-anchor="middle">CDN</text>
-      <text class="t-sub" x="220" y="184" text-anchor="middle">Cloudflare · 別人的機房</text>
+      <text class="t-sub" x="220" y="184" text-anchor="middle">例：Cloudflare</text>
     </g>
 
     <line x1="220" y1="194" x2="220" y2="230" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#ah)"/>
-    <text class="t-edge" x="232" y="217">② 快取沒有才往下問</text>
+    <text class="t-edge" x="232" y="217">② 未命中時回源</text>
 
     <!-- 邊界 B -->
     <rect x="30" y="230" width="380" height="300" rx="5" fill="none" stroke="var(--ink-3)" stroke-width="1.2" stroke-dasharray="5 4" opacity=".7"/>
-    <text class="t-bound" x="44" y="250">我們自己的伺服器</text>
+    <text class="t-bound" x="44" y="250">應用服務範圍</text>
 
     <g class="hot" data-k="web" tabindex="0" role="button" aria-label="前端伺服器">
       <rect class="sh" x="56" y="262" width="328" height="50" rx="4" fill="var(--paper-2)" stroke="var(--line)" stroke-width="1.5"/>
@@ -302,7 +316,7 @@
     </g>
 
     <line x1="220" y1="312" x2="220" y2="342" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#ah)"/>
-    <text class="t-edge" x="232" y="332">③ 打 API</text>
+    <text class="t-edge" x="232" y="332">③ 呼叫 API</text>
 
     <g class="hot" data-k="api" tabindex="0" role="button" aria-label="後端 API">
       <rect class="sh" x="56" y="342" width="328" height="50" rx="4" fill="var(--paper-2)" stroke="var(--line)" stroke-width="1.5"/>
@@ -347,39 +361,44 @@
   </div>
 
   <div class="detail" id="archDetail">
-    <p class="placeholder">↑ 點圖上任何一個方塊，這裡會說明它是什麼、為什麼要有它、沒有它會怎樣。</p>
+    <p class="placeholder">點選架構圖中的元件，查看用途與設計考量。</p>
   </div>
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">05</span><h2>名詞解碼器</h2></div>
-  <p class="sec-lede">上面幾段講過的名詞這裡不重複收，只留下比較難、而且上面沒機會講到的。分類不按字母排，按<b>「你會在哪裡看到它」</b>。</p>
+  <div class="sec-head"><span class="sec-num">05</span>
+<h2>技術名詞索引</h2>
+</div>
+  <p class="sec-lede">以下補充架構圖、專案檔案與開發流程中常見的名詞。可依出現情境篩選，也可直接輸入關鍵字。</p>
 
   <div class="tools">
     <input class="search" id="q" type="search" placeholder="搜尋，例如 cache" aria-label="搜尋名詞">
-    <div class="cats" id="cats"></div>
+    <div class="cats" id="cats">
+</div>
   </div>
-  <div class="terms" id="terms"></div>
-  <p class="none" id="none" hidden>沒找到。試試更短的關鍵字。</p>
+  <div class="terms" id="terms">
+</div>
+  <p class="none" id="none" hidden>沒有符合的項目。可縮短關鍵字，或切換至「全部」分類。</p>
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">06</span><h2>洋蔥圖：誰在誰上面</h2></div>
-  <p class="sec-lede">上下層關係畫出來，就是<b>一層疊一層，像洋蔥</b>。<br>
-  <b>最外面那層是你寫的</b>，往裡面每一層都是別人已經寫好的。你只碰最外面，但裡面每一層都在跑。<br>
-  左邊是四條真實的鏈。<b>點任何一層</b>，右邊卡片會說明它是什麼。</p>
+  <div class="sec-head"><span class="sec-num">06</span>
+<h2>從應用程式理解軟體分層</h2>
+</div>
+  <p class="sec-lede">應用程式會使用框架、執行環境與作業系統提供的能力。下方以巢狀圖呈現四種簡化的依賴路徑。<br>這些路徑省略了部分內部元件，也不表示每個專案都採用同樣的組合。<b>點選任一層</b>，查看說明。</p>
 
   <div class="split">
-    <div class="chains" id="chains"></div>
+    <div class="chains" id="chains">
+</div>
     <div class="detail sticky" id="layerDetail">
-      <p class="placeholder">← 點洋蔥圖上任何一層，這張卡片會說明它是什麼、它底下是誰、同一層還有哪些選擇。</p>
+      <p class="placeholder">選擇一層，查看它依賴的能力、上層用途與相關選擇。</p>
     </div>
   </div>
 </section>
 
 <footer>
-  <p>下次看到不懂的名詞，先問它是六種關係裡的哪一種，再問它在哪一層。<br>
-  這兩題問完，大部分的名詞就不會那麼陌生了。剩下的通常要真的動手做過才會懂。</p>
+<p class="cred">延伸閱讀：<a href="https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/First_steps/Client-Server_overview">MDN 用戶端與伺服器</a>、<a href="https://www.typescriptlang.org/docs/handbook/2/basic-types.html">TypeScript 基礎</a>、<a href="https://developer.mozilla.org/en-US/docs/WebAssembly/Guides/Concepts">WebAssembly 概念</a>。</p>
+  <p>閱讀架構圖時，可先確認每個元件的職責，再沿箭頭追蹤請求與資料。遇到陌生名詞，就回到它在流程中的位置查閱文件。</p>
   <p class="cred">字體：資源圓體 Resource Han Rounded TW（思源黑體的圓角繁中版，開源）</p>
 </footer>
 
@@ -387,42 +406,180 @@
 <script>
 /* ══════════ 03 六種關係 ══════════ */
 const RELS = [
-  { fig:`<svg viewBox="0 0 320 96" role="img" aria-label="A 疊在 B 上面，B 在底下持續運作"><rect x="14" y="12" width="150" height="32" rx="3" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="89" y="33" text-anchor="middle">A</text><rect x="14" y="48" width="150" height="32" rx="3" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="89" y="69" text-anchor="middle">B</text><text class="f-l" x="176" y="32">你直接使用的是這層</text><text class="f-l" x="176" y="68">它在底下一直運作</text></svg>`,
-    n:"上下層", sym:"A 底層是 B", key:1,
-    def:"A 是<b>建立在 B 上面</b>的。你使用 A 的功能時，底層還是 B 在工作，只是平常不需要直接碰到它。",
-    says:["A 是基於 B","A 底層是 B","A 封裝了 B","A 是 B 的 wrapper"],
-    egs:[["Three.js","建立在","WebGL"],["Next.js","建立在","React"],["axios","建立在","fetch"]],
-    why:"會多包一層，通常是因為下層太難用。用 WebGL 畫一個三角形要寫一百行，換成 Three.js 三行就畫得出來。" },
-  { fig:`<svg viewBox="0 0 320 96" role="img" aria-label="A 和 B 站在同一個位子上，只會選一個"><rect x="26" y="10" width="108" height="30" rx="3" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="80" y="30" text-anchor="middle">A</text><rect x="186" y="10" width="108" height="30" rx="3" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="5 3"/><text class="f-t" x="240" y="30" text-anchor="middle">B</text><path d="M80 42 L142 58" fill="none" stroke="var(--accent)" stroke-width="1.4" marker-end="url(#fac)"/><path d="M240 42 L182 58" fill="none" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="4 3"/><rect x="94" y="62" width="132" height="26" rx="3" fill="none" stroke="var(--ink-3)" stroke-width="1.2" stroke-dasharray="5 4"/><text class="f-s" x="160" y="80" text-anchor="middle">同一個位子</text></svg>`,
-    n:"同類替代", sym:"A ｜ B", key:1,
-    def:"兩個東西<b>站在同一個位子上</b>，做的是同一份工作。選一個就好，不用兩個都學。這是最容易誤會成「都要會」的關係。",
-    says:["A vs B","該用 A 還是 B","A 的替代品","A 的競品"],
-    egs:[["React","｜","Vue ｜ Svelte"],["PostgreSQL","｜","MySQL"],["Vite","｜","Webpack"]],
-    why:"只要有人在寫文章「比較」它們，它們就是這種關係，挑一個用就好。" },
-  { fig:`<svg viewBox="0 0 320 96" role="img" aria-label="A 需要 B 才啟動得起來"><rect x="16" y="20" width="112" height="34" rx="3" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="72" y="42" text-anchor="middle">A</text><line x1="132" y1="37" x2="182" y2="37" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><text class="f-s" x="157" y="29" text-anchor="middle">需要</text><rect x="188" y="20" width="112" height="34" rx="3" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="244" y="42" text-anchor="middle">B</text><text class="f-l" x="160" y="80" text-anchor="middle">少了 B，A 連啟動都不會開始</text></svg>`,
-    n:"依賴", sym:"A → 需要 B",
-    def:"沒有 B，A <b>根本跑不起來</b>。這種問題通常會在安裝或部署的時候直接出現。",
-    says:["依賴 / dependency","要先裝 B","requires Node 18+","peer dependency"],
-    egs:[["Next.js","需要","Node.js"],["React Three Fiber","需要","React + Three.js"],["幾乎所有前端工具","需要","Node.js"]],
-    why:"版本是最常出事的地方。「需要 Node 18 以上」這句話講的就是這件事。" },
-  { fig:`<svg viewBox="0 0 320 96" role="img" aria-label="A 主動呼叫 B，B 回傳資料"><rect x="12" y="14" width="112" height="36" rx="3" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="68" y="37" text-anchor="middle">A</text><rect x="196" y="14" width="112" height="36" rx="3" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="252" y="37" text-anchor="middle">B</text><line x1="128" y1="25" x2="190" y2="25" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#fac)"/><text class="f-s" x="159" y="17" text-anchor="middle" fill="var(--accent)">協定</text><line x1="192" y1="41" x2="132" y2="41" stroke="var(--ink-3)" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#fa)"/><text class="f-l" x="160" y="78" text-anchor="middle">實線是誰主動去找誰，虛線是回傳</text></svg>`,
-    n:"呼叫", sym:"A ──協定──▶ B", key:1,
-    def:"A 和 B 是<b>兩個獨立的東西</b>，但它們會按照約定好的方式交換資料。架構圖裡看到 A → B，很多時候就是這種關係，箭頭表示 A 主動去呼叫 B。",
-    says:["打 API","呼叫 / call","送請求","串接","request"],
-    egs:[["瀏覽器","──HTTPS──▶","伺服器"],["後端","──SQL──▶","資料庫"],["前端","──WebSocket──▶","即時伺服器"]],
-    why:"線上寫的那個字最重要，它決定兩邊用什麼方式交換資料。看不懂那個字，就看不懂那條線。" },
-  { fig:`<svg viewBox="0 0 320 96" role="img" aria-label="A 經過 build 產生 B"><rect x="12" y="18" width="118" height="36" rx="3" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="71" y="35" text-anchor="middle">A</text><text class="f-l" x="71" y="48" text-anchor="middle">你寫的</text><line x1="134" y1="36" x2="186" y2="36" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><text class="f-s" x="159" y="28" text-anchor="middle">build</text><rect x="190" y="18" width="118" height="36" rx="3" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="5 3"/><text class="f-t" x="249" y="35" text-anchor="middle">B</text><text class="f-l" x="249" y="48" text-anchor="middle">機器實際跑的</text><text class="f-l" x="160" y="80" text-anchor="middle">B 是產生出來的，專案裡找不到它</text></svg>`,
-    n:"編譯產出", sym:"A ⇒ B",
-    def:"A 是<b>你寫的</b>，B 是<b>機器實際執行的</b>。中間有一道自動轉換，所以你在專案裡找不到 B，因為 B 是產生出來的。",
-    says:["編譯 / compile","build / 打包","transpile","產生 / generate"],
-    egs:[["TypeScript","⇒","JavaScript"],["Sass","⇒","CSS"],["React 的 JSX","⇒","一般 JavaScript"]],
-    why:"讓人寫得順手，跟讓機器跑得快，本來就是兩件不同的事，所以中間才需要這一道轉換。" },
-  { fig:`<svg viewBox="0 0 320 96" role="img" aria-label="A 掛在 B 上面，離開 B 就沒有作用"><rect x="26" y="14" width="192" height="52" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="122" y="45" text-anchor="middle">B</text><rect x="218" y="28" width="72" height="24" rx="3" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="254" y="45" text-anchor="middle">A</text><text class="f-l" x="160" y="86" text-anchor="middle">A 從 B 上面拆下來就沒有作用</text></svg>`,
-    n:"擴充", sym:"A ＋ B",
-    def:"A 是 B 的<b>擴充功能</b>，離開 B 就沒有作用。單獨去查 A 會查不懂，因為它本來就不是獨立的東西。",
-    says:["plugin / 外掛","套件 / package","extension","middleware"],
-    egs:[["postprocessing","＋","Three.js"],["Tailwind","＋","CSS"],["ESLint 規則包","＋","ESLint"]],
-    why:"名字裡有 plugin、-loader，或是 @某某/某某 這種寫法的，大多屬於這一類。" },
+  {
+    "fig": "<svg viewBox=\"0 0 320 96\" role=\"img\" aria-label=\"A 疊在 B 上面，B 在底下持續運作\"><rect x=\"14\" y=\"12\" width=\"150\" height=\"32\" rx=\"3\" fill=\"var(--accent-soft)\" stroke=\"var(--accent)\" stroke-width=\"1.4\"/><text class=\"f-t\" x=\"89\" y=\"33\" text-anchor=\"middle\">A</text><rect x=\"14\" y=\"48\" width=\"150\" height=\"32\" rx=\"3\" fill=\"var(--paper-3)\" stroke=\"var(--line)\" stroke-width=\"1.4\"/><text class=\"f-t\" x=\"89\" y=\"69\" text-anchor=\"middle\">B</text><text class=\"f-l\" x=\"176\" y=\"32\">直接使用的介面</text><text class=\"f-l\" x=\"176\" y=\"68\">下層提供的能力</text></svg>",
+    "n": "分層與封裝",
+    "sym": "A 底層是 B",
+    "key": 1,
+    "def": "A 使用 B 提供的能力，並提供較高層的操作方式。使用 A 時，部分細節由下層處理。",
+    "says": [
+      "A 是基於 B",
+      "A 底層是 B",
+      "A 封裝了 B",
+      "A 是 B 的 wrapper"
+    ],
+    "egs": [
+      [
+        "Three.js",
+        "可使用",
+        "WebGL"
+      ],
+      [
+        "Next.js",
+        "建立於",
+        "React"
+      ],
+      [
+        "React Three Fiber",
+        "整合",
+        "React 與 Three.js"
+      ]
+    ],
+    "why": "例如 Three.js 提供場景與相機等概念，減少直接管理底層圖形介面的工作。"
+  },
+  {
+    "fig": "<svg viewBox=\"0 0 320 96\" role=\"img\" aria-label=\"A 和 B 站在相近的用途上，依需求選用\"><rect x=\"26\" y=\"10\" width=\"108\" height=\"30\" rx=\"3\" fill=\"var(--accent-soft)\" stroke=\"var(--accent)\" stroke-width=\"1.4\"/><text class=\"f-t\" x=\"80\" y=\"30\" text-anchor=\"middle\">A</text><rect x=\"186\" y=\"10\" width=\"108\" height=\"30\" rx=\"3\" fill=\"var(--paper)\" stroke=\"var(--line)\" stroke-width=\"1.4\" stroke-dasharray=\"5 3\"/><text class=\"f-t\" x=\"240\" y=\"30\" text-anchor=\"middle\">B</text><path d=\"M80 42 L142 58\" fill=\"none\" stroke=\"var(--accent)\" stroke-width=\"1.4\" marker-end=\"url(#fac)\"/><path d=\"M240 42 L182 58\" fill=\"none\" stroke=\"var(--line)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"/><rect x=\"94\" y=\"62\" width=\"132\" height=\"26\" rx=\"3\" fill=\"none\" stroke=\"var(--ink-3)\" stroke-width=\"1.2\" stroke-dasharray=\"5 4\"/><text class=\"f-s\" x=\"160\" y=\"80\" text-anchor=\"middle\">相近的用途</text></svg>",
+    "n": "同類替代",
+    "sym": "A ｜ B",
+    "key": 1,
+    "def": "A 與 B 在某些需求上可以互相替代，但功能、限制與生態系未必相同。",
+    "says": [
+      "A vs B",
+      "該用 A 還是 B",
+      "A 的替代品",
+      "A 的競品"
+    ],
+    "egs": [
+      [
+        "React",
+        "｜",
+        "Vue ｜ Svelte"
+      ],
+      [
+        "PostgreSQL",
+        "｜",
+        "MySQL"
+      ],
+      [
+        "Vite",
+        "｜",
+        "Webpack"
+      ]
+    ],
+    "why": "初學時可先選一個完成實作，再依專案需求比較其他方案。"
+  },
+  {
+    "fig": "<svg viewBox=\"0 0 320 96\" role=\"img\" aria-label=\"A 需要 B 才啟動得起來\"><rect x=\"16\" y=\"20\" width=\"112\" height=\"34\" rx=\"3\" fill=\"var(--accent-soft)\" stroke=\"var(--accent)\" stroke-width=\"1.4\"/><text class=\"f-t\" x=\"72\" y=\"42\" text-anchor=\"middle\">A</text><line x1=\"132\" y1=\"37\" x2=\"182\" y2=\"37\" stroke=\"var(--ink-3)\" stroke-width=\"1.4\" marker-end=\"url(#fa)\"/><text class=\"f-s\" x=\"157\" y=\"29\" text-anchor=\"middle\">需要</text><rect x=\"188\" y=\"20\" width=\"112\" height=\"34\" rx=\"3\" fill=\"var(--paper-3)\" stroke=\"var(--line)\" stroke-width=\"1.4\"/><text class=\"f-t\" x=\"244\" y=\"42\" text-anchor=\"middle\">B</text><text class=\"f-l\" x=\"160\" y=\"80\" text-anchor=\"middle\">缺少必要相依項目可能無法執行</text></svg>",
+    "n": "相依關係",
+    "sym": "A → 需要 B",
+    "def": "A 的某些功能、建置或執行需要 B。相依項目與版本通常會記錄在設定或文件中。",
+    "says": [
+      "dependency / 相依性",
+      "執行環境需求",
+      "支援的版本範圍",
+      "peer dependency"
+    ],
+    "egs": [
+      [
+        "React Three Fiber",
+        "需要",
+        "React 與 Three.js"
+      ],
+      [
+        "Vite 開發工具",
+        "需要",
+        "相容的執行環境"
+      ]
+    ],
+    "why": "區分開發、建置與執行時的相依性，並確認版本範圍是否相容。"
+  },
+  {
+    "fig": "<svg viewBox=\"0 0 320 96\" role=\"img\" aria-label=\"A 主動呼叫 B，B 回傳資料\"><rect x=\"12\" y=\"14\" width=\"112\" height=\"36\" rx=\"3\" fill=\"var(--paper)\" stroke=\"var(--line)\" stroke-width=\"1.4\"/><text class=\"f-t\" x=\"68\" y=\"37\" text-anchor=\"middle\">A</text><rect x=\"196\" y=\"14\" width=\"112\" height=\"36\" rx=\"3\" fill=\"var(--paper)\" stroke=\"var(--line)\" stroke-width=\"1.4\"/><text class=\"f-t\" x=\"252\" y=\"37\" text-anchor=\"middle\">B</text><line x1=\"128\" y1=\"25\" x2=\"190\" y2=\"25\" stroke=\"var(--accent)\" stroke-width=\"1.5\" marker-end=\"url(#fac)\"/><text class=\"f-s\" x=\"159\" y=\"17\" text-anchor=\"middle\" fill=\"var(--accent)\">協定</text><line x1=\"192\" y1=\"41\" x2=\"132\" y2=\"41\" stroke=\"var(--ink-3)\" stroke-width=\"1.3\" stroke-dasharray=\"4 3\" marker-end=\"url(#fa)\"/><text class=\"f-l\" x=\"160\" y=\"78\" text-anchor=\"middle\">此圖實線表示請求，虛線表示回應</text></svg>",
+    "n": "介面呼叫",
+    "sym": "A ──協定──▶ B",
+    "key": 1,
+    "def": "A 透過約定的介面向 B 發出請求，B 再回傳結果。箭頭的確切意義應以圖例為準。",
+    "says": [
+      "打 API",
+      "呼叫 / call",
+      "送請求",
+      "串接",
+      "request"
+    ],
+    "egs": [
+      [
+        "瀏覽器",
+        "──HTTPS──▶",
+        "伺服器"
+      ],
+      [
+        "後端",
+        "──SQL──▶",
+        "資料庫"
+      ],
+      [
+        "前端",
+        "──WebSocket──▶",
+        "即時伺服器"
+      ]
+    ],
+    "why": "查看連線上的協定或操作標示。SQL 是查詢語言，HTTPS 則是加密的網路通訊方式。"
+  },
+  {
+    "fig": "<svg viewBox=\"0 0 320 96\" role=\"img\" aria-label=\"A 經過 build 產生 B\"><rect x=\"12\" y=\"18\" width=\"118\" height=\"36\" rx=\"3\" fill=\"var(--accent-soft)\" stroke=\"var(--accent)\" stroke-width=\"1.4\"/><text class=\"f-t\" x=\"71\" y=\"35\" text-anchor=\"middle\">A</text><text class=\"f-l\" x=\"71\" y=\"48\" text-anchor=\"middle\">原始內容</text><line x1=\"134\" y1=\"36\" x2=\"186\" y2=\"36\" stroke=\"var(--ink-3)\" stroke-width=\"1.4\" marker-end=\"url(#fa)\"/><text class=\"f-s\" x=\"159\" y=\"28\" text-anchor=\"middle\">build</text><rect x=\"190\" y=\"18\" width=\"118\" height=\"36\" rx=\"3\" fill=\"var(--paper-3)\" stroke=\"var(--line)\" stroke-width=\"1.4\" stroke-dasharray=\"5 3\"/><text class=\"f-t\" x=\"249\" y=\"35\" text-anchor=\"middle\">B</text><text class=\"f-l\" x=\"249\" y=\"48\" text-anchor=\"middle\">建置輸出</text><text class=\"f-l\" x=\"160\" y=\"80\" text-anchor=\"middle\">B 由工具產生，通常不直接編輯</text></svg>",
+    "n": "建置與轉換",
+    "sym": "A ⇒ B",
+    "def": "原始內容 A 經工具處理後成為輸出 B，例如 TypeScript 轉為 JavaScript。",
+    "says": [
+      "編譯 / compile",
+      "build / 打包",
+      "transpile",
+      "產生 / generate"
+    ],
+    "egs": [
+      [
+        "TypeScript",
+        "⇒",
+        "JavaScript"
+      ],
+      [
+        "Sass",
+        "⇒",
+        "CSS"
+      ],
+      [
+        "React 的 JSX",
+        "⇒",
+        "一般 JavaScript"
+      ]
+    ],
+    "why": "輸出可能存在 dist/ 等目錄，也可能由部署平台產生。修改通常應從來源檔進行。"
+  },
+  {
+    "fig": "<svg viewBox=\"0 0 320 96\" role=\"img\" aria-label=\"A 掛在 B 上面，離開 B 就沒有作用\"><rect x=\"26\" y=\"14\" width=\"192\" height=\"52\" rx=\"4\" fill=\"var(--paper-3)\" stroke=\"var(--line)\" stroke-width=\"1.4\"/><text class=\"f-t\" x=\"122\" y=\"45\" text-anchor=\"middle\">B</text><rect x=\"218\" y=\"28\" width=\"72\" height=\"24\" rx=\"3\" fill=\"var(--accent-soft)\" stroke=\"var(--accent)\" stroke-width=\"1.4\"/><text class=\"f-t\" x=\"254\" y=\"45\" text-anchor=\"middle\">A</text><text class=\"f-l\" x=\"160\" y=\"86\" text-anchor=\"middle\">A 透過 B 的擴充介面運作</text></svg>",
+    "n": "功能擴充",
+    "sym": "A ＋ B",
+    "def": "A 透過 B 提供的擴充介面增加能力，例如加入格式檢查規則。",
+    "says": [
+      "plugin / 外掛",
+      "套件 / package",
+      "extension",
+      "middleware"
+    ],
+    "egs": [
+      [
+        "ESLint 規則包",
+        "擴充",
+        "ESLint"
+      ],
+      [
+        "Vite 外掛",
+        "擴充",
+        "Vite"
+      ]
+    ],
+    "why": "先查閱主工具支援的外掛介面。套件名稱含 @ 並不表示它一定是外掛。"
+  }
 ];
 
 const relsEl = document.getElementById("rels");
@@ -439,7 +596,7 @@ RELS.forEach((r,i)=>{
     <p class="rel-def">${r.def}</p>
     <figure class="fig rel-fig">${r.fig}</figure>
     <div class="rel-grid">
-      <div class="rel-box"><dt>聽到這些話就是它</dt>
+      <div class="rel-box"><dt>常見描述</dt>
         <dd class="says">${r.says.map(s=>`<span>${esc(s)}</span>`).join("")}</dd></div>
       <div class="rel-box"><dt>例子</dt>
         <dd class="egs">${r.egs.map(e=>
@@ -451,41 +608,64 @@ RELS.forEach((r,i)=>{
 
 /* ══════════ 04 架構圖 ══════════ */
 const ARCH = {
-  browser:{ n:"瀏覽器", tag:"使用者這邊",
-    l:"使用者真正看得到、摸得到的地方。你寫的 React、Three.js 全部在這裡執行，不是在你的伺服器上。",
-    why:"這是唯一「不是你的機器」的地方。使用者可以打開開發者工具看光你送過去的東西，所以密碼、金鑰絕對不能放這裡。",
-    without:"沒有這一塊就不是網頁了。",
-    real:"Chrome / Safari / Edge。你的 JS 在 V8 引擎裡跑。" },
-  cdn:{ n:"CDN", tag:"第三方服務", full:"Content Delivery Network，內容傳遞網路",
-    l:"把你的圖片、影片、JS 檔複製到全世界幾百個機房。使用者從離自己最近的那個拿，所以在國外開你的網站也不會慢。",
-    why:"你的伺服器可能在美國，台灣使用者連過去要繞半個地球。CDN 讓他直接從台北的機房拿。",
-    without:"海外使用者載入會慢好幾秒，而且所有流量都砸在你自己的伺服器上，容易被流量壓垮。",
-    real:"Cloudflare、Fastly、AWS CloudFront。多數有免費額度。" },
-  web:{ n:"前端伺服器", tag:"你的伺服器",
-    l:"負責「把網頁組好送出去」的程式。它可以在伺服器上先把畫面算好（SSR，Server-Side Rendering，伺服器端渲染），也可以只送一個空殼讓瀏覽器自己畫（CSR，Client-Side Rendering，瀏覽器端渲染）。",
-    why:"先組好再送，Google 才看得到你的內容（SEO，Search Engine Optimization，搜尋引擎最佳化），使用者也不用盯著白畫面等。",
-    without:"純靜態網站可以沒有它，直接把檔案丟 CDN 就好。有登入、有個人化內容才需要。",
-    real:"Next.js、Nuxt、SvelteKit。它們同時是框架也是伺服器。" },
-  api:{ n:"後端 API", tag:"你的伺服器", full:"Application Programming Interface，應用程式介面",
-    l:"真正處理業務邏輯的地方：驗證你是誰、算錢、決定你能看到什麼。前端只是門面，這裡才是大腦。",
-    why:"規則必須放在使用者改不到的地方。前端的檢查全部都能被繞過，只有這裡的檢查是真的。",
-    without:"任何需要「儲存資料」或「不能被作弊」的功能都做不了。",
-    real:"Node.js、Python (FastAPI)、Go。小專案可以跟前端伺服器合在一起。" },
-  db:{ n:"資料庫", tag:"你的伺服器",
-    l:"資料真正躺著的地方。程式重開、伺服器重灌，資料都還在，這是它跟「記憶體」最大的差別。",
-    why:"因為程式的記憶體一關就清空。要讓資料活過重開機，就必須寫進資料庫。",
-    without:"使用者一登出東西就不見了。",
-    real:"PostgreSQL（最通用）、SQLite（整個資料庫就一個檔案，小專案很方便）、MySQL。" },
-  cache:{ n:"快取", tag:"你的伺服器",
-    l:"把常被問到的答案先記在記憶體裡，下次直接給，不用再去問資料庫。讀取速度差距大概是一百倍。",
-    why:"資料庫查詢很貴。同一個熱門頁面被一萬個人打開，沒有快取就要查一萬次。",
-    without:"流量一大，資料庫會先撐不住。小專案還沒有流量的話可以先不加。",
-    real:"Redis 幾乎是預設答案。麻煩的是「資料改了要記得清掉舊快取」。工程師圈有個老笑話說，電腦科學只有兩件難事，其中一件就是這個。" },
-  third:{ n:"第三方服務", tag:"別人的伺服器",
-    l:"別人已經做好的功能，你付錢用。AI、金流、寄信、簡訊、地圖，這些自己做要花好幾個月。",
-    why:"因為不是你的核心價值。你不會為了收錢自己去接銀行，你會用 Stripe。",
-    without:"什麼都自己做，然後三年後才上線。",
-    real:"Claude API（AI）、Stripe（金流）、Resend（寄信）。要注意兩件事：<b>它掛掉你也會掛</b>，還有<b>用量會計費</b>。" },
+  "browser": {
+    "n": "瀏覽器",
+    "tag": "用戶端",
+    "l": "顯示網頁並執行前端互動程式。部分框架也會先在伺服器產生頁面內容。",
+    "why": "瀏覽器接收的程式與資料可被使用者檢視，因此不可把服務端密鑰傳到這裡。",
+    "without": "網頁通常透過瀏覽器使用；同一個後端也可以提供行動 App 等其他用戶端。",
+    "real": "Chrome、Safari、Edge 使用不同組合的瀏覽器引擎。"
+  },
+  "cdn": {
+    "n": "CDN",
+    "tag": "內容傳遞服務",
+    "l": "透過分散的節點快取與傳送內容，減少部分請求回到原始伺服器的需要。",
+    "why": "可縮短使用者取得可快取內容的路徑，並減少來源服務的傳輸負擔。",
+    "without": "小型或區域性網站也能直接由伺服器提供內容，是否需要 CDN 可依量測決定。",
+    "real": "Cloudflare、Fastly 與 CloudFront 都提供相關服務；實際功能與費用依方案而異。",
+    "full": "Content Delivery Network，內容傳遞網路"
+  },
+  "web": {
+    "n": "前端伺服器",
+    "tag": "應用服務",
+    "l": "提供網頁內容。可執行 SSR（Server-Side Rendering，伺服器端渲染），或傳送由瀏覽器執行的程式。",
+    "why": "伺服器端渲染可提供初始 HTML；是否改善速度與索引效果，仍取決於實作。",
+    "without": "靜態網站可直接提供已建置的檔案。個人化網站也可採用靜態前端搭配後端 API。",
+    "real": "Next.js、Nuxt 與 SvelteKit 是包含相關能力的框架。"
+  },
+  "api": {
+    "n": "後端 API",
+    "tag": "應用服務",
+    "l": "接收請求，執行身分驗證、權限檢查與業務規則，再存取需要的資料或服務。",
+    "why": "受信任的服務端必須驗證輸入與權限，不能只依賴可被繞過的前端檢查。",
+    "without": "展示型網站可不設自有 API；需要帳號與共享資料時，也可使用受管理的後端服務。",
+    "real": "可使用 Node.js、Python 或 Go 等技術；也可與提供網頁的服務部署在一起。",
+    "full": "Application Programming Interface，應用程式介面"
+  },
+  "db": {
+    "n": "資料庫",
+    "tag": "資料儲存",
+    "l": "以結構化方式管理資料，支援查詢與更新。持久化能力仍依資料庫設定與儲存設備而定。",
+    "why": "有助於多個請求一致地存取資料。重要資料仍需要備份與復原機制。",
+    "without": "簡單服務也可使用檔案等方式保存內容；多人協作與複雜查詢通常需要更完整的資料管理。",
+    "real": "例如 PostgreSQL、MySQL 與 SQLite。應依查詢、併發與部署需求選擇。"
+  },
+  "cache": {
+    "n": "快取",
+    "tag": "效能元件",
+    "l": "暫存可重複使用的結果，減少重新查詢或計算。快取可位於記憶體、磁碟或其他服務。",
+    "why": "當相同資料經常被存取，且允許一定更新延遲時，快取可能減少後端負擔。",
+    "without": "若效能已符合需求，可先不加入額外快取服務。先量測查詢與計算的瓶頸。",
+    "real": "Redis 是常見選擇之一。需規劃到期、失效與資料更新方式。"
+  },
+  "third": {
+    "n": "第三方服務",
+    "tag": "外部系統",
+    "l": "透過外部供應商使用模型、付款、郵件或地圖等能力。",
+    "why": "可減少自行開發與維運的範圍，但需要評估資料存取、服務限制與費用。",
+    "without": "可自行實作或選擇其他供應商；是否值得取決於需求與維護成本。",
+    "real": "例如 Claude API、Stripe 與郵件服務。呼叫端應處理逾時、重試及費用上限。"
+  }
 };
 
 const archDetail = document.getElementById("archDetail");
@@ -500,8 +680,8 @@ document.querySelectorAll("#arch .hot").forEach(g=>{
       <p class="d-lede">${esc(d.l)}</p>
       <div class="d-grid">
         <div class="d-cell"><dt>為什麼要有它</dt><dd>${esc(d.why)}</dd></div>
-        <div class="d-cell"><dt>沒有它會怎樣</dt><dd>${esc(d.without)}</dd></div>
-        <div class="d-cell"><dt>實際上是什麼</dt><dd>${d.real}</dd></div>
+        <div class="d-cell"><dt>簡化或替代方式</dt><dd>${esc(d.without)}</dd></div>
+        <div class="d-cell"><dt>常見實作</dt><dd>${d.real}</dd></div>
       </div>`;
     archDetail.scrollIntoView({block:"nearest", behavior:"smooth"});
   };
@@ -514,68 +694,138 @@ document.querySelectorAll("#arch .hot").forEach(g=>{
 /* ══════════ 01 各種程式語言的用途 ══════════ */
 // fixed:true 代表這種工作只能用特定的語言
 const JOBS = [
-  { n:"網頁排版", sub:"畫面怎麼排", fixed:true, langs:["HTML","CSS"],
-    l:"HTML 標記出文字內容、圖片位置；CSS 負責指定字體大小、顏色、間距。",
-    choice:"HTML 跟 CSS 不算程式語言，它們不會判斷、也不會重複做事。CSS 寫得出「這個按鈕是紅色」，寫不出「如果使用者還沒登入就變灰色」，後面那句要交給 JavaScript。<br><br>CSS 有三個觀念是門檻。<br><br><b>box model</b>：每個方塊由內容、內距（padding）、邊框（border）、外距（margin）四層組成。預設情況下你寫 <code>width:200px</code> 指的只有內容那一層，再加 20px 內距跟 2px 邊框，實際佔的位置是 244px，版面就爆了。解法是全站加一行 <code>*{box-sizing:border-box}</code>，改成「200px 就是含內距和邊框的總寬」。現在的專案幾乎都會加這一行。<br><br><b>Flexbox</b>：一維排版，一次只管一個方向。<code>display:flex</code> 之後，<code>justify-content</code> 控制主軸怎麼分配（靠左、置中、平均分開），<code>align-items</code> 控制另一軸怎麼對齊。導覽列、按鈕列、卡片內部都用它。<br><br><b>Grid</b>：二維排版，同時管列跟欄。<code>grid-template-columns:1fr 1fr 1fr</code> 是切成等寬三欄，<code>repeat(auto-fit,minmax(200px,1fr))</code> 則是「每欄至少 200px，塞得下幾欄就幾欄」，視窗變窄會自己減欄數。整頁的大版面用它。",
-    tools:"<b>Tailwind CSS</b>：把常用樣式包成短名字，在 HTML 裡直接寫 <code>flex gap-4 p-6</code>，等於「橫向排列、間距 16px、內距 24px」。好處是不用另外開 CSS 檔，也不用想 class 名字；代價是 HTML 會變得很長。<br><br><b>Sass</b>：讓 CSS 可以寫變數跟巢狀結構，編譯後變回一般 CSS。這幾年變數功能被原生的 <code>--變數名</code> 取代掉大半，但舊專案還很多，看到 .scss 就是它。<br><br><b>開發者工具</b>：瀏覽器按 F12 打開，Elements 分頁可以看到每個元素的四層盒子各佔多少、樣式是被哪一條規則蓋掉的。畫面歪掉一律先開這個。",
-    when:"最先學，抓兩到三個週末。<br><br>學到「能把一頁排出來」就夠：常用標籤大約二十個（<code>div</code>、<code>p</code>、<code>h1</code>、<code>img</code>、<code>a</code>、<code>button</code>、<code>input</code>、<code>ul</code>、<code>li</code>、<code>table</code>），加上 box model、Flexbox、Grid 這三個觀念。剩下的查得到。",
-    myth:"以為要把幾百個標籤跟屬性背起來。打開任何一個網站按 F12，看到的翻來覆去就那幾個。<br><br>比較該注意的是排版出錯時的找法。一個元素被擠到旁邊，可能是它自己的 margin，可能是父層的 padding，也可能是 Flexbox 的對齊設定。用開發者工具一層一層往上點，比盯著程式碼猜快很多。" },
-
-  { n:"網頁畫面", sub:"瀏覽器裡跑的那一半", fixed:true, langs:["JavaScript"],
-    l:"讓畫面有反應：按鈕按下去改變內容、輸入框即時檢查格式、跟伺服器要資料回來更新畫面。",
-    choice:"瀏覽器原生只看得懂 JavaScript。其他語言想在瀏覽器裡跑，都要先被翻譯成 JavaScript。<br><br><b>TypeScript</b> 是 JavaScript 加上型別檢查，寫完會被轉回 JavaScript 才送出去，不算第二個語言。它的價值在於你寫 <code>user.nmae</code> 的當下編輯器就畫紅線，不用等打開網頁才發現是 undefined。<br><br><b>WebAssembly</b> 是唯一的例外，它讓 C++ 或 Rust 編譯成瀏覽器看得懂的二進位檔，速度接近原生。用在很重的計算上，Figma 的繪圖引擎就是這樣做的，一般網站用不到。",
-    tools:"<b>React ｜ Vue ｜ Svelte ｜ Angular</b>，互相取代的關係，一個專案只用一個。<br><br>它們解決同一個問題：畫面上有一份資料，資料改了畫面要跟著改。沒有它們的時候你得自己寫「找到那個 span、把裡面的文字換掉」，一個畫面十幾處要同步就會亂掉。用了之後你只改資料，畫面自己跟上。<br><br>做法上，React 跟 Vue 會先在記憶體裡放一份畫面的副本（<b>virtual DOM</b>），資料變了就拿新舊兩份比對，只把真的有差的那幾個地方寫回瀏覽器。因為直接操作瀏覽器畫面很慢，比對記憶體裡的物件快得多。Svelte 走另一條路，在打包的時候就先算好哪一行資料對應哪一個位置，所以不需要在瀏覽器裡比對。<br><br>台灣職缺以 React 最多，Vue 次之。另外幾乎一定會搭一個狀態管理工具（Zustand、Pinia），處理「好幾個不相鄰的元件要共用同一份資料」的情況。",
-    when:"想做出「按下去會有反應」的網頁時，抓一到兩個月。<br><br>基本功是變數、判斷、迴圈、陣列、函式。真正的門檻在<b>非同步</b>這一段：<br><br>JavaScript 只有一條執行緒，同一時間只能做一件事。跟伺服器要資料可能要等半秒，這半秒如果卡著不放，整個畫面會凍住，連捲動都不動。所以它的做法是「先掛號，等結果回來再處理」。<br><br><code>fetch()</code> 不會回傳資料，它回傳一個 <b>Promise</b>（一張號碼牌，代表「結果之後會到」）。<code>await</code> 的意思是「等這張號碼牌兌現再往下走」，但等的時候執行緒是放給別人用的，畫面照常運作。<br><br>初學者最常卡在這裡，因為程式碼的閱讀順序跟執行順序不一樣：寫在 <code>fetch</code> 下面那行，可能比 <code>fetch</code> 的結果更早跑完。",
-    myth:"以為 React 跟 Vue 都要會。它們是競爭對手，會一個就夠。<br><br>更常見的是以為學了 React 就不用學 JavaScript。React 噴出來的錯誤訊息全部是 JavaScript 的錯誤訊息，例如 <code>Cannot read properties of undefined</code>（你去拿一個不存在的東西裡面的欄位），JavaScript 不熟的話看到會不知道要往哪裡查。" },
-
-  { n:"後端", sub:"伺服器上跑的那一半", fixed:false, langs:["JavaScript","Python","Go","Java","PHP","C#"],
-    l:"驗證使用者身分、執行業務規則、決定誰能看到哪些資料、把資料存進資料庫。",
-    choice:"每個語言都做得到，差別在生態系跟你身邊誰會。<br><br>已經會 JavaScript 就用 <b>Node.js</b>，前後端同一個語言。<br>專案跟 AI 或資料有關就選 <b>Python</b>，函式庫都在那邊。<br><b>Go</b> 適合「同時服務很多人」，它用自己的輕量執行單位（goroutine），一台機器開幾萬條連線的記憶體成本很低，代價是語法嚴格、寫起來字比較多。<br><br><b>Java</b> 跟 <b>C#</b> 是大公司、銀行、保險業的主力，<b>PHP</b> 是 WordPress 那一掛。這三個你會常看到，但多半不用主動去學。<br><br>為什麼一定要有後端：瀏覽器裡的程式碼使用者按 F12 就看得到也改得動，「這個人是不是管理員」放在前端判斷等於沒有判斷。",
-    tools:"<b>Express</b>、<b>Fastify</b>（Node.js），<b>FastAPI</b>、<b>Django</b>（Python），<b>Gin</b>（Go）。它們把「有人打 /users/123 這個網址就執行這段程式」變成三行設定，你不用自己處理 HTTP 的細節。<br><br><b>ORM</b>（Prisma、Drizzle、SQLAlchemy）讓你寫 <code>user.findMany()</code>，它翻成 SQL 送出去。要注意 <b>N+1 問題</b>：你撈 100 篇文章，再在迴圈裡跟每篇要作者名字，ORM 就發了 101 句查詢。正確做法是一次把作者一起撈回來（Prisma 的 <code>include</code>、SQLAlchemy 的 <code>joinedload</code>）。這是後端最常見的效能問題。<br><br><b>JWT</b> 是登入之後發給使用者的通行證。它由三段組成：標頭、內容（誰、什麼時候過期）、簽章。內容那段是明碼的，任何人都解得開，所以裡面不能放密碼；它的防偽靠簽章，改了內容簽章就對不上。好處是伺服器不用存 session，收到之後自己驗簽章就知道真假，多台機器都能驗。壞處是發出去就收不回來，要提前撤銷得另外做黑名單。",
-    when:"當你需要「資料要存起來」「要有帳號登入」「API 金鑰不能被使用者看到」的時候。純展示的網站不需要。<br><br>抓一到兩個月，包含 SQL。要學會的是：怎麼開一個 API 網址、怎麼讀進來的資料、怎麼把密碼<b>雜湊</b>（hash，用 bcrypt 或 argon2 把密碼變成不可還原的亂碼再存，資料庫外洩也拿不到原密碼）、怎麼發 token 維持登入狀態。",
-    myth:"以為後端語言要學好幾個。一個就夠，而且通常就是你已經會的那個。<br><br>另一個是把檢查寫在前端就以為安全了。前端檢查只是為了使用者體驗，任何人用 curl 或 Postman 直接打你的 API，前端那一層完全不存在。所有跟權限、金額有關的判斷都要在後端再做一次。" },
-
-  { n:"資料庫查詢", sub:"跟資料庫要東西", fixed:true, langs:["SQL"],
-    l:"跟資料庫要資料、把資料寫回去。使用者、訂單、文章、留言都存在這裡。",
-    choice:"不管後端用哪個語言，跟資料庫講話都是 SQL，換語言不用重學。<br><br>它的寫法跟一般程式不一樣：你描述要什麼，資料庫自己決定怎麼拿，不用告訴它一筆一筆怎麼翻。<code>SELECT 名字 FROM 使用者 WHERE 年齡 > 18</code>。<br><br>資料庫本身可以選：<b>PostgreSQL</b>（最通用，新專案的預設）、<b>MySQL</b>（老牌，虛擬主機上很多）、<b>SQLite</b>（整個資料庫就是一個檔案）。三者的 SQL 語法大同小異。<br><br><b>NoSQL</b>（MongoDB、Firebase）是另一類，資料長得像 JSON，欄位可以隨時加。一開始很自由，但資料之間一有關聯就會痛：訂單要接到使用者、使用者要接到公司，這種在 SQL 裡一句 JOIN 解決，在 NoSQL 要嘛自己在程式裡查三次，要嘛把同一份資料複製到很多地方，然後煩惱改一處要同步幾處。",
-    tools:"<b>ORM</b>（Prisma、Drizzle、SQLAlchemy）幫你把程式碼翻成 SQL，少打字，也比較不會踩到 <b>SQL injection</b>。<br><br>SQL injection 是這樣發生的：你把使用者輸入直接黏進查詢字串，對方在輸入框填一段 SQL，你的查詢就被改寫成他要的樣子，整張使用者表被撈走。防法是用<b>參數化查詢</b>，把值跟語句分開送，資料庫就只把它當成值、不當成語法。ORM 預設都是這樣做的。<br><br>另外要會看<b>執行計畫</b>：在查詢前面加 <code>EXPLAIN</code>，資料庫會告訴你它打算怎麼找。看到 Seq Scan（整張表從頭翻）就是該加 index 了。",
-    when:"跟後端同時學。查（SELECT）、增（INSERT）、改（UPDATE）、刪（DELETE）四個動作一天就能開始用。<br><br>接下來兩個觀念要花時間：<br><br><b>JOIN</b>：把兩張表接起來。訂單表裡只存了買家編號，要顯示買家名字就得接到使用者表。常用的是 INNER JOIN（兩邊都有才留）跟 LEFT JOIN（左邊全留，右邊沒有就空白）。<br><br><b>index</b>（索引）：資料庫另外維護一份排好序的目錄，查詢時用二分搜尋直接跳到位置，不用整張表從頭翻。十萬筆資料的差別大約是「翻十萬次」跟「翻十七次」。代價是每次新增和修改都要順便更新索引，而且索引本身佔硬碟，所以只加在真的常用來篩選或排序的欄位上。",
-    myth:"以為 SQL 很難所以想跳過。基本用法比 JavaScript 簡單，一句英文就是一個查詢。<br><br>難的在後面：查詢慢在哪一步、index 該加在哪個欄位、兩張表接起來為什麼變成幾百萬筆（漏了接續條件，變成每一筆都跟每一筆配對）。這些等真的遇到再學。" },
-
-  { n:"AI 與資料分析", sub:"處理大量資料", fixed:true, langs:["Python"],
-    l:"清理資料、跑統計、訓練模型。輸入通常是幾萬到幾百萬列的表格或文字。",
-    choice:"函式庫都長在 Python 這邊，換語言等於重寫別人十年的成果。<br><br><b>R</b> 在統計跟學術圈還很常見，做統計檢定跟畫統計圖比 Python 順手，但要把模型接進產品裡通常還是回到 Python。<br><br>如果你要做的是「叫現成的 AI 幫我做事」而不是「訓練一個 AI」，JavaScript 就夠了，直接打 Claude API 就好。這兩件事常被混為一談，但用到的技能完全不同。",
-    tools:"<b>pandas</b>：把 CSV 或 Excel 讀成程式裡的表格（DataFrame），一行就能篩選、分組、算平均。它跟 Excel 最大的差別是每一步都寫成程式碼，下次換一份資料重跑就好，不用再點一次。<br><br><b>NumPy</b>：在 pandas 底下負責數字運算。它把整欄數字一次算完，而不是用 Python 迴圈一個一個算，速度差幾十倍。<br><br><b>scikit-learn</b>：現成的傳統機器學習模型，分類、迴歸、分群。介面統一成 <code>fit()</code> 訓練、<code>predict()</code> 預測，換模型只要換一行。<br><br><b>PyTorch</b>：訓練深度學習模型用的，影像跟語言那一類。它需要 GPU，因為訓練的本質是同一組矩陣運算重複幾百萬次，而 GPU 剛好擅長這件事。<br><br><b>Jupyter Notebook</b>：一格一格跑、跑到哪看到哪，適合邊試邊改。",
-    when:"當你要自己訓練模型、或處理幾十萬筆資料的時候。<b>只是要串 Claude API 這種現成服務，不需要 Python。</b><br><br>已經會 JavaScript 的話，Python 基本語法兩週上手，pandas 再兩週。<br><br>要理解的核心觀念是「訓練」到底在做什麼：你給模型一堆輸入跟正確答案，它先亂猜，算出猜錯多少（loss），再往「錯得比較少」的方向微調自己的參數，重複幾萬次。所謂訓練好的模型，就是這組調完的參數。",
-    myth:"以為想碰 AI 就一定要先學 Python。很多用現成 API 做出 AI 產品的人完全沒寫過 Python。<br><br>另一個是以為要先把數學補完。用現成函式庫做分類、做推薦不需要自己推導公式；要自己設計模型架構、或看得懂論文在改什麼，才需要線性代數跟微積分。" },
-
-  { n:"手機 App", sub:"從商店裝下來的那種", fixed:false, langs:["Swift","Kotlin","Dart","JavaScript"],
-    l:"從 App Store 或 Google Play 裝下來的程式。能用到相機、GPS、推播通知、離線資料、指紋解鎖。",
-    choice:"兩邊各一套，程式碼不通用。iPhone 是 <b>Swift</b>，Android 是 <b>Kotlin</b>。<br><br>不想寫兩次有兩條路，差別在畫面是誰畫的：<br><br><b>React Native</b>（JavaScript）：你的程式碼跑在一個 JavaScript 引擎裡，畫面則是叫系統原生的元件去畫。所以按鈕的手感跟系統一致，但兩邊的細節會有差，要分開調。<br><br><b>Flutter</b>（Dart）：它帶著自己的繪圖引擎，每個像素都自己畫。兩邊長得一模一樣，也不受系統版本影響，代價是跟系統原生的手感有一點差距，App 檔案也比較大。<br><br>兩條路都有同一個限制：遇到比較深的系統功能，還是得回去寫一段 Swift 或 Kotlin 再接起來。",
-    tools:"<b>SwiftUI</b>（iPhone）跟 <b>Jetpack Compose</b>（Android）是現在官方推的寫法。兩個都是「描述畫面的樣子，資料改了自己更新」，觀念跟 React 一樣，取代了以前那種手動一行一行改畫面的寫法。<br><br>做 iPhone App 一定要 <b>Xcode</b>，而 Xcode 只能在 Mac 上跑，這是很多人第一個卡關的地方。Android 那邊是 <b>Android Studio</b>，Windows 也能跑。<br><br>上架還要處理<b>簽章</b>：每個 App 都要用開發者憑證簽名，系統才肯裝。憑證過期、機器換了、團隊多人共用，都會在這裡卡住，而且錯誤訊息通常看不懂。",
-    when:"確定非做 App 不可的時候。很多需求做成網頁就夠，而且網頁不用等審核、改了立刻上線；App 送審一次要一到三天，被退還要重來。<br><br>抓三到六個月。除了語言之外，上架、簽章、憑證、隱私權說明這些跟寫程式無關的事，通常會吃掉三分之一的時間。",
-    myth:"以為 App 一定比網頁高級。要用到相機、推播、離線的時候才真的需要 App。<br><br>另一個是以為用了 React Native 或 Flutter 就完全不用碰原生。只要接到金流、藍牙、健康資料這類東西，還是會開 Xcode。" },
-
-  { n:"要跑很快的東西", sub:"系統、遊戲、影音", fixed:false, langs:["C","C++","Rust"],
-    l:"作業系統、瀏覽器本身、遊戲引擎、影音轉檔。這類程式慢一點使用者立刻感覺得到。",
-    choice:"它們快在兩件事。<br><br>第一，程式碼在上線前就編譯成機器碼，執行時直接跑；JavaScript 和 Python 是邊跑邊翻譯，中間多一層。<br><br>第二，記憶體管理方式不同。JavaScript、Python、Java 都有<b>垃圾回收</b>（garbage collection），系統會定期停下來清掉沒人用的記憶體，那個暫停對遊戲來說就是掉幀。C 跟 C++ 要你自己配置跟釋放，沒有暫停，但忘記釋放就是漏、釋放兩次就是當掉。<br><br><b>C</b> 最接近硬體，作業系統跟韌體幾乎都是它，語言本身小到一週看得完，難的是完全沒有安全網。<br><br><b>C++</b> 是 C 加上物件導向跟大量功能，遊戲引擎（Unreal）、瀏覽器（Chrome）、影音處理（FFmpeg）都是它，也是公認最複雜的主流語言之一。<br><br><b>Rust</b> 一樣快，但用<b>所有權</b>（ownership）規則在編譯階段就檢查記憶體：同一份資料同一時間只能有一個人可以改，離開範圍就自動釋放。所以它既沒有垃圾回收的暫停，也不會發生用到已釋放記憶體那類錯誤。代價是編譯器很嚴格，初學者常卡在編譯不過。",
-    tools:"<b>Unreal Engine</b>（C++ 的遊戲引擎）、<b>Tauri</b>（Rust 寫的桌面 App 框架，比 Electron 省很多記憶體，因為它用系統內建的瀏覽器核心，不像 Electron 每個 App 都包一份 Chrome）、<b>FFmpeg</b>（幾乎所有影音轉檔背後都是它）。<br><br><b>WebAssembly</b> 讓 C++ 跟 Rust 編譯後能在瀏覽器裡跑。Figma 的繪圖引擎、線上版的 Photoshop 都是這樣來的。",
-    when:"非工程師幾乎不會需要，知道它們存在就夠。<br><br>真的需要的時機很明確：你手上有一段計算跑太慢，而且已經量過，確認慢的是計算本身，不是資料庫查詢也不是網路等待。在量過之前不要碰。",
-    myth:"以為「跑比較快的語言比較厲害，所以應該學那個」。<br><br>快是用寫起來麻煩換來的。一般網站跟 App 的瓶頸幾乎都在資料庫查詢跟網路等待，這種情況換語言一點用都沒有，該做的是加 index 或加快取。" },
-
-  { n:"自動化與小指令", sub:"把重複的事交給電腦", fixed:false, langs:["Bash","Python"],
-    l:"批次改檔名、定時備份資料庫、把一長串指令包成一個檔案執行。",
-    choice:"<b>Bash</b> 是終端機本身的語言。你平常打的 <code>cd</code>、<code>ls</code>、<code>cp</code> 存成一個 .sh 檔就能一次跑完。<br><br>它最擅長把現成的指令串起來，靠兩個符號：<code>|</code>（pipe，把前一個指令印出來的東西直接餵給下一個）跟 <code>></code>（把結果寫進檔案）。例如 <code>ls *.log | wc -l</code> 就是「列出所有 log 檔，數有幾個」。<br><br>寫 Bash 有一個一定要加的東西：檔案開頭寫 <code>set -e</code>。預設情況下前一行失敗了它還是會繼續跑下一行，備份腳本就會變成「壓縮失敗，然後照樣把舊檔刪掉」。<code>set -e</code> 的意思是一出錯就整個停下來。<br><br>只要牽扯到判斷、迴圈、處理 JSON，Bash 的語法就會變得很難讀，而且不同系統的行為還有差。超過大約三十行，或需要「讀檔案、算一算、產生報表」，就換 <b>Python</b>：它有現成的模組處理路徑（pathlib）、CSV、JSON、打 API（requests），寫起來跟一般程式一樣。",
-    tools:"<b>cron</b>：系統內建的排程器。設定檔寫一行 <code>0 3 * * * /path/backup.sh</code>，意思是每天凌晨三點跑一次。前面五個欄位依序是分、時、日、月、星期，星號代表「每一個都算」。Mac 跟 Linux 都內建。<br><br><b>GitHub Actions</b>：把同一件事搬到雲端。專案裡放一個 .yml 檔，寫「每次有人推程式碼上來就自動跑測試」，GitHub 開一台機器跑完再關掉，公開專案免費。它也能排時間跑，所以不想自己顧一台機器的話，定時工作放這裡也行。<br><br><b>Makefile</b>：把一串指令取一個名字，打 <code>make deploy</code> 就等於跑那一串。比 shell script 更適合「這幾件事互相有先後關係」的情況。",
-    when:"當你發現同一串指令打了第五次的時候。一兩個小時的學習可以省掉之後每週的十幾分鐘。<br><br>起手式：開一個檔案，第一行寫 <code>#!/bin/bash</code>（告訴系統這個檔案要用 bash 執行），第二行 <code>set -e</code>，把平常打的指令一行一行貼進去，存成 deploy.sh，再打 <code>chmod +x deploy.sh</code> 給它執行權限。之後打 <code>./deploy.sh</code> 就會跑。",
-    myth:"以為要先學會整個 Linux 才能寫。你打得出來的指令就寫得出腳本。<br><br>要小心的是刪除。腳本裡的 <code>rm</code> 路徑寫錯不會問你，直接刪。而且變數沒設定到的時候會被當成空字串，<code>rm -rf $DIR/</code> 就會變成 <code>rm -rf /</code>。所以牽涉到刪除的腳本，先把 <code>rm</code> 換成 <code>echo rm</code> 跑一次，確認印出來的路徑正確再換回去。" },
-
-  { n:"網頁 3D 與特效", sub:"寫給顯示卡看的", fixed:true, langs:["GLSL"],
-    l:"寫給顯示卡執行的小程式，決定畫面上每一個像素的顏色。發光、扭曲、水面波紋都靠它。",
-    choice:"就是 <b>GLSL</b>，給 WebGPU 用的新版叫 <b>WGSL</b>。<br><br>它分成兩種。<b>vertex shader</b> 負責把 3D 模型的每一個頂點換算成畫面上的位置；<b>fragment shader</b> 負責決定每一個像素的顏色，做特效的時候幾乎都在寫這個。<br><br>它難在思考方式跟一般程式相反。一般程式是「拿一份資料，一步一步處理」；shader 是同一段程式被複製成幾百萬份，每個像素各跑一份，而且它們彼此看不到對方的結果，也不知道自己是第幾個像素以外的任何事。所以你不能寫迴圈去掃鄰居，只能靠數學算出「在這個座標上，顏色應該是多少」。<br><br>資料進出的方式也不同：<b>uniform</b> 是所有像素共用的值（時間、滑鼠位置），<b>varying</b> 是從 vertex shader 傳給 fragment shader、而且會自動在中間插值的值（例如漸層）。",
-    tools:"<b>Three.js</b> 內建大部分常見材質，金屬、玻璃、發光都有現成的，九成的網頁 3D 用內建的就做完了。<br><br>真的要自己寫的時候，Three.js 提供 <code>ShaderMaterial</code>，讓你把自己的 GLSL 塞進去，並且用 <code>uniforms</code> 把時間、滑鼠座標這些值傳進去。<br><br><b>Shadertoy</b> 是主要的練習跟找範例的地方，上面全部是別人寫好的 fragment shader，可以直接改參數看畫面怎麼變。",
-    when:"當內建效果做不出你要的東西時。做網頁 3D 不代表一定要學它。<br><br>順序建議先用 Three.js 內建材質把整個場景做完，缺哪個效果再回來補 GLSL。反過來先學 GLSL 會卡在完全沒有畫面可以看。",
-    myth:"以為做 3D 就要先學 GLSL。九成的情況用 Three.js 內建材質就做完了。<br><br>另一個是以為它跟 JavaScript 差不多。GLSL 是 C 語言家族的語法，每個變數都要標型別，而且<b>沒有 <code>console.log</code></b>。唯一的除錯方式是把某個數值當成顏色輸出（例如把座標值直接畫成紅綠兩色），用眼睛判斷算出來對不對。" },
+  {
+    "n": "網頁結構與排版",
+    "sub": "內容與呈現",
+    "langs": [
+      "HTML",
+      "CSS"
+    ],
+    "fixed": false,
+    "l": "HTML 描述內容結構與語意，CSS 決定版面、字體與視覺樣式。",
+    "choice": "HTML 是標記語言，CSS 是樣式語言。登入等業務狀態由程式處理，再透過屬性或類別改變樣式。<br><br>Box model（盒模型）包含內容、內距、邊框與外距。使用 <code>box-sizing:border-box</code> 時，設定的寬度包含內距與邊框。Flexbox 適合沿主軸安排項目，Grid 適合列與欄的配置。",
+    "tools": "瀏覽器開發者工具可查看元素尺寸與樣式來源。Tailwind CSS 提供工具類別，Sass 則是需轉成 CSS 的樣式語言；兩者都不能取代對 CSS 的理解。",
+    "when": "建立第一個網頁時即可開始。先練習語意標籤、連結、圖片、表單與響應式排版，再依需要查閱其他功能。",
+    "myth": "不必背完屬性。版面異常時，可從元素與父層的尺寸、間距及排列規則逐步檢查，也需確認鍵盤操作與文字可讀性。"
+  },
+  {
+    "n": "網頁互動",
+    "sub": "瀏覽器端程式",
+    "langs": [
+      "JavaScript",
+      "TypeScript"
+    ],
+    "fixed": false,
+    "l": "處理按鈕、表單與資料載入，讓畫面能回應使用者操作。",
+    "choice": "JavaScript 是瀏覽器主要的腳本語言。TypeScript 擴充型別語法，通常在建置時轉為 JavaScript；型別檢查不會自動驗證執行時收到的資料。WebAssembly 則提供另一種可執行格式。",
+    "tools": "React、Vue、Svelte 與 Angular 都能協助管理元件與畫面更新，但更新機制不同。先選一套符合專案的工具即可；共享狀態是否需要額外套件，應依複雜度決定。",
+    "when": "先學變數、函式、條件與陣列，再練習事件及非同步操作。<code>fetch()</code> 回傳 Promise；<code>await</code> 等待結果時，不會持續占用目前的 JavaScript 執行緒。",
+    "myth": "框架仍建立在 JavaScript 上。先理解資料如何傳遞、何時完成載入，以及錯誤如何處理，有助於閱讀框架程式。"
+  },
+  {
+    "n": "後端服務",
+    "sub": "伺服器端程式",
+    "langs": [
+      "JavaScript",
+      "Python",
+      "Go",
+      "Java",
+      "PHP",
+      "C#"
+    ],
+    "fixed": false,
+    "l": "驗證請求、執行業務規則，並管理資料與外部服務的存取。",
+    "choice": "多種語言都能建立後端。選擇時可評估既有能力、團隊維護與所需函式庫。Node.js 可執行 JavaScript；Python 常用於資料與模型整合；Go、Java、C# 與 PHP 各有成熟的服務工具。",
+    "tools": "Express、FastAPI 等框架協助處理 HTTP 路由。ORM（Object-Relational Mapping，物件關聯對映）將部分資料操作轉成 SQL，仍需注意查詢次數與效能。若逐筆查詢關聯資料，可能出現 N+1 次查詢。",
+    "when": "需要受控的資料存取、帳號或服務端密鑰時，可開始學習 API、輸入驗證與資料庫。密碼應使用適當的密碼雜湊機制；帳號流程可優先採成熟實作。",
+    "myth": "前端驗證改善操作體驗，服務端仍需自行檢查。JWT（JSON Web Token）常見簽章形式的內容可被解碼，不能把它視為加密儲存；撤銷與效期也需另行設計。"
+  },
+  {
+    "n": "資料庫查詢",
+    "sub": "保存與查詢資料",
+    "langs": [
+      "SQL"
+    ],
+    "fixed": false,
+    "l": "在關聯式資料庫中查詢、新增、更新與刪除資料。",
+    "choice": "SQL 是宣告式查詢語言，描述要取得的結果。PostgreSQL、MySQL 與 SQLite 都支援 SQL，但語法與功能存在差異。NoSQL 是多種非關聯式資料模型的總稱，並非都以 JSON 儲存。",
+    "tools": "ORM 可協助組織資料操作。無論是否使用 ORM，都應避免把不可信輸入直接拼入 SQL，並使用參數化查詢。EXPLAIN 可協助理解執行計畫；全表掃描不一定代表需要新增索引。",
+    "when": "先練習基本查詢與篩選，再理解 JOIN、交易及索引。索引能加速部分存取，但會占用空間並增加寫入維護成本。",
+    "myth": "學習重點也包括資料關係。JOIN 條件錯誤可能產生大量重複組合；修改或刪除資料前，應先確認篩選範圍。"
+  },
+  {
+    "n": "AI 與資料分析",
+    "sub": "資料整理與模型",
+    "langs": [
+      "Python",
+      "R"
+    ],
+    "fixed": false,
+    "l": "整理資料、進行統計分析，或使用機器學習模型進行預測。",
+    "choice": "Python 有豐富的資料與機器學習函式庫，R 也常用於統計工作。呼叫既有 AI API 可使用多種語言，不必先訓練模型。",
+    "tools": "pandas 處理表格，NumPy 提供陣列運算，scikit-learn 提供常見學習方法，PyTorch 支援深度學習。Jupyter Notebook 便於逐段探索。是否需要 GPU，取決於模型與工作量。",
+    "when": "可先以小型資料練習清理與驗證。監督式學習使用輸入與標籤調整參數，並以未參與訓練的資料評估；其他學習方法的資料條件不同。",
+    "myth": "使用函式庫前仍需理解資料切分、指標與誤差。數學可以配合實作逐步補足，不能只因程式可執行就認定分析成立。"
+  },
+  {
+    "n": "行動應用程式",
+    "sub": "手機與平板",
+    "langs": [
+      "Swift",
+      "Kotlin",
+      "Dart",
+      "JavaScript"
+    ],
+    "fixed": false,
+    "l": "提供適合行動裝置的介面，並依權限使用相機、通知與本機資料等功能。",
+    "choice": "iOS 常用 Swift，Android 常用 Kotlin。React Native 與 Flutter 可共用部分跨平台程式碼，但仍需處理平台差異。",
+    "tools": "SwiftUI、Jetpack Compose、React Native 與 Flutter 是不同的介面開發選擇。本機 iOS 建置使用 macOS 與 Xcode，也可使用受管理的雲端建置流程。",
+    "when": "先確認是否需要商店發布、系統整合或特定裝置體驗。部分相機、通知與離線需求也可透過網頁實現，應依目標裝置測試。",
+    "myth": "跨平台工具無法消除所有平台工作。簽章、權限、隱私聲明與商店審查，都需依當前要求處理。"
+  },
+  {
+    "n": "系統與高效能程式",
+    "sub": "控制資源與執行成本",
+    "langs": [
+      "C",
+      "C++",
+      "Rust"
+    ],
+    "fixed": false,
+    "l": "常用於作業系統、遊戲引擎、影音處理與其他資源敏感的程式。",
+    "choice": "這些語言可提供較直接的記憶體與資源控制。效能同時受演算法、編譯器與硬體影響，不能只由語言名稱判斷。Rust 的所有權與借用檢查可在安全程式碼中避免部分記憶體錯誤。",
+    "tools": "Unreal Engine 使用 C++，FFmpeg 用於影音處理，Tauri 可用 Rust 建立桌面應用程式。C、C++ 與 Rust 也可透過合適工具編譯為 WebAssembly。",
+    "when": "若工作涉及硬體、系統介面或已量測的計算瓶頸，可深入學習。先確認時間花在計算、網路還是資料存取。",
+    "myth": "即時編譯、垃圾回收與原生編譯各有不同實作。改用另一種語言不保證改善端到端速度，也不能取代效能量測。"
+  },
+  {
+    "n": "自動化與腳本",
+    "sub": "重複工作流程",
+    "langs": [
+      "Bash",
+      "Python"
+    ],
+    "fixed": false,
+    "l": "把可重複的檔案操作、檢查或部署步驟整理成可執行流程。",
+    "choice": "Bash 適合組合現有命令。管線 <code>|</code> 傳遞標準輸出，<code>&gt;</code> 可將輸出寫入檔案。需要複雜資料處理時，可使用 Python 的 pathlib、csv 與 json 等標準模組。",
+    "tools": "cron 可排程執行，GitHub Actions 可依事件啟動流程，Make 可描述目標與相依關係。實際環境、權限與費用需依使用方式確認。",
+    "when": "先選一項已手動完成過的重複工作，記錄輸入、輸出與失敗時應停止的位置，再逐步自動化。",
+    "myth": "<code>set -e</code> 的停止行為有例外，不能替代明確的錯誤檢查。涉及覆寫或刪除時，應先驗證變數與路徑，提供預覽或備份，並以非正式資料測試。"
+  },
+  {
+    "n": "網頁 3D 與著色器",
+    "sub": "圖形處理",
+    "langs": [
+      "GLSL",
+      "WGSL"
+    ],
+    "fixed": false,
+    "l": "著色器在 GPU 上執行，用於處理頂點、片段與其他圖形運算。",
+    "choice": "WebGL 使用 GLSL，WebGPU 使用 WGSL。頂點著色器處理位置等資訊，片段著色器計算輸出顏色。著色器可使用迴圈與紋理取樣，但資料存取與同步受到執行模型限制。",
+    "tools": "Three.js 提供場景、相機與材質，能減少直接操作底層介面的工作。需要客製效果時，再查閱 ShaderMaterial 或對應渲染後端的工具。",
+    "when": "先建立可顯示的場景，再依效果需要學習向量、座標轉換與著色器。Uniform 可傳遞共用參數，例如時間或滑鼠位置。",
+    "myth": "建立 3D 場景不一定需要自己寫著色器。除錯可結合編譯訊息、圖形工具與視覺化輸出，不能直接沿用一般 JavaScript 的所有做法。"
+  }
 ];
 
 const jobsEl = document.getElementById("jobs");
@@ -597,7 +847,7 @@ JOBS.forEach(j=>{
         <div class="d-cell"><dt>使用的語言</dt><dd>${j.choice}</dd></div>
         <div class="d-cell"><dt>常用的工具</dt><dd>${j.tools}</dd></div>
         <div class="d-cell"><dt>什麼時候該學</dt><dd>${j.when}</dd></div>
-        <div class="d-cell"><dt>最常見的誤會</dt><dd>${j.myth}</dd></div>
+        <div class="d-cell"><dt>學習提醒</dt><dd>${j.myth}</dd></div>
       </div>`;
     if(window.matchMedia("(max-width:860px)").matches){
       jobDetail.scrollIntoView({block:"nearest", behavior:"smooth"});
@@ -606,38 +856,56 @@ JOBS.forEach(j=>{
   jobsEl.appendChild(b);
 });
 
-/* ══════════ 02 什麼時候學什麼 ══════════ */
+/* ══════════ 02 依需求安排學習順序 ══════════ */
 const ROAD = [
-  { n:"HTML ＋ CSS", time:"兩到三個週末",
-    trigger:"一開始。你想做出「看得到的東西」。",
-    level:"能把一張靜態頁面排出來就好。標籤不用背，查得到就行。",
-    can:"一頁個人簡介、一頁作品集，而且可以放到網路上給別人看。",
-    note:"這一站最不需要毅力，因為改一行、存檔、畫面就變了，回饋很快。" },
-  { n:"JavaScript", time:"一到兩個月",
-    trigger:"當你想要「按下去會有反應」，或想把別人的資料抓進自己的頁面。",
-    level:"會變數、判斷、迴圈、陣列、函式，會用 fetch 去別人的 API 拿資料。",
-    can:"會動的網頁、抓公開資料做成小工具、串現成的 AI 服務。",
-    note:"<b>這一站不能跳過。</b>後面的 React、Vue、Node.js 全部建在它上面。這裡沒學好，後面每一站都會卡在同一個地方。" },
-  { n:"挑一個 UI 框架（React 或 Vue）", time:"一個月",
-    trigger:"當你的頁面多到「同一段 HTML 你複製貼上第三次」，或畫面狀態多到自己改到亂掉。",
-    level:"會把畫面拆成元件、會在元件之間傳資料、會處理表單。",
-    can:"有多個頁面、有登入畫面、資料一變畫面就跟著變的完整前端。",
-    note:"那要選哪一個？想要工作機會跟教學資源多就選 React，想快點做出東西、語法好懂就選 Vue。兩個做得出來的網站一模一樣，而且<b>觀念共通，先學哪個都不會白費</b>。" },
-  { n:"TypeScript", time:"一週",
-    trigger:"當你開始因為「傳錯資料」「打錯欄位名字」而抓 bug 抓很久的時候。",
-    level:"會標基本型別就夠了。進階寫法用到再查，不用一次學完。",
-    can:"編輯器會在你打錯的當下就畫紅線，而不是等到打開網頁才發現。",
-    note:"它是 JavaScript 加上型別檢查，不是新的語言，所以不用重學，只是多寫幾個字。" },
-  { n:"Node.js ＋ SQL", time:"一到兩個月",
-    trigger:"當你需要「東西要存起來」「要有帳號登入」「API 金鑰不能被使用者看到」的時候。",
-    level:"會寫幾個自己的 API、會查增改刪四個 SQL 動作、知道密碼不能直接存進資料庫。",
-    can:"一個真正完整的服務：使用者註冊、登入、存自己的資料。",
-    note:"Node.js 用的還是 JavaScript，所以第二站花的時間，在這裡又回收一次。" },
-  { n:"Python（需要才走）", time:"兩週上手",
-    trigger:"要自己訓練模型、做資料分析、寫爬蟲的時候。只是串現成 AI 服務的話，這一站可以不走。",
-    level:"基本語法加上 pandas，就能開始處理資料。",
-    can:"清理幾十萬筆資料、跑統計、訓練小模型。",
-    note:"已經會 JavaScript 的話，Python 的基本語法兩週就能上手，因為觀念是同一套，只是寫法不一樣。" },
+  {
+    "n": "HTML 與 CSS",
+    "time": "約 2 至 3 個週末",
+    "trigger": "想建立可閱讀的靜態網頁。",
+    "level": "完成語意結構、基本排版與窄螢幕調整。",
+    "can": "個人簡介或單頁作品介紹。",
+    "note": "先驗證內容與操作，再調整外觀。"
+  },
+  {
+    "n": "JavaScript",
+    "time": "約 1 至 2 個月",
+    "trigger": "需要互動、表單處理或載入外部資料。",
+    "level": "理解函式、資料結構、事件與 Promise。",
+    "can": "可查詢公開資料的小工具。",
+    "note": "練習載入、空資料與失敗狀態，避免只處理成功情境。"
+  },
+  {
+    "n": "一套介面框架",
+    "time": "約 1 個月",
+    "trigger": "畫面出現重複元件，或狀態關係需要統一管理。",
+    "level": "拆分元件、傳遞資料並處理表單。",
+    "can": "具有多個畫面與共享元件的前端。",
+    "note": "依既有專案與學習資源選擇 React、Vue 等工具。"
+  },
+  {
+    "n": "TypeScript",
+    "time": "約 1 至 2 週入門",
+    "trigger": "希望在開發時檢查資料結構與函式介面。",
+    "level": "使用基本型別、介面與聯集型別。",
+    "can": "能檢查部分型別錯誤的專案。",
+    "note": "保留執行時驗證；靜態型別無法保證外部資料正確。"
+  },
+  {
+    "n": "後端與 SQL",
+    "time": "約 1 至 2 個月入門",
+    "trigger": "需要受控的資料保存、帳號與權限。",
+    "level": "建立 API，練習 SQL 與服務端驗證。",
+    "can": "可保存使用者資料的服務原型。",
+    "note": "Node.js 能沿用 JavaScript；也可依需求使用其他後端語言。"
+  },
+  {
+    "n": "Python 與資料處理",
+    "time": "約 2 至 4 週入門",
+    "trigger": "需要資料清理、分析或模型實作。",
+    "level": "使用基本語法與表格處理工具。",
+    "can": "可重現的小型分析流程。",
+    "note": "先確認資料品質與分析問題，再選擇模型。"
+  }
 ];
 
 const roadEl = document.getElementById("road");
@@ -650,7 +918,7 @@ ROAD.forEach((r,i)=>{
       <h3>${i+1} · ${esc(r.n)}<span class="time">${esc(r.time)}</span></h3>
       <div class="d-grid">
         <div class="d-cell"><dt>什麼時候學</dt><dd>${r.trigger}</dd></div>
-        <div class="d-cell"><dt>學到什麼程度就夠</dt><dd>${r.level}</dd></div>
+        <div class="d-cell"><dt>練習目標</dt><dd>${r.level}</dd></div>
         <div class="d-cell"><dt>學完能做出什麼</dt><dd>${r.can}</dd></div>
       </div>
       <p class="note">${r.note}</p>
@@ -658,68 +926,333 @@ ROAD.forEach((r,i)=>{
   roadEl.appendChild(d);
 });
 
-/* ══════════ 05 名詞解碼器 ══════════ */
+/* ══════════ 05 技術名詞索引 ══════════ */
 // [名字, 分類, 說明, 全名（沒有就留空）]
 const TERMS = [
-  // ── 架構圖上的方塊 ──
-  ["Load Balancer","架構圖","前面站一個門房，把湧進來的人平均分給後面好幾台伺服器。","負載平衡器"],
-  ["Queue","架構圖","一排等著被處理的工作。寄信、轉檔這種慢工丟進去慢慢做，不要卡住使用者。","佇列"],
-  ["API Gateway","架構圖","所有請求的總入口。負責檢查身分、擋流量、分派到對的服務。","Application Programming Interface Gateway，應用程式介面閘道"],
-  ["Reverse Proxy","架構圖","站在伺服器前面代收請求的中間人，順便處理加密和分流。Nginx 最常見。","反向代理"],
-  ["Worker","架構圖","在背景默默做事的程式，不直接面對使用者。負責處理佇列裡的工作。","背景工作程式"],
-  ["Webhook","架構圖","跟 API 方向相反：對方那邊有事發生的時候主動打來通知你，不用你一直去問。","網頁回呼"],
-  ["Microservice","架構圖","把一個大程式拆成很多小程式各管各的。大團隊才划算，小專案會被拆到死。","微服務"],
-  ["Monolith","架構圖","全部寫在一起沒有拆。聽起來土，但小專案這樣最好。","單體式架構"],
-  ["Object Storage","架構圖","放檔案的雲端空間，圖片影片丟這裡。S3、R2 都是。","物件儲存"],
-  ["WAF","架構圖","擋掉惡意流量的防火牆，站在你的服務最前面。","Web Application Firewall，網頁應用程式防火牆"],
-  // ── 線上的字（協定）──
-  ["HTTPS","線上的字","瀏覽器跟伺服器講話的標準規矩，而且全程加密。網址開頭那個就是。","HyperText Transfer Protocol Secure，加密的超文字傳輸協定"],
-  ["HTTP","線上的字","同上，但<b>沒有加密</b>。現在幾乎不該再用。","HyperText Transfer Protocol，超文字傳輸協定"],
-  ["JSON","線上的字","前後端傳資料時最常用的格式，長得像一堆大括號。人看得懂、機器也好讀。","JavaScript Object Notation，JavaScript 物件表示法"],
-  ["TCP","線上的字","網路最底層的送信規矩，保證每個封包都會到、而且順序不會亂。","Transmission Control Protocol，傳輸控制協定"],
-  ["DNS","線上的字","把網址翻譯成 IP 位址的電話簿。網站連不上有一半是它出事。","Domain Name System，網域名稱系統"],
-  ["SSE","線上的字","伺服器單方向持續推訊息給瀏覽器。比 WebSocket 簡單，但只能單向。","Server-Sent Events，伺服器推送事件"],
-  ["gRPC","線上的字","後端跟後端之間講話用的高效格式，比 JSON 快但人看不懂。","Google Remote Procedure Call，Google 遠端程序呼叫"],
-  // ── 檔名 ──
-  ["package.json","檔名","JS 專案的身分證：用了哪些套件、有哪些指令可以跑。",""],
-  [".env","檔名","放密碼和金鑰的檔案。<b>絕對不能上傳到 GitHub</b>，這是最常見的外洩意外。","environment，環境設定"],
-  ["Dockerfile","檔名","「怎麼把這個程式裝進盒子」的說明書。一行一個步驟。",""],
-  [".tsx / .jsx","檔名","React 元件檔。x 代表裡面可以直接寫 HTML 標籤，ts 代表用 TypeScript。","TypeScript XML / JavaScript XML"],
-  [".yml / .yaml","檔名","設定檔格式，靠縮排表示層次。CI/CD 和 Docker 常用。縮排錯一格就爆。","YAML Ain't Markup Language"],
-  ["package-lock.json","檔名","鎖住每個套件的<b>確切版本</b>，確保每台電腦裝出來一模一樣。不要手改。",""],
-  ["node_modules","檔名","裝下來的套件全堆在這，通常幾百 MB。永遠不要動它，也不要上傳。",""],
-  ["dist / build","檔名","打包完成、準備上線的成品資料夾。這才是真正丟到伺服器的東西。","distribution，發布版"],
-  [".glb / .gltf","檔名","3D 模型檔，等於 3D 界的 jpg。","GL Transmission Format (Binary)，圖形傳輸格式"],
-  [".wasm","檔名","編譯後的檔案，讓 C++／Rust 能在瀏覽器裡跑。","WebAssembly，網頁組合語言"],
-  [".gitignore","檔名","列出「不要上傳到 Git 的東西」。node_modules 和 .env 一定要在裡面。",""],
-  // ── 指令 ──
-  ["npm install","指令","把 package.json 列的套件全部裝下來。拿到新專案第一件事。","Node Package Manager，Node 套件管理器"],
-  ["npm run dev","指令","開發模式啟動。改檔案存檔，畫面自動更新。","development，開發模式"],
-  ["npm run build","指令","打包成上線用的版本，產出丟進 dist 資料夾。",""],
-  ["docker run","指令","啟動一個盒子。盒子裡的環境跟你的電腦完全隔離。",""],
-  ["migrate","指令","改資料庫的表格結構，例如加一個欄位。要小心，改壞會遺失資料。","migration，資料庫遷移"],
-  ["seed","指令","塞一批假資料進資料庫，方便開發時測試。","種子資料"],
-  ["lint","指令","檢查程式碼有沒有寫壞或不符合規矩。上線前跑一次。","靜態檢查"],
-  ["deploy","指令","把程式送上正式環境給使用者用。","部署"],
-  // ── 行話 ──
-  ["endpoint","行話","API 的其中一個具體網址，例如 /users/123。一個 API 有很多 endpoint。","端點"],
-  ["SDK","行話","官方寫好的工具包，讓你不用自己手動串 API。裝了就能直接用。","Software Development Kit，軟體開發套件"],
-  ["Hydration","行話","伺服器送來的靜態畫面「接上」JavaScript 變成可互動的那一刻。這裡對不起來就是 hydration error。","注水／水合"],
-  ["middleware","行話","請求到達目的地之前要經過的一道道關卡，例如檢查有沒有登入。","中介層"],
-  ["CI/CD","行話","程式碼一推上去就自動測試、自動上線的流程。GitHub Actions 最常見。","Continuous Integration / Continuous Deployment，持續整合／持續部署"],
-  ["dev / staging / production","行話","三套環境：開發用、測試用、真正給使用者用的。改壞了只會壞在前兩個。","development / staging / production，開發／預備／正式"],
-  ["rate limit","行話","限制你一分鐘能呼叫幾次。超過就被擋，防止服務被打爆。","速率限制"],
-  ["token","行話","一串代表「我是誰」的密碼。登入後拿到，之後每次請求都要帶著。","權杖"],
-  ["REST","行話","前後端講話的規矩。用網址代表資源：<code>GET /users/123</code> 就是「給我 123 號使用者」。","Representational State Transfer，表現層狀態轉移"],
-  ["GraphQL","行話","REST 的對手。讓前端自己指定要哪些欄位，後端不用一個個開 API。","Graph Query Language，圖形查詢語言"],
-  ["ORM","行話","讓你用寫程式的方式操作資料庫，不用手寫 SQL。Prisma、Drizzle 都是。","Object-Relational Mapping，物件關聯對映"],
-  ["CRUD","行話","增、查、改、刪。任何管理資料的功能都逃不出這四個動作。","Create Read Update Delete，新增／讀取／更新／刪除"],
-  ["race condition","行話","兩件事同時發生、順序不確定，所以有時對有時錯。最難抓的 bug 之一。","競爭條件"],
-  ["latency","行話","從你送出請求到收到回應的時間。跟「頻寬」不同：頻寬是水管粗細，延遲是水管長度。","延遲"],
-  ["idempotent","行話","同一個動作做一次跟做十次結果一樣。付款 API 一定要做到，不然重送會扣兩次錢。","冪等"],
-  ["environment variable","行話","放在程式外面的設定值，換環境就換一份，不用改程式碼。","環境變數"],
-  ["breaking change","行話","升級之後舊寫法會壞掉。版本號第一碼跳號就是在警告這個。","破壞性變更"],
-  ["UI / UX","行話","UI 是使用者看到摸到的介面，UX 是他用起來的整體感受。兩個常被混用但不一樣。","User Interface / User Experience，使用者介面／使用者體驗"],
+  [
+    "Load Balancer",
+    "架構圖",
+    "依規則將請求分配給多個服務實例，可搭配健康檢查排除無法服務的節點。",
+    "負載平衡器"
+  ],
+  [
+    "Queue",
+    "架構圖",
+    "保存等待處理的訊息或任務，讓接收與執行可以分開進行。",
+    "佇列"
+  ],
+  [
+    "API Gateway",
+    "架構圖",
+    "API 的共同入口，可集中處理驗證、路由與流量政策，功能依實作而定。",
+    "Application Programming Interface Gateway，應用程式介面閘道"
+  ],
+  [
+    "Reverse Proxy",
+    "架構圖",
+    "代後端接收並轉送請求的服務，常用於 TLS 終止、路由或快取。",
+    "反向代理"
+  ],
+  [
+    "Worker",
+    "架構圖",
+    "執行背景任務的程式，例如從佇列取得工作並產生縮圖。",
+    "背景工作程式"
+  ],
+  [
+    "Webhook",
+    "架構圖",
+    "事件發生時，由服務向已設定的網址送出通知。接收端需驗證來源並處理重送。",
+    "網頁回呼"
+  ],
+  [
+    "Microservice",
+    "架構圖",
+    "將應用拆為可獨立部署的服務。可支援團隊分工，也增加通訊、觀測與資料一致性的管理成本。",
+    "微服務"
+  ],
+  [
+    "Monolith",
+    "架構圖",
+    "將主要功能作為單一應用部署的架構。內部仍可清楚分模組，適合先集中管理的需求。",
+    "單體式架構"
+  ],
+  [
+    "Object Storage",
+    "架構圖",
+    "以物件與中繼資料保存內容的儲存方式，常用於圖片、影片與備份。",
+    "物件儲存"
+  ],
+  [
+    "WAF",
+    "架構圖",
+    "依規則檢查與過濾網頁流量的防護元件，不能取代應用程式本身的安全設計。",
+    "Web Application Firewall，網頁應用程式防火牆"
+  ],
+  [
+    "HTTPS",
+    "線上的字",
+    "透過 TLS 保護的 HTTP 通訊，可提供傳輸加密與對端驗證。",
+    "HyperText Transfer Protocol Secure，加密的超文字傳輸協定"
+  ],
+  [
+    "HTTP",
+    "線上的字",
+    "用於交換網頁與 API 訊息的應用層協定，本身不提供傳輸加密。",
+    "HyperText Transfer Protocol，超文字傳輸協定"
+  ],
+  [
+    "JSON",
+    "線上的字",
+    "以物件、陣列與基本值表示資料的文字格式，常用於 API 回應與設定。",
+    "JavaScript Object Notation，JavaScript 物件表示法"
+  ],
+  [
+    "TCP",
+    "線上的字",
+    "提供可靠且有序位元組串流的傳輸層協定。連線仍可能失敗，應用程式需處理錯誤。",
+    "Transmission Control Protocol，傳輸控制協定"
+  ],
+  [
+    "DNS",
+    "線上的字",
+    "解析網域名稱與相關紀錄的系統，例如取得服務的 IP 位址。",
+    "Domain Name System，網域名稱系統"
+  ],
+  [
+    "SSE",
+    "線上的字",
+    "透過 HTTP 將事件串流由伺服器傳給用戶端，適合單向更新。",
+    "Server-Sent Events，伺服器推送事件"
+  ],
+  [
+    "gRPC",
+    "線上的字",
+    "遠端程序呼叫框架，常搭配 Protocol Buffers 描述服務與序列化資料。",
+    "gRPC，遠端程序呼叫框架"
+  ],
+  [
+    "package.json",
+    "檔名",
+    "記錄 Node.js 專案資訊、相依套件與 scripts 指令。",
+    ""
+  ],
+  [
+    ".env",
+    "檔名",
+    "常用來提供環境變數的檔案。含有效密鑰的內容不應提交或公開。",
+    "environment，環境設定"
+  ],
+  [
+    "Dockerfile",
+    "檔名",
+    "描述如何建置容器映像檔的文字檔，包含基底映像與安裝步驟等指示。",
+    ""
+  ],
+  [
+    ".tsx / .jsx",
+    "檔名",
+    "包含 JSX 語法的 JavaScript 或 TypeScript 檔案。JSX 類似 HTML，但語法與執行方式不同。",
+    "JSX 與 TypeScript JSX 檔案"
+  ],
+  [
+    ".yml / .yaml",
+    "檔名",
+    "常見的設定資料格式，以縮排表示層次；編輯後應檢查語法。",
+    "YAML Ain't Markup Language"
+  ],
+  [
+    "package-lock.json",
+    "檔名",
+    "記錄 npm 解析出的套件版本，協助重現安裝結果，通常由工具更新。",
+    ""
+  ],
+  [
+    "node_modules",
+    "檔名",
+    "套件管理工具的安裝目錄。通常不納入 Git，也不直接在此維護修改。",
+    ""
+  ],
+  [
+    "dist / build",
+    "檔名",
+    "常見的建置輸出目錄名稱；實際內容與部署方式依工具設定決定。",
+    "distribution，發布版"
+  ],
+  [
+    ".glb / .gltf",
+    "檔名",
+    "glTF 是 3D 場景與模型的傳輸格式，GLB 是其二進位容器形式。",
+    "GL Transmission Format (Binary)，圖形傳輸格式"
+  ],
+  [
+    ".wasm",
+    "檔名",
+    "WebAssembly 二進位模組，可在支援的瀏覽器或其他執行環境運作。",
+    "WebAssembly，網頁組合語言"
+  ],
+  [
+    ".gitignore",
+    "檔名",
+    "指定 Git 應忽略的未追蹤檔案規則，不會自動停止追蹤已提交的檔案。",
+    ""
+  ],
+  [
+    "npm install",
+    "指令",
+    "依套件清單與相關設定安裝相依套件，也可能更新鎖檔。執行前確認專案來源。",
+    "npm，JavaScript 套件管理工具"
+  ],
+  [
+    "npm run dev",
+    "指令",
+    "執行 package.json 中的 dev script。是否自動重新載入，依腳本與工具而定。",
+    "development，開發模式"
+  ],
+  [
+    "npm run build",
+    "指令",
+    "執行 package.json 中的 build script。產出位置由建置工具設定決定。",
+    ""
+  ],
+  [
+    "docker run",
+    "指令",
+    "從映像檔建立並啟動容器。容器的隔離與存取範圍受參數、掛載與權限影響。",
+    ""
+  ],
+  [
+    "migrate",
+    "指令",
+    "執行資料庫結構或資料變更。部署前應確認相容性、備份與復原策略。",
+    "migration，資料庫遷移"
+  ],
+  [
+    "seed",
+    "指令",
+    "載入初始化或測試資料。應確認操作環境，避免影響正式資料。",
+    "種子資料"
+  ],
+  [
+    "lint",
+    "指令",
+    "以靜態規則檢查程式，找出部分問題或風格不一致之處，不能取代功能測試。",
+    "靜態檢查"
+  ],
+  [
+    "deploy",
+    "指令",
+    "將應用與設定發布到指定環境，可能是測試環境或正式環境。",
+    "部署"
+  ],
+  [
+    "endpoint",
+    "行話",
+    "服務可接受請求的具體位置，通常由網址與 HTTP 方法共同描述。",
+    "端點"
+  ],
+  [
+    "SDK",
+    "行話",
+    "供開發者使用的工具、函式庫與介面集合，可協助整合某項平台或服務。",
+    "Software Development Kit，軟體開發套件"
+  ],
+  [
+    "Hydration",
+    "行話",
+    "用戶端框架接手伺服器產生的 HTML，建立互動所需的狀態與事件處理。",
+    "注水／水合"
+  ],
+  [
+    "middleware",
+    "行話",
+    "在請求處理流程中執行的中介程式，例如記錄請求或檢查身分。",
+    "中介層"
+  ],
+  [
+    "CI/CD",
+    "行話",
+    "透過自動化整合、檢查與交付程式。CD 可指持續交付或持續部署，是否自動上線依流程而定。",
+    "Continuous Integration / Continuous Delivery or Deployment，持續整合／持續交付或部署"
+  ],
+  [
+    "dev / staging / production",
+    "行話",
+    "開發、預備與正式環境。隔離環境有助於測試，但不能保證正式環境完全沒有問題。",
+    "development / staging / production，開發／預備／正式"
+  ],
+  [
+    "rate limit",
+    "行話",
+    "在指定期間限制請求數或資源使用，常依帳號、IP 或服務層級設定。",
+    "速率限制"
+  ],
+  [
+    "token",
+    "行話",
+    "用於驗證或授權的憑證。用途依協定而定，持有者可能取得相應權限，應妥善保護。",
+    "權杖"
+  ],
+  [
+    "REST",
+    "行話",
+    "一種架構風格，強調資源、統一介面與無狀態互動等限制；HTTP API 常借用其設計概念。",
+    "Representational State Transfer，表現層狀態轉移"
+  ],
+  [
+    "GraphQL",
+    "行話",
+    "API 查詢語言與執行模型，讓用戶端描述需要的欄位；後端仍需實作解析與存取規則。",
+    "GraphQL，API 查詢語言"
+  ],
+  [
+    "ORM",
+    "行話",
+    "將程式物件與關聯式資料對應的方式，通常由函式庫協助產生查詢。",
+    "Object-Relational Mapping，物件關聯對映"
+  ],
+  [
+    "CRUD",
+    "行話",
+    "資料操作中常用的四類動作：新增、讀取、更新與刪除。",
+    "Create Read Update Delete，新增／讀取／更新／刪除"
+  ],
+  [
+    "race condition",
+    "行話",
+    "結果受到多個操作執行時序影響，且缺少適當協調的情況。",
+    "競爭條件"
+  ],
+  [
+    "latency",
+    "行話",
+    "操作或請求的等待時間。評估時需說明量測起點、終點與百分位數。",
+    "延遲"
+  ],
+  [
+    "idempotent",
+    "行話",
+    "同一操作重複執行，對目標狀態的效果與執行一次相同。重送付款可使用冪等鍵避免重複處理。",
+    "冪等"
+  ],
+  [
+    "environment variable",
+    "行話",
+    "由執行環境提供給程式的設定值。是否保密取決於暴露方式與權限。",
+    "環境變數"
+  ],
+  [
+    "breaking change",
+    "行話",
+    "可能使既有使用方式不相容的變更。遵循語意化版本的專案通常以主版本標示，仍需閱讀變更紀錄。",
+    "破壞性變更"
+  ],
+  [
+    "UI / UX",
+    "行話",
+    "UI 關注使用者操作的介面，UX 關注完成任務時的整體體驗，包含理解、流程與回饋。",
+    "User Interface / User Experience，使用者介面／使用者體驗"
+  ]
 ];
 
 const CATS = ["全部","架構圖","線上的字","檔名","指令","行話"];
@@ -727,149 +1260,454 @@ let curCat = "全部", curQ = "";
 
 /* ══════════ 06 地層 ══════════ */
 const LAYERS = [
-  { name:"硬體", techs:[
-    { n:"CPU", full:"Central Processing Unit，中央處理器",
-      l:"一次專心做一件事，但很聰明。你的程式邏輯在這裡跑。",
-      down:"實體晶片，最底層", up:"所有東西", vs:"無", meet:"「跑很慢」通常是這裡塞住" },
-    { n:"GPU", full:"Graphics Processing Unit，圖形處理器",
-      l:"一次做幾千件簡單的事。畫圖跟跑 AI 都靠它，那兩件事本質都是「同一個算式重複幾百萬次」。",
-      down:"實體晶片", up:"WebGL、排版引擎", vs:"無", meet:"3D、影片、AI 都在搶它" },
-    { n:"實體機器", full:"伺服器主機",
-      l:"真的有一台電腦擺在某個機房裡。所謂「雲端」，只是別人幫你顧的機器。",
-      down:"無", up:"作業系統", vs:"自己買機器 ｜ 租雲端", meet:"「伺服器掛了」講的就是它" },
-    { n:"作業系統", full:"Operating System，OS",
-      l:"管理硬體、分配資源的底層軟體。伺服器上幾乎都是 Linux。",
-      down:"CPU ＋ 實體機器", up:"Node.js、Python、Docker", vs:"Linux ｜ Windows ｜ macOS", meet:"部署時會遇到" },
-    { n:"Linux", full:"開源作業系統",
-      l:"免費、開源的作業系統。全世界絕大多數的伺服器都跑它。",
-      down:"實體機器", up:"Docker、Node.js", vs:"Windows Server", meet:"所有雲端服務底下都是它" },
-  ]},
-  { name:"瀏覽器內部", techs:[
-    { n:"V8", full:"Google 的 JavaScript 引擎代號（不是縮寫）",
-      l:"Chrome 裡負責跑 JavaScript 的引擎，把你的 JS 即時翻譯成機器碼。",
-      down:"CPU", up:"所有 JS、Node.js", vs:"JavaScriptCore（Safari）", meet:"Node.js 就是「把 V8 搬出瀏覽器」" },
-    { n:"Blink", full:"Chrome 的排版引擎代號",
-      l:"把 HTML ＋ CSS 算成「每個字在螢幕的第幾個像素」。",
-      down:"GPU ＋ CPU", up:"DOM", vs:"WebKit（Safari）、Gecko（Firefox）", meet:"改個 CSS 整頁重排變卡，就是它在忙" },
-  ]},
-  { name:"瀏覽器原生功能", techs:[
-    { n:"DOM", full:"Document Object Model，文件物件模型",
-      l:"操作網頁元素的介面。「找到這個按鈕、把文字改掉」就是它。",
-      down:"Blink", up:"React、Vue", vs:"Canvas 2D（另一種畫法）", meet:"React 底下跑的就是它" },
-    { n:"Canvas 2D", full:"畫布",
-      l:"一塊空白畫布，可以自由畫線畫圖。畫完就是一張圖，沒有「元素」的概念。",
-      down:"Blink ＋ GPU", up:"Chart.js、小遊戲", vs:"DOM、WebGL", meet:"圖表、簽名板、小遊戲" },
-    { n:"WebGL", full:"Web Graphics Library，網頁圖形函式庫",
-      l:"直接叫顯示卡畫東西的介面。低階到幾乎沒人直接寫，畫一個三角形要一百行。",
-      down:"GPU", up:"Three.js、Babylon.js", vs:"Canvas 2D、WebGPU", meet:"所有網頁 3D 的底層" },
-    { n:"WebGPU", full:"網頁圖形處理器介面",
-      l:"WebGL 的接班人。更快、也能拿來跑 AI 運算。",
-      down:"GPU", up:"Three.js", vs:"WebGL", meet:"新專案值得考慮" },
-    { n:"WebSocket", full:"網頁雙向連線協定",
-      l:"跟伺服器保持一條雙向通道。一般請求是「你問一句它答一句」，這個是「兩邊隨時都能主動說話」。",
-      down:"TCP", up:"多人遊戲、聊天室", vs:"fetch、SSE", meet:"即時通知、線上協作" },
-    { n:"fetch", full:"瀏覽器內建的網路請求函式",
-      l:"發出網路請求拿資料。",
-      down:"HTTP", up:"axios、React Query", vs:"axios", meet:"所有跟後端拿資料的地方" },
-  ]},
-  { name:"語言", techs:[
-    { n:"JavaScript", full:"",
-      l:"瀏覽器唯一原生看得懂的語言。所有其他選擇最後都要變成它。",
-      down:"V8", up:"全部", vs:"無（瀏覽器裡沒對手）", meet:"到處都是" },
-    { n:"TypeScript", full:"",
-      l:"JavaScript 加上型別檢查。打錯字、傳錯資料，寫的當下就被抓出來。最後還是編譯成 JS。",
-      down:"JavaScript", up:"大部分現代專案", vs:"純 JavaScript", meet:"看到 .ts / .tsx 就是它" },
-    { n:"WebAssembly", full:"WASM，網頁組合語言",
-      l:"讓 C++、Rust 編譯後跑在瀏覽器裡，速度接近原生。用在「JS 太慢」的地方。",
-      down:"瀏覽器", up:"Figma、物理引擎", vs:"JavaScript", meet:"很重的計算搬上網頁時" },
-    { n:"GLSL", full:"OpenGL Shading Language，OpenGL 著色器語言",
-      l:"寫給 GPU 看的迷你語言，負責「這個像素是什麼顏色」。整條 3D 路上唯一真的難的東西。",
-      down:"GPU", up:"WebGL", vs:"WGSL", meet:"要做內建做不出的特效時" },
-    { n:"Python", full:"",
-      l:"資料處理跟 AI 的主流語言。語法簡單、函式庫多。不能在瀏覽器裡跑。",
-      down:"作業系統", up:"PyTorch、FastAPI", vs:"Node.js、Go", meet:"AI、資料分析、爬蟲" },
-  ]},
-  { name:"函式庫", techs:[
-    { n:"Three.js", full:"",
-      l:"把 WebGL 包成人話。用「場景、相機、燈光」這種現實世界的詞寫 3D，不用碰矩陣數學。",
-      down:"WebGL", up:"React Three Fiber", vs:"Babylon.js、PlayCanvas", meet:"網頁 3D 的預設選擇" },
-    { n:"D3.js", full:"Data-Driven Documents，資料驅動文件",
-      l:"資料視覺化的祖師爺。它不畫圖表，它給你「把資料變成座標」的工具。",
-      down:"DOM", up:"各種圖表庫", vs:"Chart.js、ECharts", meet:"客製化圖表" },
-    { n:"GSAP", full:"GreenSock Animation Platform，GreenSock 動畫平台",
-      l:"動畫時間軸。「這個先動 0.3 秒，然後那個淡入」這種編排。",
-      down:"DOM", up:"你的專案", vs:"Framer Motion、CSS animation", meet:"精緻的進場動畫" },
-    { n:"Zod", full:"",
-      l:"檢查資料形狀對不對。從外面拿到的東西不見得符合預期，它擋在門口。",
-      down:"TypeScript", up:"表單、API 層", vs:"Yup、Valibot", meet:"表單驗證" },
-  ]},
-  { name:"UI 框架", techs:[
-    { n:"React", full:"",
-      l:"把畫面拆成一塊一塊的「元件」，資料變了畫面自動跟著變，你不用自己去改 DOM。",
-      down:"DOM", up:"Next.js、React Three Fiber", vs:"Vue、Svelte", meet:"目前市佔最高" },
-    { n:"Vue", full:"",
-      l:"跟 React 做同一件事的對手。上手比較快，語法比較像傳統 HTML。",
-      down:"DOM", up:"Nuxt", vs:"React、Svelte", meet:"亞洲用得多" },
-    { n:"Svelte", full:"",
-      l:"跟 React 做<b>同一件事</b>，但做法不同。React 是把「自動更新畫面」的整套機制一起送到瀏覽器，所以檔案比較大；Svelte 是在你打包的時候就先把這些算好，只送結果過去。對你來說的差別：兩個都能做出一樣的網站，Svelte 寫的字比較少、載入比較快，但會的人比較少、遇到問題比較難查。",
-      down:"DOM", up:"SvelteKit", vs:"React、Vue", meet:"想要網站小又快、而且不怕資源少的時候" },
-    { n:"React Three Fiber", full:"",
-      l:"把 Three.js 包成 React 元件。已經會 React 又想做 3D 的最短路徑。",
-      down:"React ＋ Three.js", up:"你的專案", vs:"直接寫 Three.js", meet:"React 專案要加 3D 時" },
-    { n:"Tailwind CSS", full:"",
-      l:"用一堆小 class 直接在 HTML 裡寫樣式，不用另外開 CSS 檔。",
-      down:"CSS", up:"你的專案", vs:"原生 CSS、CSS Modules", meet:"看到 flex gap-4 p-6 就是它" },
-  ]},
-  { name:"全端框架", techs:[
-    { n:"Next.js", full:"",
-      l:"React 的「完整版」。多了路由、伺服器渲染、API。React 只管畫面，它管整個網站。",
-      down:"React ＋ Node.js", up:"Vercel", vs:"Nuxt、SvelteKit、Remix", meet:"大部分正式 React 專案" },
-    { n:"Astro", full:"",
-      l:"專做內容型網站，像部落格、文件站。預設不送 JS 到瀏覽器，所以極快。",
-      down:"Vite", up:"CDN", vs:"Next.js、Hugo", meet:"部落格、文件、行銷頁" },
-    { n:"Express", full:"",
-      l:"寫後端 API 最常見的小工具。負責「有人打這個網址時，執行這段程式」。",
-      down:"Node.js", up:"你的 API", vs:"Fastify、Hono、NestJS", meet:"Node.js 後端幾乎都用它" },
-    { n:"Node.js", full:"",
-      l:"讓 JavaScript 跑在伺服器上，不只瀏覽器裡。本質是「把 V8 引擎搬出瀏覽器」。",
-      down:"V8 ＋ 作業系統", up:"Next.js、Express", vs:"Deno、Bun、Python、Go", meet:"後端和所有 npm 指令" },
-  ]},
-  { name:"工具與部署", techs:[
-    { n:"Vite", full:"",
-      l:"開發時秒開、上線時打包。現在新專案的預設選擇。",
-      down:"Node.js", up:"你的專案", vs:"Webpack、Parcel", meet:"npm run dev 通常就是它" },
-    { n:"npm / pnpm", full:"Node Package Manager，Node 套件管理器",
-      l:"裝套件用的指令。pnpm 比較省硬碟也比較快。",
-      down:"Node.js", up:"所有專案", vs:"yarn、bun", meet:"你每天都在打 npm install" },
-    { n:"Git", full:"",
-      l:"記錄每一次改動，隨時可以退回去。GitHub 是放 Git 的網站，兩個不是同一個東西。",
-      down:"作業系統", up:"GitHub、CI/CD", vs:"無", meet:"所有專案的標配" },
-    { n:"Docker", full:"",
-      l:"把「程式 ＋ 它需要的環境」打包成一個盒子。解決「我電腦跑得起來啊」這個千古難題。",
-      down:"Linux", up:"Vercel、雲端平台", vs:"直接裝在機器上", meet:"部署後端時" },
-    { n:"Vercel", full:"",
-      l:"幫你把網站放上網的平台。git push 就自動上線，免費額度很大方。背後幫你打理伺服器和 CDN。",
-      down:"Docker ＋ CDN", up:"你的網站", vs:"Cloudflare、Netlify、自己租機器", meet:"前端部署的預設答案" },
-  ]},
+  {
+    "name": "硬體",
+    "techs": [
+      {
+        "n": "CPU",
+        "full": "Central Processing Unit，中央處理器",
+        "l": "執行一般程式指令的處理器，現代 CPU 可透過多核心等機制處理多項工作。",
+        "down": "硬體",
+        "up": "作業系統與應用程式",
+        "vs": "依指令集與需求選擇",
+        "meet": "計算與資源使用的效能分析"
+      },
+      {
+        "n": "GPU",
+        "full": "Graphics Processing Unit，圖形處理器",
+        "l": "適合大量平行運算的處理器，常用於圖形與矩陣計算。",
+        "down": "硬體",
+        "up": "圖形介面與運算框架",
+        "vs": "依工作負載選擇",
+        "meet": "3D 渲染與模型運算"
+      },
+      {
+        "n": "實體機器",
+        "full": "伺服器主機",
+        "l": "提供處理器、記憶體、儲存與網路的實際主機，可能由自己或雲端供應商管理。",
+        "down": "硬體設備",
+        "up": "作業系統與虛擬化層",
+        "vs": "自有主機或租用資源",
+        "meet": "部署容量與硬體故障處理"
+      },
+      {
+        "n": "作業系統",
+        "full": "Operating System，OS",
+        "l": "管理程序、記憶體、檔案與裝置，提供應用程式使用硬體的介面。",
+        "down": "CPU 與裝置",
+        "up": "執行環境與服務",
+        "vs": "Linux、Windows、macOS",
+        "meet": "環境設定與部署"
+      },
+      {
+        "n": "Linux",
+        "full": "Linux 核心與發行版",
+        "l": "Linux 是作業系統核心，常與其他工具組成 Linux 發行版。",
+        "down": "實體或虛擬硬體",
+        "up": "伺服器與容器工作負載",
+        "vs": "其他作業系統",
+        "meet": "伺服器與容器環境"
+      }
+    ]
+  },
+  {
+    "name": "瀏覽器內部",
+    "techs": [
+      {
+        "n": "V8",
+        "full": "Google 的 JavaScript 引擎代號（不是縮寫）",
+        "l": "執行 JavaScript 與 WebAssembly 的引擎，可透過編譯等機制執行程式。",
+        "down": "作業系統與 CPU",
+        "up": "Chromium、Node.js",
+        "vs": "JavaScriptCore、SpiderMonkey",
+        "meet": "JavaScript 執行與效能分析"
+      },
+      {
+        "n": "Blink",
+        "full": "Chrome 的排版引擎代號",
+        "l": "Chromium 的渲染引擎，處理網頁結構、樣式與版面等工作。",
+        "down": "作業系統與硬體",
+        "up": "Chromium 瀏覽器",
+        "vs": "WebKit、Gecko",
+        "meet": "網頁排版與渲染分析"
+      }
+    ]
+  },
+  {
+    "name": "瀏覽器原生功能",
+    "techs": [
+      {
+        "n": "DOM",
+        "full": "Document Object Model，文件物件模型",
+        "l": "以物件表示文件結構，讓程式可以讀取與修改網頁元素。",
+        "down": "瀏覽器的 DOM 實作",
+        "up": "介面框架與應用程式",
+        "vs": "Canvas 用於不同繪圖需求",
+        "meet": "網頁元素操作"
+      },
+      {
+        "n": "Canvas 2D",
+        "full": "畫布",
+        "l": "在畫布上繪製線條、影像與文字的 API，繪製內容不會自動成為獨立 DOM 元素。",
+        "down": "瀏覽器繪圖實作",
+        "up": "圖表、繪圖與遊戲",
+        "vs": "SVG、DOM、WebGL",
+        "meet": "簽名板與客製繪圖"
+      },
+      {
+        "n": "WebGL",
+        "full": "Web Graphics Library，網頁圖形函式庫",
+        "l": "瀏覽器提供的圖形 API，可使用 GPU 渲染 2D 與 3D 內容。",
+        "down": "瀏覽器、驅動程式與 GPU",
+        "up": "Three.js 等圖形函式庫",
+        "vs": "WebGPU、Canvas 2D",
+        "meet": "互動 3D 與圖形效果"
+      },
+      {
+        "n": "WebGPU",
+        "full": "網頁圖形處理器介面",
+        "l": "提供現代 GPU 渲染與通用運算能力的網頁 API，使用前需確認平台支援。",
+        "down": "瀏覽器、驅動程式與 GPU",
+        "up": "圖形與運算函式庫",
+        "vs": "WebGL 等依需求比較",
+        "meet": "圖形與平行計算"
+      },
+      {
+        "n": "WebSocket",
+        "full": "網頁雙向連線協定",
+        "l": "建立持續的雙向通訊，讓用戶端與伺服器都能送出訊息。",
+        "down": "網路協定實作",
+        "up": "聊天與即時協作",
+        "vs": "SSE 或輪詢，依需求選擇",
+        "meet": "即時狀態同步"
+      },
+      {
+        "n": "fetch",
+        "full": "瀏覽器內建的網路請求函式",
+        "l": "以 Promise 介面送出請求並取得回應，讀取回應內容通常還需後續操作。",
+        "down": "執行環境的網路能力",
+        "up": "應用資料存取",
+        "vs": "XMLHttpRequest 或請求函式庫",
+        "meet": "呼叫 API"
+      }
+    ]
+  },
+  {
+    "name": "語言",
+    "techs": [
+      {
+        "n": "JavaScript",
+        "full": "",
+        "l": "用於網頁互動及其他執行環境的程式語言，瀏覽器中的圖形運算也可配合 WebAssembly。",
+        "down": "JavaScript 引擎",
+        "up": "前端與部分後端程式",
+        "vs": "依執行環境選擇",
+        "meet": "互動與流程邏輯"
+      },
+      {
+        "n": "TypeScript",
+        "full": "",
+        "l": "在 JavaScript 上加入型別語法與靜態檢查，通常轉換為 JavaScript 執行。",
+        "down": "JavaScript 與編譯工具",
+        "up": "型別化的應用程式",
+        "vs": "JavaScript",
+        "meet": ".ts 與 .tsx 檔案"
+      },
+      {
+        "n": "WebAssembly",
+        "full": "WASM，網頁組合語言",
+        "l": "可攜的低階執行格式，可作為多種語言的編譯目標。",
+        "down": "支援 WebAssembly 的執行環境",
+        "up": "計算模組與移植的應用",
+        "vs": "依工作負載與 JavaScript 配合",
+        "meet": "瀏覽器與其他環境的計算模組"
+      },
+      {
+        "n": "GLSL",
+        "full": "OpenGL Shading Language，OpenGL 著色器語言",
+        "l": "圖形著色器語言，用於描述 GPU 的頂點與片段等處理。",
+        "down": "支援的圖形管線",
+        "up": "WebGL 著色器",
+        "vs": "WebGPU 使用 WGSL",
+        "meet": "客製圖形效果"
+      },
+      {
+        "n": "Python",
+        "full": "",
+        "l": "常用於自動化、資料分析與後端的語言，也可透過特定執行環境在瀏覽器使用。",
+        "down": "Python 執行環境",
+        "up": "資料與服務函式庫",
+        "vs": "R、JavaScript 等依任務比較",
+        "meet": "分析、模型與腳本"
+      }
+    ]
+  },
+  {
+    "name": "函式庫",
+    "techs": [
+      {
+        "n": "Three.js",
+        "full": "",
+        "l": "以場景、相機、幾何與材質等概念組織網頁 3D，降低直接操作圖形介面的需求。",
+        "down": "WebGL 或支援的渲染後端",
+        "up": "React Three Fiber 與應用場景",
+        "vs": "Babylon.js、PlayCanvas",
+        "meet": "網頁 3D"
+      },
+      {
+        "n": "D3.js",
+        "full": "Data-Driven Documents，資料驅動文件",
+        "l": "提供資料轉換、比例尺與文件操作等工具，適合組合客製視覺化。",
+        "down": "JavaScript 與網頁介面",
+        "up": "資料視覺化應用",
+        "vs": "Chart.js、ECharts 等依需求比較",
+        "meet": "客製圖表"
+      },
+      {
+        "n": "GSAP",
+        "full": "GreenSock Animation Platform，GreenSock 動畫平台",
+        "l": "管理動畫補間與時間軸的工具，可安排多個視覺效果的先後關係。",
+        "down": "JavaScript 與動畫目標",
+        "up": "互動動畫",
+        "vs": "CSS 動畫與其他動畫工具",
+        "meet": "需要時間軸協調的效果"
+      },
+      {
+        "n": "Zod",
+        "full": "",
+        "l": "在執行時驗證資料結構的函式庫，並可與 TypeScript 型別整合。",
+        "down": "JavaScript 執行環境",
+        "up": "表單與 API 資料驗證",
+        "vs": "Yup、Valibot",
+        "meet": "檢查外部輸入"
+      }
+    ]
+  },
+  {
+    "name": "UI 框架",
+    "techs": [
+      {
+        "n": "React",
+        "full": "",
+        "l": "以元件描述介面的函式庫，依狀態與資料更新對應畫面。",
+        "down": "JavaScript 與對應渲染器",
+        "up": "Next.js 與 React 應用",
+        "vs": "Vue、Svelte",
+        "meet": "元件化介面"
+      },
+      {
+        "n": "Vue",
+        "full": "",
+        "l": "提供元件與反應式資料機制的介面框架，可逐步整合至網頁。",
+        "down": "JavaScript 與 DOM",
+        "up": "Nuxt 與 Vue 應用",
+        "vs": "React、Svelte",
+        "meet": "互動網頁"
+      },
+      {
+        "n": "Svelte",
+        "full": "",
+        "l": "透過編譯與執行時機制管理元件及畫面更新的介面框架。",
+        "down": "JavaScript 與 DOM",
+        "up": "SvelteKit 與應用程式",
+        "vs": "React、Vue",
+        "meet": "元件化網頁"
+      },
+      {
+        "n": "React Three Fiber",
+        "full": "",
+        "l": "React 的 Three.js 渲染器，讓場景可用 React 元件方式描述。",
+        "down": "React 與 Three.js",
+        "up": "React 3D 場景",
+        "vs": "直接使用 Three.js",
+        "meet": "React 專案中的 3D"
+      },
+      {
+        "n": "Tailwind CSS",
+        "full": "",
+        "l": "提供工具類別的 CSS 框架，讓樣式可在標記中組合，仍需理解 CSS。",
+        "down": "CSS 與建置整合",
+        "up": "應用介面",
+        "vs": "原生 CSS、CSS Modules",
+        "meet": "以工具類別編寫樣式"
+      }
+    ]
+  },
+  {
+    "name": "全端框架",
+    "techs": [
+      {
+        "n": "Next.js",
+        "full": "",
+        "l": "以 React 為基礎的框架，整合路由、不同渲染方式與服務端能力。",
+        "down": "React 與支援的執行環境",
+        "up": "網頁應用",
+        "vs": "Nuxt、SvelteKit 等依需求比較",
+        "meet": "React 全端應用"
+      },
+      {
+        "n": "Astro",
+        "full": "",
+        "l": "以內容網站為主要使用情境的框架，可按需加入互動元件。",
+        "down": "建置與執行環境",
+        "up": "部落格與文件站",
+        "vs": "其他靜態或全端框架",
+        "meet": "內容發布"
+      },
+      {
+        "n": "Express",
+        "full": "",
+        "l": "Node.js 的網頁框架，提供路由與中介軟體機制。",
+        "down": "Node.js",
+        "up": "API 與網頁服務",
+        "vs": "Fastify、Hono 等",
+        "meet": "Node.js 後端"
+      },
+      {
+        "n": "Node.js",
+        "full": "",
+        "l": "在瀏覽器外執行 JavaScript 的環境，包含 V8 與檔案、網路等系統介面。",
+        "down": "V8 與作業系統",
+        "up": "Express、建置工具",
+        "vs": "Deno、Bun 等",
+        "meet": "後端與開發工具"
+      }
+    ]
+  },
+  {
+    "name": "工具與部署",
+    "techs": [
+      {
+        "n": "Vite",
+        "full": "",
+        "l": "提供開發伺服器與建置流程的前端工具，實際行為依版本與設定決定。",
+        "down": "支援的 JavaScript 執行環境",
+        "up": "前端專案",
+        "vs": "其他建置工具",
+        "meet": "開發與打包"
+      },
+      {
+        "n": "npm / pnpm",
+        "full": "JavaScript 套件管理工具",
+        "l": "管理 JavaScript 套件與相依關係的工具，安裝策略與鎖檔格式各有不同。",
+        "down": "支援的執行環境",
+        "up": "JavaScript 專案",
+        "vs": "Yarn、Bun 等",
+        "meet": "安裝與執行專案指令"
+      },
+      {
+        "n": "Git",
+        "full": "",
+        "l": "記錄提交與分支的版本控制工具。GitHub 是提供 Git 儲存庫託管等功能的平台。",
+        "down": "作業系統",
+        "up": "版本協作與發布流程",
+        "vs": "其他版本控制工具",
+        "meet": "追蹤與審閱變更"
+      },
+      {
+        "n": "Docker",
+        "full": "",
+        "l": "以映像檔與容器管理應用執行環境。Linux 容器共享主機或虛擬機的 Linux 核心。",
+        "down": "作業系統與容器執行環境",
+        "up": "容器化服務",
+        "vs": "直接部署或其他容器工具",
+        "meet": "環境封裝與部署"
+      },
+      {
+        "n": "Vercel",
+        "full": "",
+        "l": "提供網頁部署與相關託管能力的平台，支援的功能與限制依方案而定。",
+        "down": "受管理的部署基礎設施",
+        "up": "網站與網頁應用",
+        "vs": "其他託管平台或自建服務",
+        "meet": "受管理的網頁部署"
+      }
+    ]
+  }
 ];
 
 /* 洋蔥圖：四條真實的上下層鏈，最外面是你寫的，最裡面是硬體 */
 const OWN = {
-  "你寫的元件":{ full:"你自己的程式碼", l:"你實際打字寫出來的那幾個檔案。整條鏈只有這一層是你的，其他每一層都是別人寫好的。",
-    down:"Next.js", up:"無（最外層）", vs:"無", meet:"你的專案資料夾裡" },
-  "你寫的場景":{ full:"你自己的程式碼", l:"你擺的相機位置、燈光、模型。你只寫這些，剩下的交給下面幾層。",
-    down:"React Three Fiber", up:"無（最外層）", vs:"無", meet:"你的專案資料夾裡" },
-  "你寫的 API":{ full:"你自己的程式碼", l:"你定義的規則：誰能看什麼、資料怎麼算。這是整個服務真正的價值所在。",
-    down:"Express", up:"無（最外層）", vs:"無", meet:"你的專案資料夾裡" },
-  "你的網站":{ full:"打包完的成品", l:"build 之後產生的那一堆檔案。你不用手改它，它是被產生出來的。",
-    down:"Vercel", up:"無（最外層）", vs:"無", meet:"dist 或 build 資料夾" },
+  "你寫的元件": {
+    "full": "應用層內容",
+    "l": "應用中的元件程式，描述畫面、狀態與互動。",
+    "down": "Next.js",
+    "up": "無（最外層）",
+    "vs": "無",
+    "meet": "專案原始碼或建置輸出"
+  },
+  "你寫的場景": {
+    "full": "應用層內容",
+    "l": "應用設定的相機、燈光、模型與互動。",
+    "down": "React Three Fiber",
+    "up": "無（最外層）",
+    "vs": "無",
+    "meet": "專案原始碼或建置輸出"
+  },
+  "你寫的 API": {
+    "full": "應用層內容",
+    "l": "應用定義的請求處理、業務規則與權限檢查。",
+    "down": "Express",
+    "up": "無（最外層）",
+    "vs": "無",
+    "meet": "專案原始碼或建置輸出"
+  },
+  "你的網站": {
+    "full": "應用層內容",
+    "l": "此例將建置後的網站與執行需求放入容器部署。",
+    "down": "Docker",
+    "up": "無（最外層）",
+    "vs": "無",
+    "meet": "專案原始碼或建置輸出"
+  }
 };
 
 const CHAINS = [
-  { t:"做一個網頁介面", sub:"最常見的一條", levels:["你寫的元件","Next.js","React","DOM","Blink","GPU"] },
-  { t:"做網頁 3D", sub:"多包了兩層", levels:["你寫的場景","React Three Fiber","Three.js","WebGL","GPU"] },
-  { t:"跑一個後端", sub:"伺服器那邊", levels:["你寫的 API","Express","Node.js","V8","作業系統","CPU"] },
-  { t:"把網站放上網", sub:"部署", levels:["你的網站","Vercel","Docker","Linux","實體機器"] },
+  {
+    "t": "網頁介面",
+    "sub": "以 Chromium 瀏覽器為例",
+    "levels": [
+      "你寫的元件",
+      "Next.js",
+      "React",
+      "DOM",
+      "Blink",
+      "GPU"
+    ]
+  },
+  {
+    "t": "網頁 3D",
+    "sub": "以 WebGL 渲染為例",
+    "levels": [
+      "你寫的場景",
+      "React Three Fiber",
+      "Three.js",
+      "WebGL",
+      "GPU"
+    ]
+  },
+  {
+    "t": "後端 API",
+    "sub": "以 Node.js 為例",
+    "levels": [
+      "你寫的 API",
+      "Express",
+      "Node.js",
+      "V8",
+      "作業系統",
+      "CPU"
+    ]
+  },
+  {
+    "t": "容器化網站部署",
+    "sub": "以 Linux 主機為例",
+    "levels": [
+      "你的網站",
+      "Docker",
+      "Linux",
+      "實體機器"
+    ]
+  }
 ];
 
 /* ---- 洋蔥圖渲染 ---- */
@@ -921,10 +1759,10 @@ function show(t, box){
     ${t.full ? `<p class="d-full">（${esc(t.full)}）</p>` : ""}
     <p class="d-lede">${t.l}</p>
     <div class="d-grid">
-      <div class="d-cell"><dt>它底下是誰</dt><dd>${esc(t.down || "無")}</dd></div>
-      <div class="d-cell"><dt>誰蓋在它上面</dt><dd>${esc(t.up || "無")}</dd></div>
-      <div class="d-cell"><dt>同層對手</dt><dd>${esc(t.vs || "無")}</dd></div>
-      <div class="d-cell"><dt>你會在哪遇到</dt><dd>${esc(t.meet || "無")}</dd></div>
+      <div class="d-cell"><dt>依賴的能力</dt><dd>${esc(t.down || "無")}</dd></div>
+      <div class="d-cell"><dt>使用它的上層</dt><dd>${esc(t.up || "無")}</dd></div>
+      <div class="d-cell"><dt>相關選擇</dt><dd>${esc(t.vs || "無")}</dd></div>
+      <div class="d-cell"><dt>常見情境</dt><dd>${esc(t.meet || "無")}</dd></div>
     </div>`;
   // 窄螢幕時卡片在洋蔥圖下方，捲過去才看得到
   if(window.matchMedia("(max-width:860px)").matches){

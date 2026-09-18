@@ -1,8 +1,8 @@
 <!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>看懂錯誤訊息 · tech-notes</title>
-<meta name="description" content="一大串紅字裡，只有兩行要看。16 個最常見錯誤的白話翻譯，以及貼給 AI 的正確方式。">
+<title>理解錯誤訊息 · tech-notes</title>
+<meta name="description" content="從錯誤類型與發生位置開始閱讀，認識 16 種常見錯誤，並學習整理排查與求助所需的資訊。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
 <link rel="stylesheet" href="assets/base.css">
 <script src="assets/reveal.js" defer></script>
@@ -69,17 +69,18 @@
 .copy.done{background:var(--good-soft); border-color:var(--good); color:var(--good)}
 </style>
 
-<nav class="topnav"><div class="topnav-in">
+<nav class="topnav">
+<div class="topnav-in">
   <a class="brand" href="./">tech-notes</a>
   <div class="navlinks">
     <a href="architecture.html">架構圖</a>
     <a href="errors.html" aria-current="page">錯誤訊息</a>
     <a href="project.html">專案資料夾</a>
     <a href="skills.html">Claude 技能</a>
-    <a href="agents.html">AI 大軍</a>
+    <a href="agents.html">多代理協作</a>
     <a href="sysdesign.html">系統設計</a>
     <a href="mlsystem.html">ML 系統</a>
-    <a href="mldesign.html">面試怎麼答</a>
+    <a href="mldesign.html">ML 設計面試</a>
   </div>
 </div></nav>
 
@@ -96,12 +97,14 @@
 
 <header>
   <div class="eyebrow">錯誤訊息</div>
-  <h1>看懂錯誤訊息</h1>
+  <h1>理解錯誤訊息</h1>
 </header>
 
 <section>
-  <div class="sec-head"><span class="sec-num">01</span><h2>一段錯誤訊息，只有兩行要看</h2></div>
-  <p class="sec-lede">下面這段錯誤訊息被分成三塊，<b>點任何一塊</b>，右邊會說明那塊在講什麼、要不要看。</p>
+  <div class="sec-head"><span class="sec-num">01</span>
+<h2>先找錯誤類型與發生位置</h2>
+</div>
+  <p class="sec-lede">以下將錯誤訊息分成三個區域。<b>點選各區</b>，查看內容的意義，以及排查時的閱讀順序。</p>
 
   <div class="split">
     <div class="errbox" id="errbox">
@@ -116,67 +119,89 @@
     </div>
 
     <div class="detail sticky" id="zoneCard">
-      <p class="placeholder">← 點左邊任何一塊，這裡會說明它在講什麼。</p>
+      <p class="placeholder">點選錯誤訊息中的區域，查看解讀方式。</p>
     </div>
   </div>
 
   <div class="callout" style="margin-top:24px">
-    看<b>第一行</b>知道發生什麼事，看<b>有你檔名的那一行</b>知道在哪裡發生。<br>
-    其他行有 <code style="font-family:var(--font-mono);font-size:12.5px">node_modules</code> 這個字的，一律跳過。
+    先讀<b>錯誤類型與訊息</b>，再找<b>專案原始碼的檔名與行號</b>。<br>套件內部的呼叫紀錄可稍後閱讀；若問題涉及相依套件或呼叫順序，這些資訊仍有幫助。
   </div>
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">02</span><h2>16 個最常見的錯誤</h2></div>
-  <p class="sec-lede">把你看到的關鍵字貼進搜尋框就會篩出來。每一則的重點放在<b>它在說什麼</b>，以及<b>你下一步先動哪裡</b>。</p>
+  <div class="sec-head"><span class="sec-num">02</span>
+<h2>16 種常見錯誤與排查線索</h2>
+</div>
+  <p class="sec-lede">輸入訊息中的關鍵字，即可篩選相關說明。每則內容提供錯誤的意義與初步檢查方向；實際原因仍需對照程式與執行環境。</p>
 
   <div class="tools">
     <input class="search" id="q" type="search" placeholder="貼上關鍵字，例如 undefined" aria-label="搜尋錯誤訊息">
-    <div class="cats" id="cats"></div>
+    <div class="cats" id="cats">
+</div>
   </div>
-  <div class="errs" id="errs"></div>
-  <p class="none" id="none" hidden>沒找到。試試更短的關鍵字，例如只貼一個英文單字。</p>
+  <div class="errs" id="errs">
+</div>
+  <p class="none" id="none" hidden>沒有符合的項目。可縮短關鍵字，或切換至「全部」分類。</p>
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">03</span><h2>問人之前，先自己試這三招</h2></div>
-  <p class="sec-lede">順序照排，<b>不要跳</b>。</p>
+  <div class="sec-head"><span class="sec-num">03</span>
+<h2>依情境進行初步排查</h2>
+</div>
+  <p class="sec-lede">先保留錯誤訊息與重現步驟，再選擇符合情境的操作。不需要為每個問題都重新安裝套件。</p>
 
   <div class="steps">
     <div class="step">
-      <div class="step-rail"><div class="dot"></div><div class="bar"></div></div>
+      <div class="step-rail">
+<div class="dot">
+</div>
+<div class="bar">
+</div>
+</div>
       <div class="step-body">
-        <h3>關掉重開<span class="time">10 秒</span></h3>
-        <p>在跑程式的那個終端機視窗按 <code>Ctrl</code> ＋ <code>C</code> 停掉，再重跑一次。改了設定檔、裝了新套件之後，一定要這樣做。舊的還在記憶體裡跑，你看到的是過期的畫面。</p>
+        <h3>重新啟動開發伺服器<span class="time">10 秒</span>
+</h3>
+        <p>若設定或套件變更尚未生效，可在開發伺服器的終端機按 <code>Ctrl</code>＋<code>C</code> 停止，再依專案指令啟動。部分工具可自動載入變更，是否需要重啟應以工具行為為準。</p>
         <div class="pre">Ctrl + C
 npm run dev</div>
       </div>
     </div>
     <div class="step">
-      <div class="step-rail"><div class="dot"></div><div class="bar"></div></div>
+      <div class="step-rail">
+<div class="dot">
+</div>
+<div class="bar">
+</div>
+</div>
       <div class="step-body">
-        <h3>看更早的那個紅字<span class="time">30 秒</span></h3>
-        <p>你看到的紅字，常常<b>不是第一個</b>錯誤，只是最後倒下的那個。在瀏覽器按 <code>F12</code>（Mac 是 <code>Cmd</code>＋<code>Option</code>＋<code>I</code>）打開 Console，<b>往上捲到最上面</b>，第一個紅字才是元兇。</p>
+        <h3>檢查較早出現的相關錯誤<span class="time">30 秒</span>
+</h3>
+        <p>一次操作可能連續產生多個錯誤。在瀏覽器開啟開發者工具的 Console，依時間順序檢查與這次操作相關的訊息。較早的錯誤可能引發後續問題，但仍需確認因果關係。</p>
 <figure class="fig">
-<svg viewBox="0 0 520 176" role="img" aria-label="Console 裡第一個紅字才是原因，後面的都是被連累的"><text class="f-hd" x="2" y="14">CONSOLE</text><rect x="86" y="24" width="300" height="26" rx="3" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.3"/><text class="f-s" x="98" y="41">✕  第 1 個紅字</text><text class="f-l" x="396" y="41">真正的原因</text><rect x="86" y="56" width="300" height="26" rx="3" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.3"/><text class="f-s" x="98" y="73">✕  第 2 個紅字</text><text class="f-l" x="396" y="73">被前一個連累</text><rect x="86" y="88" width="300" height="26" rx="3" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.3"/><text class="f-s" x="98" y="105">✕  第 3 個紅字</text><text class="f-l" x="396" y="105">被前一個連累</text><rect x="86" y="120" width="300" height="26" rx="3" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.3"/><text class="f-s" x="98" y="137">✕  最後一個紅字</text><text class="f-l" x="396" y="137">你最先看到的</text><path d="M40 133 V 37" stroke="var(--accent)" stroke-width="1.4" fill="none" marker-end="url(#fac)"/><text class="f-s" x="14" y="152">往上捲</text><text class="f-l" x="2" y="172">第一個倒下的才是原因。你最先看到的那個，通常只是最後倒下的那一個。</text></svg>
+<svg viewBox="0 0 520 176" role="img" aria-label="依時間閱讀 Console，檢查錯誤之間是否有關聯"><text class="f-hd" x="2" y="14">CONSOLE</text><rect x="86" y="24" width="300" height="26" rx="3" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.3"/><text class="f-s" x="98" y="41">✕  第 1 個紅字</text><text class="f-l" x="396" y="41">優先檢查</text><rect x="86" y="56" width="300" height="26" rx="3" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.3"/><text class="f-s" x="98" y="73">✕  第 2 個紅字</text><text class="f-l" x="396" y="73">可能受前項影響</text><rect x="86" y="88" width="300" height="26" rx="3" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.3"/><text class="f-s" x="98" y="105">✕  第 3 個紅字</text><text class="f-l" x="396" y="105">可能受前項影響</text><rect x="86" y="120" width="300" height="26" rx="3" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.3"/><text class="f-s" x="98" y="137">✕  最後一個紅字</text><text class="f-l" x="396" y="137">最近顯示的訊息</text><path d="M40 133 V 37" stroke="var(--accent)" stroke-width="1.4" fill="none" marker-end="url(#fac)"/><text class="f-s" x="14" y="152">往上捲</text><text class="f-l" x="2" y="172">沿時間順序檢查相關訊息，再確認哪些是原因、哪些是後續影響。</text></svg>
 </figure>
       </div>
     </div>
     <div class="step">
-      <div class="step-rail"><div class="dot"></div></div>
+      <div class="step-rail">
+<div class="dot">
+</div>
+</div>
       <div class="step-body">
-        <h3>砍掉重裝<span class="time">2 到 5 分鐘</span></h3>
-        <p>只在「裝套件出事」或「版本打架」時才用。它會刪掉所有下載來的套件重裝一次，是最後手段但很有效。<b>只刪 node_modules，不會動到你寫的東西。</b></p>
-        <div class="pre">rm -rf node_modules package-lock.json
-npm install</div>
+        <h3>依鎖檔重新安裝套件<span class="time">2 到 5 分鐘</span>
+</h3>
+        <p>若安裝不完整，且專案有與 package.json 一致的 npm 鎖檔，可使用 <code>npm ci</code>。它會移除現有 node_modules 並依鎖檔重新安裝；其中未保存的本機修改會遺失。若是版本相容性問題，仍需先處理衝突，避免直接刪除鎖檔。</p>
+        <div class="pre">npm ci</div>
       </div>
     </div>
   </div>
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">04</span><h2>貼給 AI 的正確方式</h2></div>
-  <p class="sec-lede">整段貼 40 行<b>反而會讓 AI 抓錯重點</b>。照下面這樣貼，答對率比較高。</p>
+  <div class="sec-head"><span class="sec-num">04</span>
+<h2>整理求助時需要的資訊</h2>
+</div>
+  <p class="sec-lede">提供可重現的情境與相關程式，能讓協助者更容易定位問題。先列出關鍵訊息，再按需要補充完整堆疊。分享前移除金鑰、密碼與個人資料。</p>
 
   <div class="split">
     <div>
@@ -184,43 +209,48 @@ npm install</div>
         <button class="copy" id="copyBtn" type="button">複製</button>
         <div class="pre" id="tplText">我遇到這個錯誤：
 
-&lt;貼第 1 行，就是有 Error 那行&gt;
+&lt;貼上錯誤類型與完整訊息&gt;
 
-出事的檔案：
+錯誤涉及的檔案：
 
-&lt;貼有我自己檔名的那 1～2 行&gt;
+&lt;貼上指向專案原始碼的堆疊紀錄&gt;
 
-我剛剛做了什麼：
+錯誤發生前的操作：
 
 &lt;例如：我在 ArticleCard 裡加了 article.title 這一行&gt;
 
-環境：Next.js 15 · macOS</div>
+環境：&lt;框架名稱與版本、執行環境版本、作業系統&gt;
+
+預期結果與實際結果：
+
+&lt;說明預期行為，以及如何重現問題&gt;</div>
       </div>
     </div>
 
     <div style="display:flex; flex-direction:column; gap:14px">
       <div class="callout ok">
-        <b>要貼的</b><br>
-        · 第一行（錯誤類型 ＋ 訊息）<br>
-        · 有你自己檔名的那 1～2 行<br>
-        · 你剛剛改了什麼、做了什麼動作<br>
-        · 用什麼框架、什麼作業系統
+        <b>建議提供</b><br>
+        · 錯誤類型與完整訊息<br>
+        · 指向專案原始碼的堆疊紀錄<br>
+        · 近期修改與重現問題的操作步驟<br>
+        · 框架、執行環境與作業系統版本
       </div>
       <div class="callout warn">
-        <b>不要貼的</b><br>
-        · 含 <code style="font-family:var(--font-mono);font-size:12.5px">node_modules</code> 的那幾十行<br>
-        · 整個檔案的程式碼（先貼出事那 10 行就好）<br>
-        · 螢幕截圖裡看不清楚的紅字（用複製的）<br>
-        · <b>你的 .env 內容</b>，裡面是密碼，貼出去等於外洩
+        <b>分享前檢查</b><br>
+        · 完整堆疊可保留備查，依排查需要補充<br>
+        · 程式片段需包含足以重現問題的上下文<br>
+        · 錯誤訊息優先以文字提供，方便搜尋與引用<br>
+        · <b>移除 .env 中的金鑰與連線憑證</b>，以遮蔽值代替
       </div>
     </div>
   </div>
 </section>
 
 <footer>
-  <p><b>整頁只有一個重點：</b>錯誤訊息只要你<b>找出那兩行</b>，不用全部看懂。<br>
-  找到之後，剩下的交給 Google 或 AI 都行，但你得先知道要問什麼。</p>
-  <p class="cred"><a href="./">← 回目錄</a></p>
+  <p class="cred">延伸閱讀：<a href="https://docs.npmjs.com/cli/v11/commands/npm-ci/">npm ci</a>、<a href="https://react.dev/reference/react/useEffect#my-effect-keeps-re-running-in-an-infinite-cycle">React 更新循環</a>、<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS">MDN CORS</a>。</p>
+  <p>排查可以從錯誤類型、發生位置與重現步驟開始。<br>採用搜尋或 AI 提供的修改建議後，重新測試原本的操作，確認問題確實改善。</p>
+  <p class="cred"><a href="./">← 返回首頁</a>
+</p>
 </footer>
 
 </div>
@@ -228,22 +258,32 @@ npm install</div>
 <script>
 /* ══════════ 01 三塊分區 ══════════ */
 const ZONES = {
-  a:{ n:"錯誤類型 ＋ 訊息", tag:"一定要看",
-      l:"這是整段訊息裡<b>唯一你必須看懂的一行</b>。冒號前面是錯誤的種類，後面是具體發生什麼事。",
-      read:"TypeError（型別錯誤）＋「想從一個 undefined（不存在的東西）裡面拿 title」＝ 你要的那包資料還沒來，你就先去拿它裡面的東西了。",
-      todo:"把這一行整行複製，貼去 Google 或問 AI。<b>只貼這行就夠開始了。</b>",
-      why:"程式裡的 undefined 是「這個位子是空的」。空的東西你不能再往裡面挖。" },
-  b:{ n:"出事的地點", tag:"一定要看",
-      l:"往下找<b>第一行有你自己檔名的</b>。這行告訴你錯誤發生在哪個檔案、第幾行、第幾個字。",
-      read:"檔案 <code>src/components/ArticleCard.tsx</code>，第 <b>14</b> 行，第 22 個字。冒號後面兩個數字就是行號跟字數。",
-      todo:"打開那個檔案，跳到第 14 行。錯就在那附近。",
-      why:"程式出錯的位置，跟你「感覺」出錯的位置常常不一樣。這行是唯一可靠的座標。" },
-  c:{ n:"程式的自言自語", tag:"完全不用看",
-      l:"這叫 stack trace（呼叫堆疊，程式一路是怎麼被叫到這裡的紀錄）。路徑裡有 <code>node_modules</code> 的，全部都是<b>別人寫的套件</b>。",
-      read:"react-dom 是 React 的內部程式。它沒有壞，它只是剛好在你出錯的時候站在旁邊。",
-      todo:"<b>跳過。不要貼給 AI，也不要花時間讀。</b>",
-      why:"這些行是寫給套件作者 debug 用的。對你來說就是雜訊，貼出去只會把真正重要的那兩行蓋掉。" },
+  "a": {
+    "n": "錯誤類型與訊息",
+    "tag": "優先閱讀",
+    "l": "冒號前通常是錯誤類型，後方描述程式遇到的情況。這是建立排查方向的起點。",
+    "read": "此例表示程式對 <code>undefined</code> 讀取 <code>title</code> 屬性。資料尚未載入、查找失敗或變數未被正確設定，都可能造成這種結果。",
+    "todo": "記錄完整訊息，並確認被讀取的變數在錯誤發生時是什麼值。",
+    "why": "<code>undefined</code> 是 JavaScript 的一種值，不能直接從它讀取物件屬性。"
+  },
+  "b": {
+    "n": "原始碼位置",
+    "tag": "優先閱讀",
+    "l": "呼叫堆疊中的專案路徑，可協助定位發生錯誤時正在執行的程式。",
+    "read": "此例指向 <code>src/components/ArticleCard.tsx</code> 第 <b>14</b> 行、第 <b>22</b> 欄。最後兩個數字通常表示行號與欄位。",
+    "todo": "開啟對應位置，檢查該行使用的資料，以及資料如何傳入。",
+    "why": "這個位置是錯誤顯現的地方；造成不正確資料的原因也可能在更早的程式中。"
+  },
+  "c": {
+    "n": "套件內部的呼叫堆疊",
+    "tag": "視需要追查",
+    "l": "Stack trace（呼叫堆疊）記錄執行時的呼叫路徑。<code>node_modules</code> 下的檔案通常屬於相依套件。",
+    "read": "此例顯示 React 在處理元件時經過的內部函式。僅看到這些路徑，還不能判定套件本身有問題。",
+    "todo": "可先檢查專案原始碼；若涉及版本相容性或套件行為，再沿這些紀錄追查。",
+    "why": "保留完整堆疊有助於後續分析，尤其是錯誤未直接指向專案檔案時。"
+  }
 };
+
 const zoneCard = document.getElementById("zoneCard");
 document.querySelectorAll(".z").forEach(btn=>{
   btn.addEventListener("click", ()=>{
@@ -256,9 +296,9 @@ document.querySelectorAll(".z").forEach(btn=>{
       <div class="d-top"><span class="d-name">${z.n}</span><span class="d-tag">${z.tag}</span></div>
       <p class="d-lede">${z.l}</p>
       <div class="d-grid">
-        <div class="d-cell"><dt>這行在說什麼</dt><dd>${z.read}</dd></div>
-        <div class="d-cell"><dt>你該做什麼</dt><dd>${z.todo}</dd></div>
-        <div class="d-cell"><dt>為什麼</dt><dd>${z.why}</dd></div>
+        <div class="d-cell"><dt>訊息解讀</dt><dd>${z.read}</dd></div>
+        <div class="d-cell"><dt>檢查方向</dt><dd>${z.todo}</dd></div>
+        <div class="d-cell"><dt>判讀依據</dt><dd>${z.why}</dd></div>
       </div>`;
     if(window.matchMedia("(max-width:860px)").matches)
       zoneCard.scrollIntoView({block:"nearest", behavior:"smooth"});
@@ -269,76 +309,230 @@ document.querySelectorAll(".z").forEach(btn=>{
 // {m:錯誤訊息, c:分類, b:[[小標, 內容], ...]}
 // 小標寫 null 就只出現一段話，不加標籤。最後一段會用比較深的字色。
 const ERRORS = [
-  { m:"Cannot read properties of undefined (reading 'xxx')", c:"畫面", b:[
-    [null,"你拿了一個還沒有值的東西，去讀它裡面的 xxx。像是畫面上寫 <code>data.title</code>，但這個時候 <code>data</code> 還是 <code>undefined</code>（空的），程式就停在這一行。"],
-    [null,"最常見的原因是資料還沒載入完成，或者欄位名稱打錯了，例如把 <code>title</code> 寫成 <code>titel</code>。"],
-    ["先試什麼","如果這個欄位本來就可能沒有值，先寫成 <code>data?.title</code>。<code>?.</code> 的意思是：有 <code>data</code> 就繼續讀，沒有就回傳 undefined，不要讓整支程式停掉。"]]},
-
-  { m:"Maximum update depth exceeded", c:"畫面", b:[
-    ["這行在說什麼","畫面更新又引發下一次更新，一直繞不出來，瀏覽器只好把它停掉。"],
-    [null,"幾乎都是同一個原因：<code>useEffect</code> 裡面改了它自己正在監聽的那個值。"],
-    ["先看哪裡","看 <code>useEffect</code> 第二個參數（那個中括號）裡放了什麼，跟裡面改的是不是同一個東西。"]]},
-
-  { m:"Hydration failed because the initial UI does not match", c:"畫面", b:[
-    [null,"這代表伺服器產生的 HTML，跟瀏覽器接手之後算出來的結果不一樣。"],
-    [null,"例如畫面裡直接用了 <code>new Date()</code>、<code>Math.random()</code> 或 <code>window.xxx</code>。伺服器和瀏覽器執行的時間、亂數或環境不同，最後產生的內容就對不起來。"],
-    ["先試什麼","如果這段程式只能在瀏覽器執行，把它移到 <code>useEffect</code> 裡面。"]]},
-
-  { m:'Each child in a list should have a unique "key" prop', c:"畫面", b:[
-    [null,"用迴圈畫出一串東西的時候，React 需要一個固定的標記才分得出誰是誰。<code>.map()</code> 裡忘了加 <code>key</code> 就會看到這一行。"],
-    ["先試什麼","加上 <code>key={資料的 id}</code>。不要用陣列順序當 key，順序一變就會出錯。"]]},
-
-  { m:"Objects are not valid as a React child", c:"畫面", b:[
-    ["這行在說什麼","你把一整包資料直接放到畫面上了，但畫面只能顯示文字。"],
-    ["先試什麼","確認你印出來的是 <code>user.name</code>，而不是 <code>user</code>。"]]},
-
-  { m:'Unexpected token \'<\', "<!DOCTYPE "... is not valid JSON', c:"網路", b:[
-    [null,"程式想把回應當成資料來讀，結果拿到的是一整頁網頁。<code>&lt;!DOCTYPE</code> 就是網頁的開頭。"],
-    [null,"通常是網址打錯，伺服器回了一頁「找不到」給你。"],
-    ["先試什麼","把那個網址直接貼到瀏覽器打開，看它到底回什麼。大多數情況都是網址錯。"]]},
-
-  { m:"CORS policy: No 'Access-Control-Allow-Origin' header", c:"網路", b:[
-    [null,"前端在一個網址、後端在另一個網址，後端沒有把你的網站加進允許名單，瀏覽器為了安全就替你擋下來了。"],
-    ["先試什麼","這要改後端設定，前端怎麼改都沒有用。不要花時間在前端試。"]]},
-
-  { m:"401 Unauthorized", c:"網路", b:[
-    ["這行在說什麼","你沒有證明你是誰，伺服器不認識你。"],
-    ["通常是因為","token（代表你身分的那串密碼）沒帶、過期了，或格式錯了（少了 <code>Bearer </code> 開頭）。"],
-    ["先試什麼","重新登入拿一張新的 token 再試一次。"]]},
-
-  { m:"403 Forbidden", c:"網路", b:[
-    [null,"伺服器知道你是誰，但你沒有權限看這個。跟 401 的差別就在這裡：401 是不認識你，403 是認識你，但不給你看。"],
-    ["先試什麼","換一個權限比較高的帳號試。能過就是權限設定的問題，不能過就是程式的問題。"]]},
-
-  { m:"500 Internal Server Error", c:"網路", b:[
-    [null,"後端自己出錯了，而且它也說不出原因。這跟你的前端沒有關係。"],
-    ["先試什麼","不要在前端找原因。去看伺服器的 log（執行紀錄），真正的錯誤訊息在那裡面。"]]},
-
-  { m:"SyntaxError: Unexpected end of JSON input", c:"網路", b:[
-    [null,"程式想把一段文字當成資料來讀，但那段文字是空的，或是斷在一半。API 回了空白、網路斷在中途，都會這樣。"],
-    ["先試什麼","先把收到的東西原封不動印出來看（<code>console.log</code>），確認到底拿到了什麼。"]]},
-
-  { m:"Module not found: Can't resolve 'xxx'", c:"安裝", b:[
-    ["這行在說什麼","找不到叫 xxx 的東西。"],
-    ["通常是因為","忘了 <code>npm install</code>、名字打錯，或路徑寫錯。"],
-    ["先試什麼","先跑 <code>npm install xxx</code>。還是不行就檢查大小寫，你的 Mac 不分大小寫，伺服器會分。"]]},
-
-  { m:"EADDRINUSE: address already in use :::3000", c:"安裝", b:[
-    [null,"3000 這個門牌已經被別的程式佔住，新的擠不進去。通常是上一次沒有關乾淨，舊的還在背景跑。"],
-    ["先試什麼","<code>lsof -ti:3000 | xargs kill</code> 把佔住 3000 的程式關掉，再重跑一次。"]]},
-
-  { m:"npm ERR! code ERESOLVE", c:"安裝", b:[
-    [null,"套件之間的版本對不上，npm 不知道要聽誰的。多半是某個套件太舊，跟你現在的 React 版本合不來。"],
-    ["先試什麼","<code>npm install --legacy-peer-deps</code>，意思是叫 npm 先別管這個衝突，裝了再說。"]]},
-
-  { m:"ENOENT: no such file or directory", c:"安裝", b:[
-    [null,"找不到這個檔案。<code>ENOENT</code> 是 Error NO ENTry 的縮寫，路徑打錯或檔案真的不在那裡都會看到。"],
-    ["先試什麼","把訊息裡那個路徑複製起來，在終端機打 <code>ls 那個路徑</code>，看它到底存不存在。"]]},
-
-  { m:"Type 'string' is not assignable to type 'number'", c:"型別", b:[
-    ["這行在說什麼","TypeScript 說你把文字塞進了只能放數字的地方。"],
-    [null,"從網址、表單、輸入框拿到的東西一律是文字，就算它長得像數字也一樣。"],
-    ["先試什麼","用 <code>Number(那個值)</code> 轉成數字再用。"]]},
+  {
+    "m": "Cannot read properties of undefined (reading 'xxx')",
+    "c": "畫面",
+    "b": [
+      [
+        "訊息意義",
+        "程式對 undefined 讀取屬性，例如 data 尚未取得資料，就執行 <code>data.title</code>。"
+      ],
+      [
+        "檢查方向",
+        "檢查資料是否載入完成、查找是否成功，以及變數是否有正確設定。若缺值符合需求，可用 <code>data?.title</code> 並設計載入或空資料畫面；若資料本應存在，應追查來源。"
+      ]
+    ]
+  },
+  {
+    "m": "Maximum update depth exceeded",
+    "c": "畫面",
+    "b": [
+      [
+        "訊息意義",
+        "React 偵測到持續觸發的巢狀更新，為避免無限迴圈而停止。"
+      ],
+      [
+        "檢查方向",
+        "檢查是否在渲染或 Effect 中更新狀態，並使同一段更新再次執行。例如 Effect 修改了自己的相依值。先找出循環，不要只刪除相依陣列中的項目。"
+      ]
+    ]
+  },
+  {
+    "m": "Hydration failed because the initial UI does not match",
+    "c": "畫面",
+    "b": [
+      [
+        "訊息意義",
+        "伺服器產生的 HTML 與瀏覽器第一次渲染的結果不一致。"
+      ],
+      [
+        "檢查方向",
+        "檢查時間、亂數、瀏覽器專用資料與不合法的 HTML 巢狀結構。需要瀏覽器資訊的內容，可在初始畫面一致的前提下，於 Effect 中更新。"
+      ]
+    ]
+  },
+  {
+    "m": "Each child in a list should have a unique \"key\" prop",
+    "c": "畫面",
+    "b": [
+      [
+        "訊息意義",
+        "React 需要穩定的 key，才能辨識同層清單中的各個項目。"
+      ],
+      [
+        "檢查方向",
+        "在清單元素上使用資料本身穩定且同層唯一的 ID。清單會新增、刪除或排序時，避免以陣列位置作為 key。"
+      ]
+    ]
+  },
+  {
+    "m": "Objects are not valid as a React child",
+    "c": "畫面",
+    "b": [
+      [
+        "訊息意義",
+        "一般 JavaScript 物件不能直接作為 React 子節點渲染。"
+      ],
+      [
+        "檢查方向",
+        "確認要顯示的是 <code>user.name</code> 等可渲染內容。若資料是清單，先轉成元件；只為除錯查看物件時，可明確轉成 JSON 字串。"
+      ]
+    ]
+  },
+  {
+    "m": "Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
+    "c": "網路",
+    "b": [
+      [
+        "訊息意義",
+        "程式預期收到 JSON，卻嘗試解析 HTML，例如錯誤頁或登入頁。"
+      ],
+      [
+        "檢查方向",
+        "在 Network 面板檢查請求網址、HTTP 狀態與回應內容。確認端點及驗證資訊正確，再進行 JSON 解析。"
+      ]
+    ]
+  },
+  {
+    "m": "CORS policy: No 'Access-Control-Allow-Origin' header",
+    "c": "網路",
+    "b": [
+      [
+        "訊息意義",
+        "瀏覽器未取得允許跨來源讀取回應的必要資訊。CORS 是 Cross-Origin Resource Sharing，中文為跨來源資源共用。"
+      ],
+      [
+        "檢查方向",
+        "檢查來源網址、預檢請求與伺服器回應標頭。通常需要後端或受控代理正確設定，前端也需使用正確網址與憑證選項。不要以停用瀏覽器安全機制處理。"
+      ]
+    ]
+  },
+  {
+    "m": "401 Unauthorized",
+    "c": "網路",
+    "b": [
+      [
+        "訊息意義",
+        "請求缺少有效的身分驗證憑證。"
+      ],
+      [
+        "檢查方向",
+        "檢查 token 是否缺漏、過期或格式不符。若 API 使用 Bearer 驗證，確認 Authorization 標頭格式；需要時依正常登入流程取得新憑證。"
+      ]
+    ]
+  },
+  {
+    "m": "403 Forbidden",
+    "c": "網路",
+    "b": [
+      [
+        "訊息意義",
+        "伺服器拒絕執行請求，可能涉及權限或存取政策。這個狀態碼本身不能保證使用者已登入。"
+      ],
+      [
+        "檢查方向",
+        "核對帳號角色、資源權限與伺服器紀錄。請有權管理該資源的人確認設定，避免把提高權限當成一般修正方式。"
+      ]
+    ]
+  },
+  {
+    "m": "500 Internal Server Error",
+    "c": "網路",
+    "b": [
+      [
+        "訊息意義",
+        "伺服器遇到非預期狀況，無法完成請求。狀態碼本身不會揭露具體原因。"
+      ],
+      [
+        "檢查方向",
+        "以請求時間或追蹤 ID 查閱伺服器紀錄，並檢查請求內容是否觸發程式未處理的情況。"
+      ]
+    ]
+  },
+  {
+    "m": "SyntaxError: Unexpected end of JSON input",
+    "c": "網路",
+    "b": [
+      [
+        "訊息意義",
+        "JSON 解析在內容尚未完整時結束，可能收到空內容或截斷的資料。"
+      ],
+      [
+        "檢查方向",
+        "檢查狀態碼與原始回應。若 API 合法回傳無內容，例如 204，就不應再解析 JSON。記錄內容時避免輸出機密。"
+      ]
+    ]
+  },
+  {
+    "m": "Module not found: Can't resolve 'xxx'",
+    "c": "安裝",
+    "b": [
+      [
+        "訊息意義",
+        "建置工具無法找到指定模組。"
+      ],
+      [
+        "檢查方向",
+        "先辨識 xxx 是本機路徑還是套件名稱。檢查拼字、檔案大小寫、路徑別名與安裝狀態；確認套件名稱與來源後再安裝。不同檔案系統對大小寫的處理可能不同。"
+      ]
+    ]
+  },
+  {
+    "m": "EADDRINUSE: address already in use :::3000",
+    "c": "安裝",
+    "b": [
+      [
+        "訊息意義",
+        "程式要使用的網路位址或 3000 埠已被其他程序占用。"
+      ],
+      [
+        "檢查方向",
+        "在 macOS 或 Linux 可先用 <code>lsof -i :3000</code> 確認程序。若是自己的舊開發伺服器，回到該終端機停止；也可依工具設定改用其他埠。"
+      ]
+    ]
+  },
+  {
+    "m": "npm ERR! code ERESOLVE",
+    "c": "安裝",
+    "b": [
+      [
+        "訊息意義",
+        "npm 無法建立符合相依條件的套件組合，常與 peer dependency 的版本要求有關。"
+      ],
+      [
+        "檢查方向",
+        "閱讀訊息列出的套件與版本範圍，選擇相容版本。<code>--legacy-peer-deps</code> 會忽略部分相依約束，不能證明套件可正常配合，不宜作為預設修正。"
+      ]
+    ]
+  },
+  {
+    "m": "ENOENT: no such file or directory",
+    "c": "安裝",
+    "b": [
+      [
+        "訊息意義",
+        "操作指定的檔案或路徑不存在。"
+      ],
+      [
+        "檢查方向",
+        "確認目前工作目錄、路徑拼字與檔案是否已產生。可使用 <code>ls \"路徑\"</code> 檢查；引號能處理含空白的路徑。"
+      ]
+    ]
+  },
+  {
+    "m": "Type 'string' is not assignable to type 'number'",
+    "c": "型別",
+    "b": [
+      [
+        "訊息意義",
+        "TypeScript 發現字串被指定給預期數字的欄位或變數。"
+      ],
+      [
+        "檢查方向",
+        "表單的 value 與網址參數通常是字串。若需求確實是數字，可用 <code>Number(value)</code> 轉換，並檢查空字串與 <code>Number.isFinite()</code>，避免接受無效結果。"
+      ]
+    ]
+  }
 ];
 
 const ECATS = ["全部","畫面","網路","安裝","型別"];
