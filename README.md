@@ -1,10 +1,18 @@
+[![tech-notes：給科技初學者的圖解筆記](docs/social-preview.jpg)](https://hsuiris.github.io/tech-notes/)
+
 # tech-notes
 
-給科技初學者的圖解筆記。從架構圖、錯誤訊息與專案資料夾開始，逐步認識 AI 工作流程、系統設計與機器學習產品。每篇文章搭配可點選的圖解與具體案例，說明技術的用途、運作方式與適用條件。
+**給科技初學者的圖解筆記。**
 
-[閱讀網站](https://hsuiris.github.io/tech-notes/)
+讀技術文章時，即使查過術語，仍可能不清楚各個元件如何配合。tech-notes 從實際情境出發，搭配可點選的圖解，說明網頁、AI 與機器學習系統的運作方式。閱讀時不需要先具備程式開發經驗；涉及指令或程式碼的段落會交代用途與操作前提。
 
-![tech-notes 首頁，列出八個閱讀主題](docs/screenshots/home.png)
+[開始閱讀](https://hsuiris.github.io/tech-notes/) · [回報內容問題](https://github.com/hsuiris/tech-notes/issues)
+
+## 從哪裡開始
+
+初次接觸網站開發，可先讀「看懂架構圖」，沿著一次請求認識前端、後端與資料庫。若正在接手專案或排查問題，可以直接查閱「看懂專案資料夾」與「看懂錯誤訊息」。
+
+對 AI 應用有興趣，可從 Claude 技能或多代理協作開始。系統設計與機器學習系統篇接著說明服務如何組成、資料如何流動，以及技術選擇的限制。「ML 設計面試」則提供整理需求與說明設計決策的練習情境。
 
 ## 閱讀主題
 
@@ -19,7 +27,7 @@
 | [機器學習系統](https://hsuiris.github.io/tech-notes/mlsystem.html) | 串連資料、訓練、推論與監控，認識 RAG 流程與常見評估指標。 |
 | [ML 設計面試](https://hsuiris.github.io/tech-notes/mldesign.html) | 練習需求釐清、容量估算、模型與系統設計，說明每個決策的依據。 |
 
-## 互動圖解
+## 如何使用互動圖解
 
 架構圖上的方塊可以點選。選擇「後端 API」後，可閱讀元件職責與實際請求流程。名詞表支援關鍵字搜尋與分類篩選。
 
@@ -35,6 +43,13 @@
 
 錯誤訊息頁支援搜尋，系統設計與面試頁可切換案例。Claude 技能頁附有可複製的範例，使用前需依自己的專案調整。
 
+<details>
+<summary>查看首頁畫面</summary>
+
+![tech-notes 首頁的八個閱讀主題](docs/screenshots/home.png)
+
+</details>
+
 ## 編寫原則
 
 以科技初學者為讀者，使用自然的臺灣繁體中文。先說明讀者遇到的情境，再介紹概念與例子。必要術語保留英文，並在附近交代意思，避免讀者必須反覆查詢。
@@ -43,7 +58,9 @@
 
 區分事實、範例假設與建議。數字需交代計算條件或來源，研究結果需說明評估範圍。效能、成本與品質不以單一案例保證；涉及指令操作時，說明前提與可能影響。
 
-## 技術架構
+## 開發與維護
+
+### 技術架構
 
 網站使用靜態 HTML、CSS 與原生 JavaScript，無須安裝前端框架。
 
@@ -56,7 +73,7 @@
 | 字型 | 資源圓體 TW；以 `build.py` 建立網站所需的字型子集。 |
 | 部署 | GitHub Pages，發布 `main` 分支的根目錄。 |
 
-## 本機預覽
+### 本機預覽
 
 ```bash
 git clone https://github.com/hsuiris/tech-notes.git
@@ -66,13 +83,13 @@ python3 -m http.server 8000
 
 在瀏覽器開啟 <http://localhost:8000>。修改 HTML 後重新整理即可預覽。
 
-## 新增文章
+### 新增文章
 
 1. 參考現有 HTML 頁面，設定標題、描述、導覽與文章內容。
 2. 更新所有頁面的導覽列，在目前頁面的連結設定 `aria-current="page"`，並在首頁加入文章卡片。
 3. 依下節重建字型子集，檢查桌面與手機版的文字、圖解和互動功能。
 
-## 字型更新
+### 字型更新
 
 使用 [資源圓體 Resource Han Rounded TW](https://github.com/CyanoHao/Resource-Han-Rounded)。`build.py` 掃描所有 HTML 與 CSS，僅保留使用到的字元，以減少網頁下載量。
 
