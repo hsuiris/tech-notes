@@ -1,79 +1,62 @@
 # tech-notes
 
-> Plain-language IT notes for non-engineers, built around clickable diagrams.
+給科技初學者的圖解筆記。從架構圖、錯誤訊息與專案資料夾開始，逐步認識 AI 工作流程、系統設計與機器學習產品。每篇文章搭配可點選的圖解與具體案例，說明技術的用途、運作方式與適用條件。
 
-給看不懂術語的人的 IT 白話筆記。每一頁只處理一個「看不懂」的具體場面，例如架構圖、錯誤訊息、專案資料夾，圖上的方塊點下去就有說明。網站在 https://hsuiris.github.io/tech-notes/ 。
+[閱讀網站](https://hsuiris.github.io/tech-notes/)
 
-[![網站](https://img.shields.io/badge/demo-hsuiris.github.io%2Ftech--notes-E8447D)](https://hsuiris.github.io/tech-notes/)
-![HTML](https://img.shields.io/badge/HTML-E34F26?logo=html5&logoColor=white)
-![CSS](https://img.shields.io/badge/CSS-1572B6?logo=css&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-vanilla-F7DF1E?logo=javascript&logoColor=black)
-![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-222222?logo=githubpages&logoColor=white)
-![License](https://img.shields.io/badge/license-CC%20BY%204.0-lightgrey)
+![tech-notes 首頁，列出八個閱讀主題](docs/screenshots/home.png)
 
-![tech-notes 首頁，八個主題以卡片列出](docs/screenshots/home.png)
+## 閱讀主題
 
-## 頁面
-
-| 頁面 | 解決什麼 |
+| 文章 | 內容 |
 |---|---|
-| [看懂架構圖](https://hsuiris.github.io/tech-notes/architecture.html) | 看到方塊跟箭頭的圖就腦袋一片空白 |
-| [看懂錯誤訊息](https://hsuiris.github.io/tech-notes/errors.html) | 跳出一大串紅字，不知道要看哪一行 |
-| [看懂專案資料夾](https://hsuiris.github.io/tech-notes/project.html) | 打開別人的 repo，滿滿的檔案不敢碰 |
-| [自己做一個 Claude 技能](https://hsuiris.github.io/tech-notes/skills.html) | 每次都要跟 AI 重複交代同一件事 |
-| [幾個 AI 一起做事，有幾種組法](https://hsuiris.github.io/tech-notes/agents.html) | 大家都說要派很多 AI，但到底怎麼派 |
-| [系統設計的基本元件與取捨](https://hsuiris.github.io/tech-notes/sysdesign.html) | 大家都說要加快取加佇列，但什麼時候該加 |
-| [一個 AI 產品，從資料到上線](https://hsuiris.github.io/tech-notes/mlsystem.html) | 聽得懂每個字，但不知道它們怎麼串起來 |
-| [ML System Design 的 45 分鐘](https://hsuiris.github.io/tech-notes/mldesign.html) | 知道要答什麼，但不知道怎麼開場 |
+| [看懂架構圖](https://hsuiris.github.io/tech-notes/architecture.html) | 從一次網頁請求，理解前端、後端、資料庫與部署環境的關係。 |
+| [看懂錯誤訊息](https://hsuiris.github.io/tech-notes/errors.html) | 辨識錯誤類型、閱讀堆疊追蹤，整理可供重現與排查的資訊。 |
+| [看懂專案資料夾](https://hsuiris.github.io/tech-notes/project.html) | 區分原始碼、設定與工具產生的檔案，理解修改及版本控制的注意事項。 |
+| [建立 Claude 技能](https://hsuiris.github.io/tech-notes/skills.html) | 將重複的工作要求寫成技能，並理解技能、指令、子代理與外掛的關係。 |
+| [理解多代理協作](https://hsuiris.github.io/tech-notes/agents.html) | 比較八種工作流程，評估分工、審查、協調成本與研究結果的限制。 |
+| [系統設計](https://hsuiris.github.io/tech-notes/sysdesign.html) | 透過服務成長情境，理解快取、負載平衡、佇列與資料複寫的取捨。 |
+| [機器學習系統](https://hsuiris.github.io/tech-notes/mlsystem.html) | 串連資料、訓練、推論與監控，認識 RAG 流程與常見評估指標。 |
+| [ML 設計面試](https://hsuiris.github.io/tech-notes/mldesign.html) | 練習需求釐清、容量估算、模型與系統設計，說明每個決策的依據。 |
 
-## 可以點的圖解
+## 互動圖解
 
-### 架構圖：點方塊看說明
+架構圖上的方塊可以點選。選擇「後端 API」後，可閱讀元件職責與實際請求流程。名詞表支援關鍵字搜尋與分類篩選。
 
-架構圖上的每個方塊都可以點。點「後端 API」之後，下方會列出它是什麼、為什麼要有它、沒有它會怎樣，縮寫也會補上英文全名跟中文意思。
+![架構圖頁的後端 API 說明](docs/screenshots/architecture-api.png)
 
-![架構圖頁，點開後端 API 方塊後的說明](docs/screenshots/architecture-api.png)
+多代理協作頁提供八種工作流程。點選其中一種，可比較適用條件、限制、成本與實作要點。
 
-### AI 大軍：八種組法對照
+![多代理協作頁的協調者分工說明](docs/screenshots/agents-boss.png)
 
-左邊選一種組法，右邊會換成那種組法的示意圖，再寫出適合什麼題目、什麼情況不要用、成本怎麼算，以及這個想法從哪裡來。
+專案資料夾頁以檔案樹呈現常見結構。點選 `.env` 可閱讀環境設定的用途、機密資料處理方式與修改建議。
 
-![AI 大軍頁，選了主管派工之後的說明卡](docs/screenshots/agents-boss.png)
+![專案資料夾頁的環境設定說明](docs/screenshots/project-env.png)
 
-### 專案資料夾：點檔案看能不能改
+錯誤訊息頁支援搜尋，系統設計與面試頁可切換案例。Claude 技能頁附有可複製的範例，使用前需依自己的專案調整。
 
-檔案樹裡每個檔案都標了類型（你寫的、產生的、設定、別人的）。點 `.env` 會說明它放的是密碼跟金鑰，可以改，但不能上傳。
+## 編寫原則
 
-![專案資料夾頁，點開 .env 之後的說明](docs/screenshots/project-env.png)
+以科技初學者為讀者，使用自然的臺灣繁體中文。先說明讀者遇到的情境，再介紹概念與例子。必要術語保留英文，並在附近交代意思，避免讀者必須反覆查詢。
 
-錯誤訊息頁可以用關鍵字搜尋常見錯誤，架構圖頁跟 ML 系統頁的名詞解碼器也可以搜尋。系統設計頁跟面試頁用分頁切換不同題目，Claude 技能頁的指令旁邊有複製按鈕。
+語氣保持專業、具體且尊重讀者。避免粗俗用詞、貶低初學者的敘述、誇張比喻與口號。用清楚的因果關係說明技術選擇，減少固定對比句式與重複排比。
 
-## 寫作規則
-
-1. 術語第一次出現，後面用括號解釋一句。縮寫一律補上英文全名跟中文意思。
-2. 不貼整段錯誤訊息，只留關鍵那一行並翻成中文。
-3. 能點就不要只用讀的，圖上每個方塊、每一層、每一站都可以點開看說明。
-4. 繁體中文，國中生看得懂的程度。不確定就直說「我不確定」。
-5. 只用台灣慣用語，不用大陸用語、不從英文硬翻。專業術語直接寫英文原文，後面括號註明白話。
-6. 不用破折號。標題底下不放引言，語氣客觀不下斷言。
+區分事實、範例假設與建議。數字需交代計算條件或來源，研究結果需說明評估範圍。效能、成本與品質不以單一案例保證；涉及指令操作時，說明前提與可能影響。
 
 ## 技術架構
 
-沒有用任何框架，每一頁就是一個 HTML 檔，改完重新整理瀏覽器就看得到。
+網站使用靜態 HTML、CSS 與原生 JavaScript，無須安裝前端框架。
 
-| 部分 | 做法 |
+| 部分 | 實作 |
 |---|---|
-| 頁面 | 每個主題一個 HTML 檔，頁面專屬的樣式跟程式寫在同一個檔案裡 |
-| 互動 | vanilla JavaScript（瀏覽器內建的 JavaScript，不裝套件）處理點擊、搜尋、分頁切換 |
-| 圖解 | inline SVG（直接寫在 HTML 裡的向量圖），方塊可以用滑鼠點，也可以用鍵盤選 |
-| 樣式 | `assets/base.css` 全站共用，淺色、深色主題跟著系統設定切換 |
-| 捲動效果 | `assets/reveal.js` 讓區塊捲到畫面裡才浮出來，系統開了「減少動態效果」就不做 |
-| 字體 | 資源圓體，用 `build.py` 砍成只留站上用到的字 |
-| 部署 | GitHub Pages（GitHub 免費的靜態網站空間），直接發布 `main` 分支的根目錄 |
+| 頁面 | 每個主題一個 HTML 檔，包含該頁的樣式、圖解與互動資料。 |
+| 共用樣式 | `assets/base.css`，支援依系統偏好切換淺色與深色主題。 |
+| 圖解與互動 | 內嵌 SVG 與 JavaScript，處理點選、搜尋及案例切換。 |
+| 捲動效果 | `assets/reveal.js`，尊重系統的減少動態效果設定。 |
+| 字型 | 資源圓體 TW；以 `build.py` 建立網站所需的字型子集。 |
+| 部署 | GitHub Pages，發布 `main` 分支的根目錄。 |
 
 ## 本機預覽
-
-開一個小伺服器就好：
 
 ```bash
 git clone https://github.com/hsuiris/tech-notes.git
@@ -81,57 +64,28 @@ cd tech-notes
 python3 -m http.server 8000
 ```
 
-然後打開 http://localhost:8000 。
+在瀏覽器開啟 <http://localhost:8000>。修改 HTML 後重新整理即可預覽。
 
-直接用瀏覽器開 `index.html` 也行，只是字體檔可能載不到。
+## 新增文章
 
-## 專案結構
+1. 參考現有 HTML 頁面，設定標題、描述、導覽與文章內容。
+2. 更新所有頁面的導覽列，在目前頁面的連結設定 `aria-current="page"`，並在首頁加入文章卡片。
+3. 依下節重建字型子集，檢查桌面與手機版的文字、圖解和互動功能。
 
-```
-tech-notes/
-├── index.html          首頁
-├── architecture.html   看懂架構圖
-├── errors.html         看懂錯誤訊息
-├── project.html        看懂專案資料夾
-├── skills.html         自己做一個 Claude 技能
-├── agents.html         幾個 AI 一起做事
-├── sysdesign.html      系統設計
-├── mlsystem.html       一個 AI 產品，從資料到上線
-├── mldesign.html       ML System Design 的 45 分鐘
-├── assets/
-│   ├── base.css        全站共用樣式
-│   ├── reveal.js       捲動浮出效果
-│   └── rhr-*.woff2     瘦身後的字體檔
-├── build.py            字體瘦身程式
-└── docs/screenshots/   README 用的截圖
-```
+## 字型更新
 
-## 加一頁新的
+使用 [資源圓體 Resource Han Rounded TW](https://github.com/CyanoHao/Resource-Han-Rounded)。`build.py` 掃描所有 HTML 與 CSS，僅保留使用到的字元，以減少網頁下載量。
 
-1. 複製 `errors.html` 當範本，改掉 `<title>`、`<header>`、內容。
-2. 在**所有頁面**的 `<nav>` 加一個連結，並在自己那頁的連結加上 `aria-current="page"`。
-3. 在 `index.html` 的 `.cards` 加一張卡片。
-4. 跑一次 `python3 build.py`（見下一節）。新頁面如果用了舊字體檔沒有的字，不跑的話那些字會顯示成系統預設字體。
-
-## 字體
-
-用 [資源圓體 Resource Han Rounded TW](https://github.com/CyanoHao/Resource-Han-Rounded)（思源黑體的圓角繁中版，開源）。
-
-原始字體檔一個 9MB，太重。`build.py` 會掃過所有 HTML 跟 CSS，把字體砍成只留站上真的用到的字，瘦身後一個檔案約 220KB。
+先從 [Release 頁面](https://github.com/CyanoHao/Resource-Han-Rounded/releases)下載 `RHR-TW-*.7z`，將解壓縮後的 `ResourceHanRoundedTW-Regular.ttf` 與 `ResourceHanRoundedTW-Bold.ttf` 放入 `fonts/`。
 
 ```bash
-pip install fonttools brotli
-
-# 下載原始字體，解壓後把 ttf 放進 fonts/
-# https://github.com/CyanoHao/Resource-Han-Rounded/releases → RHR-TW-*.7z
-
-python3 build.py
+python3 -m venv .venv
+.venv/bin/pip install fonttools brotli
+.venv/bin/python build.py
 ```
 
-`fonts/*.ttf` 太大，沒有放進 git。`assets/*.woff2`（瘦身後的網頁字體檔）有放進 git，所以**不跑 build.py 網站也能正常顯示**，只有新增了現有字體檔沒涵蓋的字才需要重跑。
-
-字體檔缺字的話，畫面不會壞掉，缺的字會改用系統內建的蘋方（PingFang TC）。
+原始 TTF 不納入版本控制。已產生的 `assets/rhr-*.woff2` 隨網站提交，閱讀網站不需執行建置。新增文字後需重建子集；未涵蓋的字元會使用系統備援字型，外觀可能不同。
 
 ## 授權
 
-內容 CC BY 4.0。字體依 [SIL Open Font License 1.1](https://github.com/CyanoHao/Resource-Han-Rounded/blob/master/LICENSE.txt)。
+文章內容採 CC BY 4.0。字型依 [SIL Open Font License 1.1](https://github.com/CyanoHao/Resource-Han-Rounded/blob/master/LICENSE.txt) 授權。

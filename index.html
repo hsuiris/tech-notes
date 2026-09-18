@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>tech-notes</title>
-<meta name="description" content="給非工程師的 IT 白話筆記：看懂架構圖、看懂錯誤訊息、看懂專案資料夾。">
+<meta name="description" content="從網站架構與專案檔案入門，逐步理解 AI 協作、系統設計與機器學習。以互動圖解說明技術原理與使用情境。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
 <link rel="stylesheet" href="assets/base.css">
 <script src="assets/reveal.js" defer></script>
@@ -43,143 +43,125 @@ h1.home{font-size:clamp(38px,8vw,64px)}
 }
 </style>
 
-<nav class="topnav"><div class="topnav-in">
+<nav class="topnav">
+<div class="topnav-in">
   <a class="brand" href="./">tech-notes</a>
   <div class="navlinks">
     <a href="architecture.html">架構圖</a>
     <a href="errors.html">錯誤訊息</a>
     <a href="project.html">專案資料夾</a>
     <a href="skills.html">Claude 技能</a>
-    <a href="agents.html">AI 大軍</a>
+    <a href="agents.html">多代理協作</a>
     <a href="sysdesign.html">系統設計</a>
     <a href="mlsystem.html">ML 系統</a>
-    <a href="mldesign.html">面試怎麼答</a>
+    <a href="mldesign.html">ML 設計面試</a>
   </div>
 </div></nav>
 
 <div class="wrap">
 
 <header class="home">
-  <div class="eyebrow">給看不懂術語的人</div>
+  <div class="eyebrow">給科技初學者的圖解筆記</div>
   <h1 class="home">tech-notes</h1>
 </header>
 
 <div class="cards">
-
-  <a class="card" href="architecture.html">
-    <div class="card-n">01</div>
-    <h2>看懂架構圖</h2>
-    <p class="pain">「看到方塊跟箭頭的圖就腦袋一片空白」「語言那麼多，不知道什麼時候該學哪個」</p>
-    <ul>
-      <li>九種工作各用哪個語言</li>
-      <li>什麼時候學什麼，六站路線圖</li>
-      <li>技術之間的六種關係</li>
-      <li>可以點的真實架構圖</li>
-      <li>50+ 名詞解碼器（縮寫附全名）</li>
-      <li>洋蔥圖：誰在誰上面</li>
-    </ul>
-  </a>
-
-  <a class="card" href="errors.html">
-    <div class="card-n">02</div>
-    <h2>看懂錯誤訊息</h2>
-    <p class="pain">「畫面跳出一大串紅字，不知道要看哪一行」</p>
-    <ul>
-      <li>一段錯誤訊息只有兩行要看</li>
-      <li>16 個最常見錯誤的白話翻譯</li>
-      <li>問 AI 之前先自己試的三招</li>
-      <li>可以直接複製的提問模板</li>
-    </ul>
-  </a>
-
-  <a class="card" href="project.html">
-    <div class="card-n">03</div>
-    <h2>看懂一個專案資料夾</h2>
-    <p class="pain">「打開別人的 repo，滿滿的檔案完全不敢碰」</p>
-    <ul>
-      <li>可以點的專案檔案樹</li>
-      <li>三種檔案：你寫的／產生的／別人的</li>
-      <li>拿到陌生專案的五步驟</li>
-      <li>絕對不要動的五個東西</li>
-    </ul>
-  </a>
-
-  <a class="card" href="skills.html">
-    <div class="card-n">04</div>
-    <h2>Claude 技能</h2>
-    <p class="pain">「我每次都要跟 AI 重複交代同一件事」</p>
-    <ul>
-      <li>skill／command／agent／hook／MCP 差在哪</li>
-      <li>拆三個真的外掛給你看（含實際行數）</li>
-      <li>15 分鐘做出第一個 skill，指令可複製</li>
-      <li>打包成 plugin 放 GitHub 給別人裝</li>
-      <li>五個一定會踩的坑</li>
-    </ul>
-  </a>
-
-  <a class="card" href="agents.html">
-    <div class="card-n">05</div>
-    <h2>AI 大軍</h2>
-    <p class="pain">「大家都說要派很多 AI，但到底怎麼派？」</p>
-    <ul>
-      <li>八種組法：接力、分流、分頭做、投票</li>
-      <li>主管派工、辯論、寫手加評審、層級</li>
-      <li>兩套最常被比的做法，差在前提不同</li>
-      <li>好 90.2%，但吃 15 倍（Anthropic 實測）</li>
-      <li>四種情況派再多人也沒用</li>
-    </ul>
-  </a>
-
-  <a class="card" href="sysdesign.html">
-    <div class="card-n">06</div>
-    <h2>系統設計</h2>
-    <p class="pain">「大家都說要加快取加佇列，但什麼時候該加？」</p>
-    <ul>
-      <li>從一台機器長到五億使用者，中間卡住八次</li>
-      <li>每次卡住加了什麼零件、為什麼是這時候</li>
-      <li>四個要先做的取捨</li>
-      <li>短網址／聊天室／動態牆／通知系統</li>
-      <li>估算時記起來很好用的十個數字</li>
-    </ul>
-  </a>
-
-  <a class="card" href="mlsystem.html">
-    <div class="card-n">07</div>
-    <h2>ML 系統</h2>
-    <p class="pain">「聽得懂每個字，但不知道它們怎麼串起來」</p>
-    <ul>
-      <li>可以點的 ML 系統架構圖</li>
-      <li>離線訓練與線上服務兩條線</li>
-      <li>六個要先做的取捨</li>
-      <li>RAG 六站流程，每站會出什麼錯</li>
-      <li>30+ 名詞解碼器</li>
-    </ul>
-  </a>
-
-  <a class="card" href="mldesign.html">
-    <div class="card-n">08</div>
-    <h2>面試怎麼答</h2>
-    <p class="pain">「知道要答什麼，但不知道怎麼開場」</p>
-    <ul>
-      <li>45 分鐘五段怎麼分配</li>
-      <li>開場一定要問的八個問題</li>
-      <li>容量估算，算式可以直接抄</li>
-      <li>六題常考的完整答法</li>
-      <li>最常被追問的六題怎麼答</li>
-    </ul>
-  </a>
-
-
+<a class="card" href="architecture.html">
+<div class="card-n">01</div>
+<h2>讀懂網站架構</h2>
+<p class="pain">從一個網頁請求出發，理解程式語言、框架與資料庫如何配合。</p>
+<ul>
+<li>依工作需求認識常見程式語言</li>
+<li>循序建立網站開發的基本概念</li>
+<li>比較技術之間的依賴與替代關係</li>
+<li>點選架構圖，查看元件的職責</li>
+<li>查詢技術名詞與軟體分層</li>
+</ul></a>
+<a class="card" href="errors.html">
+<div class="card-n">02</div>
+<h2>理解錯誤訊息</h2>
+<p class="pain">先辨識錯誤類型與發生位置，再根據線索縮小問題範圍。</p>
+<ul>
+<li>逐段閱讀錯誤訊息與呼叫堆疊</li>
+<li>查詢 16 種常見錯誤的原因</li>
+<li>依情境選擇初步排查方式</li>
+<li>使用提問範本整理重現步驟</li>
+</ul></a>
+<a class="card" href="project.html">
+<div class="card-n">03</div>
+<h2>認識專案資料夾</h2>
+<p class="pain">了解檔案的用途與來源，判斷修改時需要注意的事項。</p>
+<ul>
+<li>點選檔案樹，查看用途與修改建議</li>
+<li>區分原始檔、產生檔與工具管理檔</li>
+<li>依步驟熟悉新專案</li>
+<li>理解版本紀錄與機密設定的處理方式</li>
+</ul></a>
+<a class="card" href="skills.html">
+<div class="card-n">04</div>
+<h2>建立 Claude 技能</h2>
+<p class="pain">把經常使用的工作指示整理成技能，讓執行方式更一致。</p>
+<ul>
+<li>認識 skill、command、agent、hook 與 MCP</li>
+<li>閱讀三個外掛的設計案例</li>
+<li>依範例建立第一個技能</li>
+<li>將技能整理成可分享的外掛</li>
+<li>檢查常見設定問題</li>
+</ul></a>
+<a class="card" href="agents.html">
+<div class="card-n">05</div>
+<h2>理解多代理協作</h2>
+<p class="pain">多個 AI 代理如何分工，以及增加協作流程之前應評估的成本。</p>
+<ul>
+<li>比較八種工作流程與協作模式</li>
+<li>理解平行處理與相互審查的差異</li>
+<li>區分投票、辯論、整合與評選</li>
+<li>閱讀研究結果及其適用範圍</li>
+<li>辨識分工與驗證上的常見問題</li>
+</ul></a>
+<a class="card" href="sysdesign.html">
+<div class="card-n">06</div>
+<h2>系統設計入門</h2>
+<p class="pain">從服務遇到的實際限制，理解快取、佇列與資料分散的用途。</p>
+<ul>
+<li>以八個情境觀察架構如何演進</li>
+<li>判斷新增元件的時機與代價</li>
+<li>比較一致性、延遲與維運需求</li>
+<li>練習短網址、聊天、動態牆與通知設計</li>
+<li>用明確假設進行容量估算</li>
+</ul></a>
+<a class="card" href="mlsystem.html">
+<div class="card-n">07</div>
+<h2>認識機器學習系統</h2>
+<p class="pain">連接資料準備、模型訓練與線上服務，理解 AI 產品的完整流程。</p>
+<ul>
+<li>點選架構圖，查看各階段的任務</li>
+<li>區分離線訓練與線上推論</li>
+<li>比較六項常見設計取捨</li>
+<li>理解 RAG 的六個處理階段</li>
+<li>查詢機器學習相關名詞</li>
+</ul></a>
+<a class="card" href="mldesign.html">
+<div class="card-n">08</div>
+<h2>機器學習系統設計面試</h2>
+<p class="pain">透過需求釐清與估算，練習說明設計選擇的理由。</p>
+<ul>
+<li>參考 45 分鐘的討論安排</li>
+<li>整理需要先確認的需求</li>
+<li>練習容量與資源估算</li>
+<li>閱讀六種題目的設計思路</li>
+<li>準備常見追問與驗證方式</li>
+</ul></a>
 </div>
 
 <div class="how">
-  <div class="soon">還想看什麼主題？開一個 issue 或直接跟我說。<br>
-  已經在排的：AI 工具名詞（token、context、RAG、embedding）。</div>
+  <div class="soon">內容建議與勘誤可透過 <a href="https://github.com/hsuiris/tech-notes/issues">GitHub Issues</a> 提出。<br>AI 相關名詞可先參閱「機器學習系統」頁的名詞索引。</div>
 </div>
 
 <footer>
   <p>字體：資源圓體 Resource Han Rounded TW（思源黑體的圓角繁中版，開源）</p>
-  <p class="cred"><a href="https://github.com/hsuiris/tech-notes">github.com/hsuiris/tech-notes</a></p>
+  <p class="cred"><a href="https://github.com/hsuiris/tech-notes">github.com/hsuiris/tech-notes</a>
+</p>
 </footer>
 
 </div>

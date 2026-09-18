@@ -1,8 +1,8 @@
 <!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>面試怎麼答 · tech-notes</title>
-<meta name="description" content="ML System Design 面試的 45 分鐘怎麼分配、一定要先問的問題、容量估算怎麼算，以及推薦系統、文件問答、內容審核、搜尋排序、詐欺偵測、客服 AI 助理六題的完整答法。">
+<title>機器學習系統設計面試 · tech-notes</title>
+<meta name="description" content="以需求、資料與容量估算建立機器學習系統設計的討論順序，透過六種案例練習模型、部署與驗證方式。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
 <link rel="stylesheet" href="assets/base.css">
 <script src="assets/reveal.js" defer></script>
@@ -78,17 +78,18 @@
 .fu .a b{color:var(--ink)}
 </style>
 
-<nav class="topnav"><div class="topnav-in">
+<nav class="topnav">
+<div class="topnav-in">
   <a class="brand" href="./">tech-notes</a>
   <div class="navlinks">
     <a href="architecture.html">架構圖</a>
     <a href="errors.html">錯誤訊息</a>
     <a href="project.html">專案資料夾</a>
     <a href="skills.html">Claude 技能</a>
-    <a href="agents.html">AI 大軍</a>
+    <a href="agents.html">多代理協作</a>
     <a href="sysdesign.html">系統設計</a>
     <a href="mlsystem.html">ML 系統</a>
-    <a href="mldesign.html" aria-current="page">面試怎麼答</a>
+    <a href="mldesign.html" aria-current="page">ML 設計面試</a>
   </div>
 </div></nav>
 
@@ -104,264 +105,295 @@
 
 
 <header>
-  <div class="eyebrow">面試怎麼答</div>
-  <h1>ML System Design 的 45 分鐘</h1>
+<div class="eyebrow">ML 設計面試</div>
+<h1>機器學習系統設計面試</h1>
 </header>
-
 <section>
-  <div class="sec-head"><span class="sec-num">01</span><h2>時間怎麼分配</h2></div>
-  <p class="sec-lede">以 45 分鐘計算，常見的分法是下面五段。</p>
-
-  <div class="clock">
-    <div class="ck">
-      <span class="m">0 到 8 分</span>
-      <span class="t">問清楚題目</span>
-      <span class="d">先別畫圖。把要做什麼、給誰用、多少量、什麼算成功問清楚。</span>
-    </div>
-    <div class="ck">
-      <span class="m">8 到 15 分</span>
-      <span class="t">資料與特徵</span>
-      <span class="d">資料哪裡來、有沒有標註、要餵哪些欄位給模型。</span>
-    </div>
-    <div class="ck">
-      <span class="m">15 到 25 分</span>
-      <span class="t">模型與評估</span>
-      <span class="d">先講最簡單的做法，再講進階版。說明用什麼指標判斷好壞。</span>
-    </div>
-    <div class="ck">
-      <span class="m">25 到 38 分</span>
-      <span class="t">上線與監控</span>
-      <span class="d">怎麼服務、多快、怎麼確認新版比舊版好、退步了怎麼發現。</span>
-    </div>
-    <div class="ck">
-      <span class="m">38 到 45 分</span>
-      <span class="t">追問</span>
-      <span class="d">留時間給面試官問。這一段常常決定最後評分。</span>
-    </div>
-  </div>
-
-<figure class="fig">
-<svg viewBox="0 0 520 158" role="img" aria-label="45 分鐘的五個階段各佔多久"><text class="f-hd" x="2" y="12">45 分鐘</text><rect x="10.0" y="40" width="88.9" height="34" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="54.45" y="62" text-anchor="middle">問清楚題目</text><text class="f-s" x="54.4" y="90" text-anchor="middle">8 分</text><rect x="98.9" y="40" width="77.8" height="34" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="137.8" y="62" text-anchor="middle">資料與特徵</text><text class="f-s" x="137.8" y="90" text-anchor="middle">7 分</text><rect x="176.7" y="40" width="111.1" height="34" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="232.25" y="62" text-anchor="middle">模型與評估</text><text class="f-s" x="232.2" y="90" text-anchor="middle">10 分</text><rect x="287.8" y="40" width="144.4" height="34" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="360" y="62" text-anchor="middle">上線與監控</text><text class="f-s" x="360.0" y="90" text-anchor="middle">13 分</text><rect x="432.2" y="40" width="77.8" height="34" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="471.1" y="62" text-anchor="middle">追問</text><text class="f-s" x="471.1" y="90" text-anchor="middle">7 分</text><text class="f-s" x="10.0" y="28" text-anchor="start">0</text><text class="f-s" x="98.9" y="28" text-anchor="middle">8</text><text class="f-s" x="176.7" y="28" text-anchor="middle">15</text><text class="f-s" x="287.8" y="28" text-anchor="middle">25</text><text class="f-s" x="432.2" y="28" text-anchor="middle">38</text><text class="f-s" x="510.0" y="28" text-anchor="end">45</text><text class="f-l" x="2" y="124">前面兩段常常被壓縮掉，但它決定你後面畫的是不是對方要的東西。</text><text class="f-l" x="2" y="150">最後那七分鐘留給追問。很多場次是這一段決定評分。</text></svg>
+<div class="sec-head"><span class="sec-num">01</span>
+<h2>45 分鐘的討論安排</h2>
+</div>
+<p class="sec-lede">以下是練習用的時間分配，不是固定評分標準。面試官若指定某一階段深入討論，應依情況調整。</p>
+<div class="clock">
+<div class="ck"><span class="m">0–8 分鐘</span><span class="t">釐清需求</span><span class="d">確認使用情境、範圍、流量與成功標準。</span>
+</div>
+<div class="ck"><span class="m">8–15 分鐘</span><span class="t">資料與特徵</span><span class="d">說明資料來源、品質、標籤與預測時可用的資訊。</span>
+</div>
+<div class="ck"><span class="m">15–25 分鐘</span><span class="t">模型與評估</span><span class="d">提出可行基準，說明評估方式與升級條件。</span>
+</div>
+<div class="ck"><span class="m">25–38 分鐘</span><span class="t">部署與監控</span><span class="d">連接資料、推論與產品，處理延遲、成本及失敗。</span>
+</div>
+<div class="ck"><span class="m">38–45 分鐘</span><span class="t">追問與補充</span><span class="d">回應條件變動，說明設計限制與待驗證事項。</span>
+</div>
+</div><figure class="fig">
+<svg viewBox="0 0 520 158" role="img" aria-label="45 分鐘的五個階段各佔多久"><text class="f-hd" x="2" y="12">45 分鐘</text><rect x="10.0" y="40" width="88.9" height="34" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="54.45" y="62" text-anchor="middle">釐清需求</text><text class="f-s" x="54.4" y="90" text-anchor="middle">8 分</text><rect x="98.9" y="40" width="77.8" height="34" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="137.8" y="62" text-anchor="middle">資料與特徵</text><text class="f-s" x="137.8" y="90" text-anchor="middle">7 分</text><rect x="176.7" y="40" width="111.1" height="34" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="232.25" y="62" text-anchor="middle">模型與評估</text><text class="f-s" x="232.2" y="90" text-anchor="middle">10 分</text><rect x="287.8" y="40" width="144.4" height="34" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="360" y="62" text-anchor="middle">上線與監控</text><text class="f-s" x="360.0" y="90" text-anchor="middle">13 分</text><rect x="432.2" y="40" width="77.8" height="34" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="471.1" y="62" text-anchor="middle">追問</text><text class="f-s" x="471.1" y="90" text-anchor="middle">7 分</text><text class="f-s" x="10.0" y="28" text-anchor="start">0</text><text class="f-s" x="98.9" y="28" text-anchor="middle">8</text><text class="f-s" x="176.7" y="28" text-anchor="middle">15</text><text class="f-s" x="287.8" y="28" text-anchor="middle">25</text><text class="f-s" x="432.2" y="28" text-anchor="middle">38</text><text class="f-s" x="510.0" y="28" text-anchor="end">45</text><text class="f-l" x="2" y="124">先確認需求與資料，才能判斷後續設計是否符合用途。</text><text class="f-l" x="2" y="150">預留追問與補充時間；實際安排依面試形式調整。</text></svg>
 </figure>
-
-  <div class="callout warn">
-    <b>近年的評分重點有變。</b>相較於架構圖畫得漂不漂亮，面試官更在意<b>成本、延遲、安全防護、監控</b>這幾件事有沒有講到。<br>
-    另外，現在很多場次會加一題跟生成式 AI 有關的：用大型語言模型、檢索、或是讓 AI 代替使用者去做事。
-  </div>
-
-  <div class="callout ok" style="margin-top:14px">
-    最常見的扣分有三種。第一種是<b>還沒問清楚就開始畫圖</b>，這個最傷，因為畫出來的可能根本不是對方要的。再來是<b>一開口就講最複雜的做法</b>，正確的順序是先給一個簡單能動的版本，再說什麼情況下要升級。最後一種比較隱形：<b>講完模型就結束了</b>，資料怎麼進來、怎麼監控、退步了怎麼辦，一個字都沒提。這幾項佔的分數不比模型少。
-  </div>
+<div class="callout">先用簡單方案建立共同理解，再說明在什麼條件下需要調整。討論範圍應涵蓋資料如何取得、效果如何衡量，以及發布後如何發現與處理問題。</div>
 </section>
-
 <section>
-  <div class="sec-head"><span class="sec-num">02</span><h2>開場一定要問的八個問題</h2></div>
-  <p class="sec-lede">這八題問完，整套設計的方向大致就定了。</p>
-
-  <div class="asks">
-    <div class="ask">
-      <h3>1. 這個功能給誰用，長在哪裡？</h3>
-      <p>是 App 首頁的推薦位，還是後台給客服看的清單？</p>
-      <p class="why">用途決定延遲要求。給使用者看的通常要幾百毫秒內，給後台看的可以慢很多。</p>
-    </div>
-    <div class="ask">
-      <h3>2. 成功長什麼樣子？</h3>
-      <p>要拉高點擊率、降低客訴、還是減少人工審核的工時？</p>
-      <p class="why">這決定用什麼指標評估。沒問清楚就會做出「準確率很高但業務沒感覺」的東西。</p>
-    </div>
-    <div class="ask">
-      <h3>3. 多少人用，多久用一次？</h3>
-      <p>日活躍使用者幾萬還是幾千萬，每人每天觸發幾次？</p>
-      <p class="why">這是唯一能把設計從空談變成具體的東西。有數字才算得出要幾台機器。</p>
-    </div>
-    <div class="ask">
-      <h3>4. 可以慢到什麼程度？</h3>
-      <p>要求 100 毫秒內，還是可以等 2 秒？</p>
-      <p class="why">延遲上限直接決定能不能用大模型、要不要先算好。這題不問，後面全部是空的。</p>
-    </div>
-    <div class="ask">
-      <h3>5. 資料現在有什麼？</h3>
-      <p>有沒有現成的使用者行為紀錄、有沒有人標註過答案？</p>
-      <p class="why">如果沒有標註，第一版可能只能用規則或無監督做法，不能一開口就說要訓練模型。</p>
-    </div>
-    <div class="ask">
-      <h3>6. 錯了哪一種比較嚴重？</h3>
-      <p>寧可誤擋好的，還是寧可放過壞的？</p>
-      <p class="why">這兩種錯誤沒辦法同時降到最低。不問清楚就沒辦法決定門檻要調哪邊。</p>
-    </div>
-    <div class="ask">
-      <h3>7. 有沒有合規或隱私限制？</h3>
-      <p>資料能不能離開公司、能不能送給外部的 AI 服務？</p>
-      <p class="why">這題會直接砍掉一整類做法。有限制的話，打外部 API 這條路就不能走。</p>
-    </div>
-    <div class="ask">
-      <h3>8. 多久要上線？</h3>
-      <p>兩週要有東西看，還是有半年可以慢慢做？</p>
-      <p class="why">時間短就要先做規則版或直接接現成服務，不要在面試裡設計一套要做半年的系統。</p>
-    </div>
-  </div>
+<div class="sec-head"><span class="sec-num">02</span>
+<h2>需求釐清的八個面向</h2>
+</div>
+<p class="sec-lede">不必逐題照念。優先詢問會改變設計的未知條件；題目未提供時，清楚列出自己的假設。</p>
+<div class="asks">
+<div class="ask">
+<h3>1. 使用者與操作情境</h3>
+<p>這是使用者即時看到的推薦，還是內部人員查看的分析結果？</p>
+<p class="why">操作情境會影響延遲、解釋方式與錯誤處理。</p>
+</div>
+<div class="ask">
+<h3>2. 成功標準</h3>
+<p>希望改善完成率、搜尋品質，還是降低人工處理負擔？</p>
+<p class="why">先定義產品成果，再選模型指標與不可退步的保護指標。</p>
+</div>
+<div class="ask">
+<h3>3. 流量與規模</h3>
+<p>日活躍使用者、觸發頻率與尖峰時段是多少？</p>
+<p class="why">分開估算平均與尖峰，並確認每個請求實際需要的運算量。</p>
+</div>
+<div class="ask">
+<h3>4. 時間要求</h3>
+<p>需要同步回應，還是可接受背景處理？延遲以哪個百分位衡量？</p>
+<p class="why">這決定哪些步驟需在線上完成，以及逾時後如何回應。</p>
+</div>
+<div class="ask">
+<h3>5. 資料條件</h3>
+<p>有哪些資料與標籤，涵蓋哪些期間，是否有缺漏或偏差？</p>
+<p class="why">資料條件會影響基準方案，也決定是否需要先建立蒐集與標註流程。</p>
+</div>
+<div class="ask">
+<h3>6. 不同錯誤的代價</h3>
+<p>誤判與漏判各造成什麼影響，是否能補救或申訴？</p>
+<p class="why">依損失與處理能力選擇門檻及人工介入方式。</p>
+</div>
+<div class="ask">
+<h3>7. 資料與權限限制</h3>
+<p>哪些內容可交給外部服務，誰能查詢或修改哪些資料？</p>
+<p class="why">先確認組織政策與適用要求，再評估供應商及部署選擇。</p>
+</div>
+<div class="ask">
+<h3>8. 交付與維護條件</h3>
+<p>第一版何時需要使用，由誰維運，可接受多少成本？</p>
+<p class="why">範圍應符合時間與團隊能力，並說明後續如何驗證改善。</p>
+</div>
+</div>
 </section>
-
 <section>
-  <div class="sec-head"><span class="sec-num">03</span><h2>容量估算，照這樣算就好</h2></div>
-  <p class="sec-lede">數字不用精確，重點是<b>算得出數量級</b>，而且過程說得出來。下面的算式可以直接抄。</p>
-
-  <h3 style="font-size:16px;margin:0 0 8px">每秒要處理幾次</h3>
-  <div class="calc">日活躍使用者      1,000 萬  <i>← 面試官給的，或你自己假設</i>
-每人每天觸發      20 次
-─────────────────────────────
-每天總次數        2 億次
-÷ 86,400 秒
-<b>平均每秒          約 2,300 次</b>
-× 尖峰倍數 3      <i>← 大家都在同一個時段用</i>
-<b>尖峰每秒          約 7,000 次</b></div>
-
-  <h3 style="font-size:16px;margin:22px 0 8px">要多少儲存空間</h3>
-  <div class="calc">一筆紀錄大小      1 KB
-每天筆數          2 億筆
-─────────────────────────────
-每天              200 GB
-× 保留 1 年
-<b>總共              約 73 TB</b>   <i>← 這個量級要用物件儲存，不是一般資料庫</i></div>
-
-  <h3 style="font-size:16px;margin:22px 0 8px">延遲預算怎麼分</h3>
-  <div class="calc">產品要求          200 毫秒以內
-─────────────────────────────
-網路來回          50 毫秒
-取特徵            10 毫秒   <i>← 從 Redis 這種地方查</i>
-<b>模型運算          100 毫秒</b>  <i>← 你真正能用的只有這麼多</i>
-其他雜項          40 毫秒</div>
-
-<figure class="fig">
-<svg viewBox="0 0 560 218" role="img" aria-label="200 毫秒的預算怎麼分給網路、特徵、模型和其他"><text class="f-hd" x="2" y="12">產品要求：使用者按下去到看到結果，200 毫秒以內</text><rect x="2.0" y="24" width="139.0" height="30" rx="3" fill="var(--ochre)" opacity=".22" stroke="var(--ochre)" stroke-width="1.3"/><text class="f-t" x="71.5" y="43" text-anchor="middle">網路來回</text><rect x="141.0" y="24" width="27.8" height="30" rx="3" fill="var(--d5)" opacity=".22" stroke="var(--d5)" stroke-width="1.3"/><rect x="168.8" y="24" width="278.0" height="30" rx="3" fill="var(--accent)" opacity=".22" stroke="var(--accent)" stroke-width="1.3"/><text class="f-t" x="307.8" y="43" text-anchor="middle">模型運算</text><rect x="446.8" y="24" width="111.2" height="30" rx="3" fill="var(--d2)" opacity=".22" stroke="var(--d2)" stroke-width="1.3"/><text class="f-t" x="502.4" y="43" text-anchor="middle">其他雜項</text><rect x="2" y="71" width="14" height="14" rx="2" fill="var(--ochre)" opacity=".22" stroke="var(--ochre)" stroke-width="1.3"/><text class="f-t" x="24" y="82">網路來回</text><text class="f-s" x="120" y="82">50 毫秒</text><text class="f-l" x="196" y="82">瀏覽器到伺服器，來回一趟</text><rect x="2" y="97" width="14" height="14" rx="2" fill="var(--d5)" opacity=".22" stroke="var(--d5)" stroke-width="1.3"/><text class="f-t" x="24" y="108">取特徵</text><text class="f-s" x="120" y="108">10 毫秒</text><text class="f-l" x="196" y="108">從 Redis 這種地方查</text><rect x="2" y="123" width="14" height="14" rx="2" fill="var(--accent)" opacity=".22" stroke="var(--accent)" stroke-width="1.3"/><text class="f-t" x="24" y="134">模型運算</text><text class="f-s" x="120" y="134">100 毫秒</text><text class="f-l" x="196" y="134">你真正能用的只有這麼多</text><rect x="2" y="149" width="14" height="14" rx="2" fill="var(--d2)" opacity=".22" stroke="var(--d2)" stroke-width="1.3"/><text class="f-t" x="24" y="160">其他雜項</text><text class="f-s" x="120" y="160">40 毫秒</text><text class="f-l" x="196" y="160">排序、過濾、組回應</text><text class="f-l" x="2" y="206">扣掉另外三項，模型只剩下 100 毫秒。這個數字會直接決定你能不能用大模型。</text></svg>
+<div class="sec-head"><span class="sec-num">03</span>
+<h2>用估算檢查方案是否可行</h2>
+</div>
+<p class="sec-lede">以下數字是練習假設。計算時標明單位、來源與未計入項目，避免讓粗估看起來像已驗證的容量。</p>
+<h3>請求數量</h3>
+<div class="calc">日活躍使用者：1,000 萬
+每人每日觸發：20 次
+每日請求：2 億次
+平均每秒：200,000,000 ÷ 86,400 ≈ 2,315 次
+假設尖峰為平均的 3 倍：約 6,945 次／秒</div>
+<p>尖峰倍率應來自資料或明示的假設。主機數量還需結合單次工作量、負載測試與故障餘裕。</p>
+<h3>資料儲存</h3>
+<div class="calc">假設每筆紀錄為 1 KB，採十進位單位
+每日 2 億筆 × 1 KB = 200 GB／日
+保存 365 天：200 GB × 365 = 73 TB
+尚未計入索引、副本、備份與壓縮效果</div>
+<p>儲存選擇要同時考量查詢方式、更新需求與保存政策。不能僅憑 73 TB 就判定只能使用物件儲存。</p>
+<h3>延遲預算</h3>
+<div class="calc">假設端到端目標為 200 毫秒
+網路：50 毫秒
+特徵讀取：10 毫秒
+模型推論：100 毫秒
+其他處理：40 毫秒</div><figure class="fig">
+<svg viewBox="0 0 560 218" role="img" aria-label="200 毫秒的預算怎麼分給網路、特徵、模型和其他"><text class="f-hd" x="2" y="12">範例假設：端到端延遲目標為 200 毫秒</text><rect x="2.0" y="24" width="139.0" height="30" rx="3" fill="var(--ochre)" opacity=".22" stroke="var(--ochre)" stroke-width="1.3"/><text class="f-t" x="71.5" y="43" text-anchor="middle">網路來回</text><rect x="141.0" y="24" width="27.8" height="30" rx="3" fill="var(--d5)" opacity=".22" stroke="var(--d5)" stroke-width="1.3"/><rect x="168.8" y="24" width="278.0" height="30" rx="3" fill="var(--accent)" opacity=".22" stroke="var(--accent)" stroke-width="1.3"/><text class="f-t" x="307.8" y="43" text-anchor="middle">模型運算</text><rect x="446.8" y="24" width="111.2" height="30" rx="3" fill="var(--d2)" opacity=".22" stroke="var(--d2)" stroke-width="1.3"/><text class="f-t" x="502.4" y="43" text-anchor="middle">其他處理</text><rect x="2" y="71" width="14" height="14" rx="2" fill="var(--ochre)" opacity=".22" stroke="var(--ochre)" stroke-width="1.3"/><text class="f-t" x="24" y="82">網路來回</text><text class="f-s" x="120" y="82">50 毫秒</text><text class="f-l" x="196" y="82">瀏覽器到伺服器，來回一趟</text><rect x="2" y="97" width="14" height="14" rx="2" fill="var(--d5)" opacity=".22" stroke="var(--d5)" stroke-width="1.3"/><text class="f-t" x="24" y="108">取特徵</text><text class="f-s" x="120" y="108">10 毫秒</text><text class="f-l" x="196" y="108">取得模型所需特徵</text><rect x="2" y="123" width="14" height="14" rx="2" fill="var(--accent)" opacity=".22" stroke="var(--accent)" stroke-width="1.3"/><text class="f-t" x="24" y="134">模型運算</text><text class="f-s" x="120" y="134">100 毫秒</text><text class="f-l" x="196" y="134">此例分配的運算預算</text><rect x="2" y="149" width="14" height="14" rx="2" fill="var(--d2)" opacity=".22" stroke="var(--d2)" stroke-width="1.3"/><text class="f-t" x="24" y="160">其他處理</text><text class="f-s" x="120" y="160">40 毫秒</text><text class="f-l" x="196" y="160">排序、過濾、組回應</text><text class="f-l" x="2" y="206">依實測檢查模型能否符合預算，並觀察高百分位延遲。</text></svg>
 </figure>
-
-
-  <div class="callout">
-    這一段的目的是<b>用數字把設計卡死</b>，不是要你算得準。<br>
-    算出來模型只剩 100 毫秒可以用，你就可以直接說「所以這裡不能用大模型，要嘛換小的，要嘛先算好存起來」。<br>
-    這種推導過程比任何架構圖都加分，因為它證明你在做工程判斷，不是在背名詞。
-  </div>
+<div class="callout">這是簡化的串行預算。實際請求可能並行，也可能排隊。各階段的 p95 不能直接相加視為整體 p95；最後仍需量測端到端分布。若超出預算，可比較預先計算、調整模型或減少非必要工作。</div>
 </section>
-
 <section>
-  <div class="sec-head"><span class="sec-num">04</span><h2>六題常考的，完整答一次</h2></div>
-  <p class="sec-lede">每一題都照同一個順序走：問清楚、資料、模型、上線、監控。</p>
-
-  <div class="tabs" role="tablist">
-    <button class="tab" role="tab" data-t="rec" aria-selected="true">推薦系統<small>最經典</small></button>
-    <button class="tab" role="tab" data-t="rag" aria-selected="false">內部文件問答<small>近年最常考</small></button>
-    <button class="tab" role="tab" data-t="mod" aria-selected="false">內容審核<small>取捨最明顯</small></button>
-    <button class="tab" role="tab" data-t="search" aria-selected="false">搜尋排序<small>兩段式最典型</small></button>
-    <button class="tab" role="tab" data-t="fraud" aria-selected="false">詐欺偵測<small>資料極度不平衡</small></button>
-    <button class="tab" role="tab" data-t="agent" aria-selected="false">客服 AI 助理<small>會動手做事</small></button>
-  </div>
-
-  <div class="panel" data-panel="rec">
-    <div class="qa">
-      <div><dt>題目</dt><dd>「設計一個影片 App 的首頁推薦。」</dd></div>
-      <div><dt>先問清楚</dt><dd>推薦位有幾格？<b>要不要即時反映剛剛看的那支</b>？新使用者要看到什麼？影片庫有幾百萬支還是幾千支？<b>成功指標是看完率還是停留時間</b>？</dd></div>
-      <div><dt>資料</dt><dd>使用者這邊：看過什麼、看多久、有沒有看完、按讚收藏。影片這邊：分類、長度、上架時間、整體受歡迎程度。<b>要特別記錄「推給他但他沒點」的紀錄</b>，這是最有價值的負面資料，很多人會漏掉。</dd></div>
-      <div><dt>模型</dt><dd>標準做法分兩段。<b>第一段 recall</b>（先粗撈）：從幾百萬支裡快速撈出幾百支候選，用簡單快速的方法。<b>第二段 ranking</b>（再細排）：對這幾百支用比較細的模型算分，排出最後要顯示的幾格。<br>兩段的原因是<b>算不完</b>。對幾百萬支逐一精算，時間預算不可能夠。</dd></div>
-      <div><dt>上線</dt><dd>候選清單可以<b>先算好存起來</b>，每小時更新一次；最後排序才即時算。新使用者沒有歷史，先用<b>熱門內容加上註冊時填的偏好</b>撐著，累積幾次行為之後再切換。</dd></div>
-      <div><dt>監控</dt><dd>看點擊率跟看完率有沒有下滑。特別要看<b>推薦有沒有越來越窄</b>，也就是一直推同類型導致使用者膩掉。通常會刻意保留一小部分位置放沒看過的類型。</dd></div>
-    </div>
-  </div>
-
-  <div class="panel" data-panel="rag" hidden>
-    <div class="qa">
-      <div><dt>題目</dt><dd>「設計一個系統，讓員工可以用問的方式查公司內部文件。」</dd></div>
-      <div><dt>先問清楚</dt><dd>文件有多少份、什麼格式（PDF、簡報、網頁）？<b>更新多頻繁</b>？<b>有沒有權限問題</b>，也就是不同部門能看的不一樣？答錯的代價多大？資料<b>可不可以送到外部的 AI 服務</b>？</dd></div>
-      <div><dt>資料</dt><dd>先把文件切成一段一段，再把每一段轉成向量存起來。<b>權限要跟著每一段一起存</b>，查詢時先過濾再比對，不能查完才過濾，不然會從答案裡洩漏出內容。</dd></div>
-      <div><dt>模型</dt><dd>不用自己訓練。流程是<b>查詢轉向量、撈前 50 段、重新排序取前 5 段、送給大型語言模型回答</b>。要求它只根據這 5 段回答，並且標出處。<br>如果內部有大量專有名詞，可以考慮微調 embedding 模型，但那是第二版的事。</dd></div>
-      <div><dt>上線</dt><dd>文件更新要能<b>只重建有改動的那幾份</b>，不能每次全部重來。常見做法是文件系統一有變動就發通知，觸發那一份重新切段建檔。</dd></div>
-      <div><dt>監控</dt><dd><b>兩件事要分開量</b>。第一件：撈回來的段落裡有多少真的相關。第二件：拿到正確段落之後，答案寫得對不對。<br>混在一起看就永遠不知道問題出在哪。另外要記錄<b>使用者按了幾次「這個沒幫助」</b>，那是最直接的訊號。</dd></div>
-    </div>
-  </div>
-
-  <div class="panel" data-panel="mod" hidden>
-    <div class="qa">
-      <div><dt>題目</dt><dd>「設計一個系統，自動找出平台上的違規留言。」</dd></div>
-      <div><dt>先問清楚</dt><dd><b>違規的定義是什麼</b>，有沒有成文規則？每天幾則留言？<b>寧可誤擋還是寧可漏放</b>？有沒有人工審核團隊，能處理多少量？要不要即時擋，還是可以先放出來再回頭撤？</dd></div>
-      <div><dt>資料</dt><dd>過去被檢舉、而且經過人工確認的留言就是現成的標註。<b>但這批資料有偏差</b>：只有被檢舉的才會進來，沒被檢舉的違規內容不在裡面。要另外隨機抽一批請人標，才知道真正的漏放率。</dd></div>
-      <div><dt>模型</dt><dd>先做<b>關鍵字加規則</b>的版本（rule-based），成本低而且馬上能上。第二版才換成語言模型，因為它抓得到「換句話說」的規避寫法。<br>正式系統通常<b>分層</b>：規則先擋掉明顯的，模型處理中間地帶，最不確定的送人工。</dd></div>
-      <div><dt>上線</dt><dd>設<b>兩個門檻</b>而不是一個。分數超過高門檻直接擋，低於低門檻直接放行，<b>中間那段送人工審核</b>。門檻位置由人工團隊的處理量決定，不是由模型決定。</dd></div>
-      <div><dt>監控</dt><dd>誤擋率跟漏放率要<b>分開看</b>，因為調整門檻會讓一個變好、另一個變差。要固定隨機抽樣送人工複核，否則只會看到被檢舉的那部分，永遠不知道漏了多少。</dd></div>
-    </div>
-  </div>
-
-  <div class="panel" data-panel="search" hidden>
-    <div class="qa">
-      <div><dt>題目</dt><dd>「設計一個電商網站的商品搜尋。」</dd></div>
-      <div><dt>先問清楚</dt><dd>商品有幾百萬件？<b>要不要支援錯字跟同義詞</b>（打「筆電」要不要找到「筆記型電腦」）？排序看什麼，銷量、評價、還是相關度？<b>有沒有廣告或贊助位</b>要插進去？多語言嗎？</dd></div>
-      <div><dt>資料</dt><dd>商品這邊：標題、描述、分類、價格、銷量、評價。使用者這邊：搜過什麼、點了第幾個、有沒有下單。<br><b>最有價值的是「搜了但沒點任何一個」的紀錄</b>，那代表這次搜尋整頁都失敗，是最直接的改善訊號。</dd></div>
-      <div><dt>模型</dt><dd>跟推薦系統一樣分兩段。<b>粗撈</b>那段用兩條路並行：關鍵字比對抓精準命中，向量比對抓語意相近（例如「露營用的燈」找到「營燈」）。兩邊的結果合併。<br><b>細排</b>再用細模型算分，把相關度、銷量、評價、庫存綜合起來。</dd></div>
-      <div><dt>上線</dt><dd>熱門搜尋詞的結果<b>直接存起來</b>，因為搜尋詞的分布非常集中，前面少數幾個詞就佔掉大半流量。商品資料變動（缺貨、改價）要能<b>幾分鐘內反映</b>，不能等每天重建。</dd></div>
-      <div><dt>監控</dt><dd>核心指標是<b>零結果率</b>（搜完什麼都沒有的比例）跟<b>無點擊率</b>。這兩個數字最能直接指出哪些搜尋詞需要補同義詞或補商品。另外要看點擊集中在第幾名，如果大家都點第 5 名，代表排序有問題。</dd></div>
-    </div>
-  </div>
-
-  <div class="panel" data-panel="fraud" hidden>
-    <div class="qa">
-      <div><dt>題目</dt><dd>「設計一個系統，在交易當下判斷是不是盜刷。」</dd></div>
-      <div><dt>先問清楚</dt><dd>每秒幾筆交易？<b>必須在幾毫秒內回答</b>（付款流程通常只給 100 毫秒以內）？<b>攔錯一筆正常交易的代價，跟放過一筆盜刷的代價，哪個大</b>？有沒有人工複核團隊？法規上要不要能解釋為什麼被擋？</dd></div>
-      <div><dt>資料</dt><dd>這題最大的特點是<b>資料極度不平衡</b>，盜刷可能只佔千分之一甚至萬分之一。<br>所以<b>準確率這個指標完全沒用</b>：全部猜「正常」就有 99.9% 準確率。要改看抓到的裡面有多少是真的、該抓的抓到多少。<br>另一個坑是<b>答案來得很晚</b>：一筆盜刷可能一個月後才被持卡人申訴，所以訓練資料永遠落後現實。</dd></div>
-      <div><dt>模型</dt><dd>先做<b>規則</b>擋掉明顯的（半夜、異國、金額異常、同卡短時間多筆）。規則的好處是能解釋，法規上常常需要。<br>再加模型處理規則抓不到的。特徵重點在<b>「跟這個人平常比起來」</b>，例如這筆金額是他平均的幾倍、這個地點離他上一筆多遠。</dd></div>
-      <div><dt>上線</dt><dd>用<b>三段門檻</b>：高分直接擋、中間送簡訊二次驗證、低分直接放行。中間那段很重要，因為它把「擋或不擋」的二選一變成「多問一句」，誤判的代價瞬間變小。<br>特徵要即時算，因為「這五分鐘刷了幾筆」這種特徵先算好就沒意義了。</dd></div>
-      <div><dt>監控</dt><dd>因為答案來得晚，要<b>同時看兩組數字</b>：即時能看的（擋掉多少比例、客訴量），以及一個月後才回填的（真正的漏放率）。<br>詐騙手法會一直變，這是典型的<b>規則變了</b>的情境，重訓頻率要比一般系統高很多。</dd></div>
-    </div>
-  </div>
-
-  <div class="panel" data-panel="agent" hidden>
-    <div class="qa">
-      <div><dt>題目</dt><dd>「設計一個客服 AI，它不只回答問題，還能幫使用者查訂單、改地址、辦退貨。」</dd></div>
-      <div><dt>先問清楚</dt><dd><b>它能做到哪一步</b>，只能查，還是可以真的改資料？<b>哪些動作一定要人工確認</b>（退款金額上限多少）？答錯或做錯的代價多大？要接哪些既有系統？<b>要不要留下完整紀錄供事後追查</b>？</dd></div>
-      <div><dt>資料</dt><dd>兩種來源分開處理。<b>知識類</b>（退貨政策、運費規則）走檢索，做成前面 RAG 那一套。<b>動作類</b>（查訂單、改地址）走系統介面，不要讓 AI 去猜資料，一律去真實系統查。<br>另外要準備<b>過去的客服對話紀錄</b>，用來知道使用者實際上都問什麼。</dd></div>
-      <div><dt>模型</dt><dd>核心是一個大型語言模型加上一組工具。設計重點<b>不在模型，在工具怎麼給</b>：<br>一、<b>唯讀跟可寫要分開</b>。查詢類的工具隨便用，會改資料的要另外把關。<br>二、<b>每個工具的說明要寫得非常清楚</b>，這是實務上最常見的失敗來源，說明含糊它就會走錯路。<br>三、<b>可以做的事情要列白名單</b>，不在名單上的一律轉人工。</dd></div>
-      <div><dt>上線</dt><dd>分階段放行。<b>第一階段只讓它回答，不讓它動手</b>；第二階段開放唯讀查詢；第三階段才開放會改資料的動作，而且先設很低的金額上限。<br>所有會改資料的動作都要<b>可以還原</b>，並且記錄是哪一次對話觸發的。</dd></div>
-      <div><dt>監控</dt><dd>除了答對率，還要看<b>轉人工的比例</b>（太高代表沒用，太低可能代表它在硬答）、<b>動作執行的成功率</b>、以及<b>使用者事後反悔的比例</b>。<br>要做 <b>red team</b> 測試（專門找人攻擊它）：專門找人想辦法騙它做出不該做的事，上線前跑一輪，上線後定期再跑。</dd></div>
-    </div>
-  </div>
+<div class="sec-head"><span class="sec-num">04</span>
+<h2>六種情境的設計思路</h2>
+</div>
+<p class="sec-lede">以下案例提供討論起點。應依題目條件補上數量、指標與限制，而非把它當作固定答案。</p>
+<div class="tabs" role="tablist"><button class="tab" role="tab" data-t="rec" aria-selected="true">推薦系統<small>候選與排序</small></button><button class="tab" role="tab" data-t="rag" aria-selected="false">文件問答<small>檢索與依據</small></button><button class="tab" role="tab" data-t="mod" aria-selected="false">內容審核<small>錯誤與申訴</small></button><button class="tab" role="tab" data-t="search" aria-selected="false">搜尋排序<small>相關性與更新</small></button><button class="tab" role="tab" data-t="fraud" aria-selected="false">詐欺偵測<small>少數類別與延遲標籤</small></button><button class="tab" role="tab" data-t="agent" aria-selected="false">客服 AI 助理<small>工具與操作權限</small></button>
+</div>
+<div class="panel" data-panel="rec">
+<div class="qa">
+<div>
+<dt>情境</dt>
+<dd>設計影片首頁推薦。先確認推薦位置、內容規模、更新頻率，以及要改善的觀看體驗。</dd>
+</div>
+<div>
+<dt>資料</dt>
+<dd>保留曝光、點擊與觀看等事件，並確認資料蒐集條件。未點擊不一定代表不喜歡，也可能與排序位置或未看見有關。</dd>
+</div>
+<div>
+<dt>基準與模型</dt>
+<dd>可先用熱門與近期內容建立基準。規模擴大後，候選生成先縮小範圍，再由排序模型比較。候選數與模型複雜度需配合延遲測試。</dd>
+</div>
+<div>
+<dt>部署</dt>
+<dd>部分候選可批次準備，最後排序依即時特徵調整。新使用者可採熱門、內容屬性或自選偏好作為起點。</dd>
+</div>
+<div>
+<dt>評估與監控</dt>
+<dd>離線檢查候選召回與排序品質，線上觀察觀看成果、負面回饋與多樣性。避免只增加停留時間而忽略使用者感受。</dd>
+</div>
+</div>
+</div>
+<div class="panel" data-panel="rag" hidden>
+<div class="qa">
+<div>
+<dt>情境</dt>
+<dd>讓員工以自然語句查詢內部文件。確認格式、版本、更新頻率、權限與外部資料傳輸限制。</dd>
+</div>
+<div>
+<dt>資料</dt>
+<dd>解析文件並保留來源、段落位置、版本與存取規則。索引更新也要處理刪除與權限變更。</dd>
+</div>
+<div>
+<dt>基準與模型</dt>
+<dd>先比較關鍵字搜尋與向量檢索，再評估混合檢索與重排是否有幫助。候選片段數量依測試設定，不固定為某一組數字。</dd>
+</div>
+<div>
+<dt>部署</dt>
+<dd>在未授權內容交給模型或使用者之前執行權限檢查。回答附上可核對的來源；依據不足時應說明限制，並處理來源中的惡意指示。</dd>
+</div>
+<div>
+<dt>評估與監控</dt>
+<dd>分別評估檢索是否取得必要資料、回答是否受到來源支持，以及引用與權限是否正確。使用者回饋可作為線索，仍需人工或標準題集驗證。</dd>
+</div>
+</div>
+</div>
+<div class="panel" data-panel="mod" hidden>
+<div class="qa">
+<div>
+<dt>情境</dt>
+<dd>辨識平台違規留言。先取得可操作的規則，釐清處理時效、不同錯誤的影響與人工複核能力。</dd>
+</div>
+<div>
+<dt>資料</dt>
+<dd>人工處理過的檢舉可作為資料來源，但有選樣偏差。另取具代表性的樣本標註，並觀察不同語言與內容類型。</dd>
+</div>
+<div>
+<dt>基準與模型</dt>
+<dd>規則或簡單分類器可作為基準，再檢查哪些錯誤需要語言模型處理。不能假設較大模型一定更符合平台規範。</dd>
+</div>
+<div>
+<dt>部署</dt>
+<dd>可依風險分成通過、人工複核與限制顯示等處理方式。門檻同時受錯誤代價、模型校準與人工容量影響。</dd>
+</div>
+<div>
+<dt>評估與監控</dt>
+<dd>分別檢查誤判與漏判，追蹤申訴結果。定期抽查未被檢舉的內容，避免只觀察已進入審核的樣本。</dd>
+</div>
+</div>
+</div>
+<div class="panel" data-panel="search" hidden>
+<div class="qa">
+<div>
+<dt>情境</dt>
+<dd>設計商品搜尋。確認文字查詢、同義詞、多語言、廣告位置與商品更新要求。</dd>
+</div>
+<div>
+<dt>資料</dt>
+<dd>使用商品資訊與合法蒐集的查詢互動。無點擊可能代表結果不足，也可能是使用者已取得資訊，需配合情境判讀。</dd>
+</div>
+<div>
+<dt>基準與模型</dt>
+<dd>先建立可用的關鍵字搜尋。需要語意匹配時可加入向量檢索，再以排序模型整合相關性與商品訊號。</dd>
+</div>
+<div>
+<dt>部署</dt>
+<dd>熱門查詢可快取，但價格、庫存與權限需有更新策略。結果更新時效由產品需求決定。</dd>
+</div>
+<div>
+<dt>評估與監控</dt>
+<dd>使用標註的相關性指標，搭配零結果率、無點擊率與後續完成行為。點擊位置受到曝光偏差影響，不能直接等同排序品質。</dd>
+</div>
+</div>
+</div>
+<div class="panel" data-panel="fraud" hidden>
+<div class="qa">
+<div>
+<dt>情境</dt>
+<dd>在交易流程中辨識風險。先確認回應時間、可採取的措施、誤拒損失與人工覆核流程。</dd>
+</div>
+<div>
+<dt>資料</dt>
+<dd>若風險交易只占 0.1%，全部預測正常仍有 99.9% accuracy，因此不能只看整體正確率。確認標籤何時成熟，避免把尚未確認的交易都當成正常。</dd>
+</div>
+<div>
+<dt>基準與模型</dt>
+<dd>以可解釋的規則或簡單模型建立基準，再分析金額、頻率與歷史行為等訊號。單一地區或時段本身不應直接視為詐欺證據。</dd>
+</div>
+<div>
+<dt>部署</dt>
+<dd>依已驗證的風險程度安排通過、額外驗證或人工處理。即時事件可透過串流特徵更新，歷史統計則可預先準備。</dd>
+</div>
+<div>
+<dt>評估與監控</dt>
+<dd>觀察 precision、recall、PR 曲線與實際成本，也要追蹤標籤延遲。重訓時機由漂移與效果驗證決定，不能假設頻繁重訓必然改善。</dd>
+</div>
+</div>
+</div>
+<div class="panel" data-panel="agent" hidden>
+<div class="qa">
+<div>
+<dt>情境</dt>
+<dd>助理可回答政策並查詢訂單，進一步可能修改地址或申請退貨。先界定可讀、可寫與需確認的操作。</dd>
+</div>
+<div>
+<dt>資料</dt>
+<dd>政策內容可透過檢索提供；訂單狀態應向權威系統查詢。歷史對話需依資料政策處理，再作為需求與評估樣本。</dd>
+</div>
+<div>
+<dt>模型與工具</dt>
+<dd>工具介面應有明確輸入、回傳與錯誤定義。唯讀操作同樣要驗證帳號與資源權限，寫入則需由服務端檢查條件。</dd>
+</div>
+<div>
+<dt>部署</dt>
+<dd>分階段開放功能。具影響的操作先呈現具體內容供確認，並設計冪等、操作紀錄與補償流程；不能假設所有動作都能直接還原。</dd>
+</div>
+<div>
+<dt>評估與監控</dt>
+<dd>量測任務完成、工具成功、錯誤操作與適當轉人工的比例。保留可追蹤的必要紀錄，同時限制個人資料的保存與存取。</dd>
+</div>
+</div>
+</div>
 </section>
-
 <section>
-  <div class="sec-head"><span class="sec-num">05</span><h2>最常被追問的六題</h2></div>
-
-  <div class="fu">
-    <div>
-      <div class="q">「如果資料量再大一百倍呢？」</div>
-      <div class="a">先講<b>哪一站會先撐不住</b>，通常是即時算特徵那一段。然後給兩個方向：把能先算好的改成先算好、把查詢按使用者分散到多台機器。<b>不要說「加機器就好」</b>，要說明加在哪一站、為什麼是那一站。</div>
-    </div>
-    <div>
-      <div class="q">「怎麼知道新模型真的比較好？」</div>
-      <div class="a">離線先用留著沒看過的資料測一次，這是門檻不是結論。真正的答案是<b>線上 A/B 測試</b>：一半使用者看新版、一半看舊版，比較真正在意的業務指標。更保守的做法是<b>先讓新版跟著跑但不給使用者看</b>，只比對結果。<br>再補一句會加分：<b>開跑前就先講好要看哪一個主要指標</b>。這是 Fisher 1935 年設計隨機對照實驗時就警告過的事，一次看二十個指標，光靠運氣就會有一個看起來顯著。事後挑贏的那個來講，等於沒測。</div>
-    </div>
-    <div>
-      <div class="q">「模型突然變差了，你怎麼查？」</div>
-      <div class="a">照順序：一、有沒有剛好上線什麼東西。二、進來的資料分布有沒有變。三、<b>訓練跟服務算特徵的方式是不是不一樣了</b>，這是最常見也最難發現的。四、世界的規則是不是變了。<br>先做的事永遠是<b>換回舊版</b>，再慢慢查。</div>
-    </div>
-    <div>
-      <div class="q">「怎麼壓成本？」</div>
-      <div class="a">四個方向由易到難：<b>能先算好的就不要即時算</b>、<b>簡單的用小模型擋掉</b>、<b>重複的問題把答案存起來</b>、把模型壓縮變小。<br>先講前兩個，那是投報率最高的。</div>
-    </div>
-    <div>
-      <div class="q">「新使用者完全沒資料怎麼辦？」</div>
-      <div class="a">分三段講：<b>剛註冊</b>用熱門內容加上註冊時填的偏好。<b>用過幾次</b>之後開始混入個人化結果。<b>累積夠了</b>就完全切到個人化。<br>要說明「累積夠了」的判斷依據，例如互動次數達到某個數量。</div>
-    </div>
-    <div>
-      <div class="q">「如果 AI 講錯話造成問題呢？」</div>
-      <div class="a">這題近年幾乎必問。答法是<b>層層防守</b>：輸出前先過一道檢查、要求標出處讓人可以查證、高風險的情況直接不回答並轉人工、記錄每一次回答方便事後追查。<br>並且明講<b>沒有任何方法能保證百分之百</b>，所以要設計「出事之後怎麼收拾」，不是只設計「怎麼避免」。</div>
-    </div>
-  </div>
+<div class="sec-head"><span class="sec-num">05</span>
+<h2>常見追問的回答方向</h2>
+</div>
+<div class="fu">
+<div>
+<div class="q">規模增加一百倍時，如何調整？</div>
+<div class="a">先指出哪項負載成長，以及目前哪個元件可能成為瓶頸。再比較快取、預先計算、批次化或分散處理，說明需要哪些量測支持選擇。</div>
+</div>
+<div>
+<div class="q">如何判斷新版模型是否改善？</div>
+<div class="a">先以一致的離線題集與資料切分比較，再依風險進行影子測試或線上實驗。A/B 測試需事先定義主要指標、分組單位、觀察期與停止條件，流量不必各半。</div>
+</div>
+<div>
+<div class="q">效果突然下降時，如何排查？</div>
+<div class="a">確認指標定義與資料是否改變，再比對部署、特徵與使用情境。若新版造成影響且舊版仍相容，可回復；若是資料管線故障，單純換模型未必有效。</div>
+</div>
+<div>
+<div class="q">如何降低成本？</div>
+<div class="a">先拆出運算、儲存、傳輸與外部 API 的成本。依瓶頸比較快取、批次推論、模型分流或壓縮，同時檢查品質與延遲是否仍達標。</div>
+</div>
+<div>
+<div class="q">缺少新使用者資料時，如何處理？</div>
+<div class="a">可以使用熱門內容、內容屬性或自選偏好建立起點。隨資料累積逐步加入個人化，並用實驗決定切換條件，保留多樣性與使用者控制。</div>
+</div>
+<div>
+<div class="q">生成內容或操作錯誤時，如何處理？</div>
+<div class="a">依風險設計來源查核、權限驗證、人工確認與回復程序。紀錄足以追查的資訊，並定義停止服務或轉人工的條件；各種檢查都需要持續驗證。</div>
+</div>
+</div>
 </section>
-
 <footer>
-  <p>整頁就一句話：先問清楚，再用數字把設計卡死，最後一定要講到上線之後怎麼辦。<br>
-  架構圖只是把這三件事畫出來而已。系統本身的結構，看 <a href="mlsystem.html">ML 系統那一頁</a>。</p>
-  <p>快取、佇列、sharding 這些一般 IT 元件，還有短網址、聊天室、動態牆這類經典題，看 <a href="sysdesign.html">一般系統設計</a>。</p>
-  <p class="cred"><a href="./">← 回目錄</a></p>
+<p>練習時，把每個設計選擇連回需求或量測假設，並指出尚待驗證的部分。架構圖可協助呈現這些關係。</p>
+<p>元件介紹見<a href="mlsystem.html">機器學習系統</a>；快取、佇列與資料分片見<a href="sysdesign.html">系統設計</a>。</p>
+<p class="cred">評估指標可查閱 <a href="https://scikit-learn.org/stable/modules/model_evaluation.html">scikit-learn 官方文件</a>。<br><a href="./">← 返回首頁</a>
+</p>
 </footer>
-
 </div>
 
 <script>

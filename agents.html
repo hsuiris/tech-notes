@@ -1,8 +1,8 @@
 <!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>幾個 AI 一起做事 · tech-notes</title>
-<meta name="description" content="八種讓多個 AI 一起做事的組法：接力、分流、分頭做、投票、主管派工、辯論、寫手加評審、層級。附 Anthropic 自己的實測數字與失敗模式。">
+<title>理解多代理協作 · tech-notes</title>
+<meta name="description" content="認識八種 AI 工作流程，理解多代理分工、相互審查與資源成本，並閱讀研究結果的適用範圍。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
 <link rel="stylesheet" href="assets/base.css">
 <script src="assets/reveal.js" defer></script>
@@ -127,17 +127,18 @@
 .trap p{margin:0; font-size:14px; color:var(--ink-2); line-height:1.7}
 </style>
 
-<nav class="topnav"><div class="topnav-in">
+<nav class="topnav">
+<div class="topnav-in">
   <a class="brand" href="./">tech-notes</a>
   <div class="navlinks">
     <a href="architecture.html">架構圖</a>
     <a href="errors.html">錯誤訊息</a>
     <a href="project.html">專案資料夾</a>
     <a href="skills.html">Claude 技能</a>
-    <a href="agents.html" aria-current="page">AI 大軍</a>
+    <a href="agents.html" aria-current="page">多代理協作</a>
     <a href="sysdesign.html">系統設計</a>
     <a href="mlsystem.html">ML 系統</a>
-    <a href="mldesign.html">面試怎麼答</a>
+    <a href="mldesign.html">ML 設計面試</a>
   </div>
 </div></nav>
 
@@ -153,433 +154,311 @@
 
 
 <header>
-  <div class="eyebrow">AI 大軍</div>
-  <h1>幾個 AI 一起做事，有幾種組法</h1>
+<div class="eyebrow">多代理協作</div>
+<h1>理解多代理協作</h1>
 </header>
-
 <section>
-  <div class="sec-head"><span class="sec-num">01</span><h2>常見的八種組法</h2></div>
-  <p class="sec-lede"><b>點左邊任何一種</b>，右邊會說明它怎麼組、什麼時候贏、什麼時候別用。</p>
-
-  <div class="split">
-    <div class="parts" id="parts">
-      <button class="part" data-p="chain" type="button">
-        <span class="pn">接力<small>Prompt Chaining</small></span>
-        <span class="pw">一個做完換下一個，每人只做一段</span>
-      </button>
-      <button class="part" data-p="route" type="button">
-        <span class="pn">分流<small>Routing</small></span>
-        <span class="pw">先有人看題目，決定丟給誰</span>
-      </button>
-      <button class="part" data-p="split" type="button">
-        <span class="pn">分頭做<small>Parallelization</small></span>
-        <span class="pw">切成不相干的小塊，同時做</span>
-      </button>
-      <button class="part" data-p="vote" type="button">
-        <span class="pn">投票<small>Voting</small></span>
-        <span class="pw">同一題做很多次，取多數</span>
-      </button>
-      <button class="part" data-p="boss" type="button">
-        <span class="pn">主管派工<small>Orchestrator-Workers</small></span>
-        <span class="pw">主管當場決定要派幾個人、各查什麼</span>
-      </button>
-      <button class="part" data-p="debate" type="button">
-        <span class="pn">辯論<small>Debate</small></span>
-        <span class="pw">各自先答，再互相反駁、修正</span>
-      </button>
-      <button class="part" data-p="critic" type="button">
-        <span class="pn">寫手＋評審<small>Evaluator-Optimizer</small></span>
-        <span class="pw">一個寫，一個挑毛病，來回改到過關</span>
-      </button>
-      <button class="part" data-p="tree" type="button">
-        <span class="pn">層級<small>Hierarchical</small></span>
-        <span class="pw">主管上面還有主管</span>
-      </button>
-    </div>
-
-    <div class="detail sticky" id="card">
-      <p class="placeholder">← 點左邊任何一種，這裡會說明它怎麼運作、什麼時候贏、什麼時候別用。</p>
-    </div>
-  </div>
-
-  <div class="callout" style="margin-top:24px">
-    用生活裡看得到的東西對照一次，會好記很多。接力是<b>生產線</b>，分流是<b>櫃檯</b>，分頭做是<b>分組報告</b>，投票是<b>問三個醫生</b>，主管派工是<b>專案經理</b>，辯論是<b>法庭</b>，寫手加評審是<b>編輯台</b>，層級是<b>一整間公司</b>。
-  </div>
+<div class="sec-head"><span class="sec-num">01</span>
+<h2>八種常見工作流程</h2>
+</div>
+<p class="sec-lede">AI 代理（agent）是能依任務呼叫工具、處理結果並繼續執行的程式。多代理系統把工作分配給多個代理。以下也包含可由一般模型呼叫完成的工作流程，並非每種模式都需要自主代理。</p>
+<p>點選模式，查看流程、適用情境與成本。</p>
+<div class="split">
+<div class="parts"><button class="part" data-p="chain" type="button"><span class="pn">循序處理<small>Prompt Chaining</small></span><span class="pw">前一步的結果交給下一步</span></button><button class="part" data-p="route" type="button"><span class="pn">任務分流<small>Routing</small></span><span class="pw">依任務類型選擇處理流程</span></button><button class="part" data-p="split" type="button"><span class="pn">平行分工<small>Parallelization</small></span><span class="pw">獨立子任務同時執行</span></button><button class="part" data-p="vote" type="button"><span class="pn">多次取樣與投票<small>Voting</small></span><span class="pw">對同一問題產生答案，再彙整票數</span></button><button class="part" data-p="boss" type="button"><span class="pn">動態任務協調<small>Orchestrator-Workers</small></span><span class="pw">協調代理依進度安排子任務</span></button><button class="part" data-p="debate" type="button"><span class="pn">多代理辯論<small>Multi-Agent Debate</small></span><span class="pw">交換論證後修訂答案</span></button><button class="part" data-p="critic" type="button"><span class="pn">產出與評估<small>Evaluator-Optimizer</small></span><span class="pw">依明確評估標準修訂內容</span></button><button class="part" data-p="tree" type="button"><span class="pn">階層式協作<small>Hierarchical</small></span><span class="pw">以多層協調管理不同任務群</span></button>
+</div>
+<div class="detail sticky" id="card">
+<p class="placeholder">選擇一種模式，查看運作方式。</p>
+</div>
+</div>
 </section>
-
 <section>
-  <div class="sec-head"><span class="sec-num">02</span><h2>兩套最常被拿來比的做法</h2></div>
-
-  <div class="duo">
-    <div>
-      <div class="lab">做法 A · 分頭做 ＋ 接力</div>
-      <h3>收完資料就往下游送</h3>
-<figure class="fig narrow">
-<svg viewBox="0 0 300 212" role="img" aria-label="六個同時收資料，整合成一份，再分析，再寫結論"><rect x="4" y="10" width="42" height="22" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="25" y="26" text-anchor="middle">●</text><rect x="52" y="10" width="42" height="22" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="73" y="26" text-anchor="middle">●</text><rect x="100" y="10" width="42" height="22" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="121" y="26" text-anchor="middle">●</text><rect x="148" y="10" width="42" height="22" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="169" y="26" text-anchor="middle">●</text><rect x="196" y="10" width="42" height="22" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="217" y="26" text-anchor="middle">●</text><rect x="244" y="10" width="42" height="22" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="265" y="26" text-anchor="middle">●</text><text class="f-s" x="150" y="48" text-anchor="middle">六個同時收資料</text><line x1="150" y1="54" x2="150" y2="70" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="80" y="74" width="140" height="28" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="150" y="93" text-anchor="middle">整合成一份</text><line x1="150" y1="104" x2="150" y2="120" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="80" y="124" width="140" height="28" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="150" y="143" text-anchor="middle">分析</text><line x1="150" y1="154" x2="150" y2="170" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="80" y="174" width="140" height="28" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="150" y="193" text-anchor="middle">寫結論</text></svg>
-</figure>
-
-      <dl>
-        <div><dt>成立的前提</dt><dd>這套能不能成，全看<b>題目切得乾不乾淨</b>。六個人負責的領域要剛好不重疊，收回來的東西拼起來才會是全貌。</dd></div>
-        <div><dt>什麼時候該用它</dt><dd>資料來源明確、彼此不相干、要快。收集是整件事裡最花時間的一段，六個同時做就是六倍快。</dd></div>
-        <div><dt>什麼時候會出事</dt><dd>切不乾淨的時候。<b>兩個人做了同一件事，有些角落又沒人管</b>，麻煩的是後面沒有任何一關會發現。前面漏掉的，後面就全部照著錯下去。</dd></div>
-      </dl>
-    </div>
-
-    <div>
-      <div class="lab">做法 B · 分頭做 ＋ 辯論</div>
-      <h3>各自寫完再互相打</h3>
-<figure class="fig narrow">
-<svg viewBox="0 0 300 212" role="img" aria-label="六個各寫一份，互相看互相挑錯，最後收斂成結論"><rect x="6" y="8" width="84" height="24" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="48" y="25" text-anchor="middle">報告 A</text><rect x="108" y="8" width="84" height="24" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="150" y="25" text-anchor="middle">報告 B</text><rect x="210" y="8" width="84" height="24" rx="4" fill="var(--paper)" stroke="var(--line)" stroke-width="1.4"/><text class="f-t" x="252" y="25" text-anchor="middle">報告 C</text><line x1="48" y1="36" x2="48" y2="54" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><line x1="150" y1="36" x2="150" y2="54" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><line x1="252" y1="36" x2="252" y2="54" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="6" y="58" width="288" height="30" rx="4" fill="var(--paper-3)" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="5 3"/><text class="f-t" x="150" y="77" text-anchor="middle">互相看、互相挑錯、修正</text><text class="f-s" x="150" y="104" text-anchor="middle">這一輪可能跑好幾次，每一輪都要再花一次錢</text><line x1="150" y1="112" x2="150" y2="130" stroke="var(--ink-3)" stroke-width="1.4" marker-end="url(#fa)"/><rect x="80" y="134" width="140" height="28" rx="4" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.4"/><text class="f-t" x="150" y="153" text-anchor="middle">收斂成結論</text><text class="f-s" x="150" y="186" text-anchor="middle">多一道互相檢查，也多一輪成本</text></svg>
-</figure>
-
-      <dl>
-        <div><dt>成立的前提</dt><dd><b>總會有人抓到別人的錯</b>。同一件事六個角度看過一遍，錯的說法應該撐不過互相檢查。</dd></div>
-        <div><dt>什麼時候該用它</dt><dd>題目有爭議、答案不只一種、錯了代價很高。多一道互相檢查，比多收一倍資料有用。</dd></div>
-        <div><dt>什麼時候會出事</dt><dd>它<b>最貴也最慢</b>，每多一輪就多燒一輪。而且有一種失敗很陰險：六個人可能<b>互相說服到一起錯</b>，最後很有自信地給你一個錯的答案，你還看不出來。</dd></div>
-      </dl>
-    </div>
-  </div>
-
-  <div class="callout ok" style="margin-top:20px">
-    這兩套可以合起來用。用 A 那種方式把資料收齊，因為快又便宜，最後<b>只在下結論那一關開辯論</b>。貴的部分只跑一次，互相抓錯的好處又留著。<br>
-    講白一點：收資料不用辯論，結論要不要辯論，看錯了會不會出事。
-  </div>
+<div class="sec-head"><span class="sec-num">02</span>
+<h2>資料分工與相互審查的差異</h2>
+</div>
+<div class="duo">
+<div >
+<div class="lab">平行分工接循序處理</div>
+<h3>分別蒐集，再統一分析</h3>
+<div class="d-shape">來源 A／B／C → 資料整合 → 分析 → 報告</div>
+<dl>
+<div>
+<dt>適用條件</dt>
+<dd>資料來源與任務範圍可事先劃分，子任務不需頻繁交換資訊。</dd>
+</div>
+<div>
+<dt>主要效益</dt>
+<dd>獨立查詢可以同時執行。整合前需檢查資料覆蓋範圍、重複內容與引用。</dd>
+</div>
+<div>
+<dt>限制</dt>
+<dd>若分工有遺漏，後續分析未必能察覺。整合者需要對照原始問題驗收。</dd>
+</div>
+</dl>
+</div>
+<div >
+<div class="lab">平行產出接相互審查</div>
+<h3>交換論證，再修訂結論</h3>
+<div class="d-shape">獨立報告 A／B／C → 相互檢查 → 修訂與整合</div>
+<dl>
+<div>
+<dt>適用條件</dt>
+<dd>希望檢查不同假設、證據或推理，且有足夠預算進行多輪處理。</dd>
+</div>
+<div>
+<dt>主要效益</dt>
+<dd>其他代理可能指出缺漏或矛盾。評估時應記錄哪些問題因此被修正。</dd>
+</div>
+<div>
+<dt>限制</dt>
+<dd>共享資料與模型偏誤可能讓代理一起接受錯誤。最後仍需查核證據。</dd>
+</div>
+</dl>
+</div>
+</div>
+<div class="callout">兩種流程可依任務組合。例如先平行蒐集資料，只針對有爭議的結論加入審查。實際效益應與較簡單的流程比較，並同時記錄成本與耗時。</div>
 </section>
-
 <section>
-  <div class="sec-head"><span class="sec-num">03</span><h2>辯論跟投票，差在哪</h2></div>
-  <p class="sec-lede">辯論的最後一步常常真的是投票，所以很容易覺得是同一件事。差別在<b>投票之前，有沒有讓大家看到彼此的答案</b>。</p>
-
-  <div class="duo">
-    <div>
-      <div class="lab">投票</div>
-      <h3>各自關在房間裡答</h3>
-      <div class="d-shape">三個人各自答
-     ↓
-交出紙條
-     ↓
-數哪個答案最多</div>
-      <dl>
-        <div><dt>會不會互相看到</dt><dd>不會。三個人<b>從頭到尾都不知道別人寫什麼</b>。</dd></div>
-        <div><dt>成立的前提</dt><dd>多數人不會剛好一起錯。</dd></div>
-        <div><dt>會在哪裡失敗</dt><dd>怕題目剛好有個常見的陷阱，三個人<b>一起掉進去</b>，投出來三票都是錯的，而且沒有人會發現。</dd></div>
-      </dl>
-    </div>
-    <div>
-      <div class="lab">辯論</div>
-      <h3>攤開來互相看</h3>
-      <div class="d-shape">三個人各自答
-     ↓
-把答案攤開，互相看
-     ↓
-「你第二點錯了，因為⋯⋯」
-     ↓
-每個人可以改自己的
-     ↓
-來回幾輪，最後才收斂</div>
-      <dl>
-        <div><dt>會不會互相看到</dt><dd>會。<b>看得到別人的答案，而且看完可以改自己的</b>。這一段投票沒有。</dd></div>
-        <div><dt>成立的前提</dt><dd>三個人裡面，總有一個會看出那是陷阱。</dd></div>
-        <div><dt>會在哪裡失敗</dt><dd>怕第一個開口的人講得很有自信，把其他人<b>說服到一起錯</b>。這點投票反而沒問題，因為大家互相看不到。</dd></div>
-      </dl>
-    </div>
-  </div>
-
-  <div class="callout" style="margin:20px 0 26px">
-    所以要選哪個？答案有標準、錯誤是隨機出現的，<b>投票就夠了</b>。答案有爭議、有陷阱、要推理才答得出來，<b>辯論才有用</b>。
-  </div>
-
-  <h3 style="font-size:17px;margin:0 0 6px">「讓 AI 互相看答案」有五種做法</h3>
-  <p class="sec-lede" style="margin-bottom:12px">差別在<b>誰可以看誰的</b>，以及看完之後<b>怎麼收斂成一個結果</b>。</p>
-
-  <div class="conv-wrap">
-  <table class="conv">
-    <thead><tr><th>做法</th><th>誰看誰</th><th>怎麼收斂</th><th>適合</th></tr></thead>
-    <tbody>
-      <tr><td>Voting<small>投票</small></td><td>誰都不看誰</td><td>數票</td><td>答案是選項、錯誤隨機</td></tr>
-      <tr><td>Debate<small>辯論</small></td><td>每個人看全部人的</td><td>來回幾輪後<b>投票或取共識</b></td><td>答案是選項、但有爭議要推理</td></tr>
-      <tr><td>Mixture-of-Agents<small>合併成一份</small></td><td>只有一個負責合併的看全部人的</td><td>把大家的<b>融合成一份新的</b></td><td>答案是一篇東西（報告、方案）</td></tr>
-      <tr><td>LLM-as-Judge<small>挑一份最好的</small></td><td>一個法官看全部人的</td><td>法官<b>挑一份最好的</b>，不合併</td><td>答案是一篇東西，而且要完整不要拼湊</td></tr>
-      <tr><td>Evaluator-Optimizer<small>寫手加評審</small></td><td>評審看寫手的，寫手看評審意見</td><td>改到評審過關</td><td>有明確好壞標準的產出</td></tr>
-    </tbody>
-  </table>
-  </div>
-
-  <div class="callout ok" style="margin-top:18px">
-    這五種的差別只有兩條線。<br>
-    第一條看<b>答案是選項還是文章</b>。選項可以數票，所以投票跟辯論可以用。文章沒辦法數票，一定要有人把它們合併成一份或挑一份出來，那就是 Mixture-of-Agents 跟 LLM-as-Judge。<br>
-    第二條看<b>合併還是挑選</b>。Mixture-of-Agents 是把大家的東西融成一份新的，可能會東拼西湊；LLM-as-Judge 是原封不動挑一份最好的，可能會錯過別人的好點子。要一份完整的用 Judge，要吸收大家優點的用 Mixture-of-Agents。
-  </div>
-
-  <div class="callout warn" style="margin-top:14px">
-    <b>用 AI 當評審，會踩到經濟學早就命名過的坑。</b><br>
-    Goodhart's Law（顧德哈特定律，1975）：<b>一個指標一旦變成目標，它就不再是個好指標</b>。
-    英國央行本來拿貨幣供給量當觀察經濟的指標，用得好好的，一改成調控目標就跟真實經濟脫鉤了。
-    AI 評審一樣：被打分的那一方會慢慢學會討好評審，答案變長、排版變漂亮、開頭先寫一句「這是個很好的問題」，分數就上去了，內容一點都沒變好。<br>
-    兩件事可以做。第一，固定抽一小批人工看，不要全押在 AI 給的分數上。
-    第二，AI 評審有 position bias（先看到的那份分數會偏高），把 A、B 順序<b>對調再跑一次取平均</b>，這招心理學做實驗做了幾十年。
-  </div>
-
-  <div class="callout" style="margin-top:14px">
-    回頭看上面那兩套做法。「六個各寫報告再辯論」是 <b>Debate 接 Mixture-of-Agents</b> 的組合：六份報告是文章不是選項，沒辦法投票，最後一定要有人把它們寫成一份。所以真正的流程是各寫、互相看、互相反駁、<b>最後一個人合併成最終版</b>。<br>
-    而「六個平行收資料再往下送」是<b>分頭做接接力</b>，中間沒有任何互看的環節。兩套差的不是有沒有六個人，差的是<b>有沒有互看那一段，還有那一段要花幾倍的錢</b>。
-  </div>
+<div class="sec-head"><span class="sec-num">03</span>
+<h2>投票、辯論與評估如何收斂結果</h2>
+</div>
+<p class="sec-lede">比較這些方法時，可先看答案是否互相可見，再看最後如何選擇或生成結果。</p>
+<div class="conv-wrap">
+<table class="conv">
+<thead>
+<tr>
+<th>方法</th>
+<th>資訊如何流動</th>
+<th>結果如何產生</th>
+<th>需要留意</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Voting<small>投票</small>
+</td>
+<td>各次取樣先獨立回答</td>
+<td>依多數決等規則彙整</td>
+<td>共同偏誤可能使多數答案也出錯</td>
+</tr>
+<tr>
+<td>Debate<small>辯論</small>
+</td>
+<td>交換回答與理由後修訂</td>
+<td>依規則投票、整合或評選</td>
+<td>相互說服不代表證據更充分</td>
+</tr>
+<tr>
+<td>Mixture-of-Agents<small>多代理整合</small>
+</td>
+<td>後續模型參考前層的回答</td>
+<td>重新生成一份整合內容</td>
+<td>整合可能遺漏分歧或混合矛盾資訊</td>
+</tr>
+<tr>
+<td>LLM-as-Judge<small>模型評估</small>
+</td>
+<td>評估模型閱讀待評內容與標準</td>
+<td>評分、比較、排序或選擇</td>
+<td>須驗證評分與人工判斷是否一致</td>
+</tr>
+<tr>
+<td>Evaluator-Optimizer<small>評估與修訂</small>
+</td>
+<td>產出端接收評估意見</td>
+<td>修訂至達標或停止條件成立</td>
+<td>應限制回合，避免反覆修改</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>以模型評分作為改善目標時，產出可能逐漸迎合評分方式。例如增加篇幅可能提高評分，卻沒有補上證據。因此，應將事實、引用與需求完成度分別檢查，並保留人工抽查。</p>
+<div class="callout">評估也可能受到答案順序影響。可交換候選答案順序再評估，觀察結果是否穩定。這是檢查偏差的方法，不能保證消除所有評估錯誤。</div>
 </section>
-
 <section>
-  <div class="sec-head"><span class="sec-num">04</span><h2>代價：好很多，但也貴很多</h2></div>
-  <p class="sec-lede">以下數字出自 Anthropic 公開的實測，對象是用 Claude 做的深度研究系統。</p>
-
-  <div class="facts">
-    <div class="fact"><b>+90.2%</b><span>多個 AI 一起做，比單一個做，表現好 90.2%</span></div>
-    <div class="fact"><b>15 倍</b><span>吃掉的量是一般聊天的 15 倍。單一個 AI 只吃 4 倍</span></div>
-    <div class="fact"><b>80%</b><span>效果差異裡，有八成單純來自「用掉的量比較多」</span></div>
-    <div class="fact"><b>剩 1/10</b><span>複雜題目的耗時，因為同時做可以縮到十分之一</span></div>
-  </div>
-
-  <div class="callout warn">
-    這四個數字放在一起讀，結論是多個 AI 之所以贏，<b>很大一部分是贏在捨得燒</b>。<br>
-    所以該問的是<b>「這題值不值得花 15 倍」</b>，不是「多派幾個會不會比較好」。查一個事實不值得，做一份會拿去開會決策的報告，可能就值得。
-  </div>
+<div class="sec-head"><span class="sec-num">04</span>
+<h2>如何閱讀效益與成本數字</h2>
+</div>
+<p class="sec-lede">Anthropic 在 2025 年公布的研究系統工程報告，提供了特定模型與任務下的比較。以下數字不可直接當作其他產品的預期效果。</p>
+<div class="facts">
+<div class="fact"><b>+90.2%</b><span>Opus 4 協調 Sonnet 4 的系統，在內部研究評測優於單一 Opus 4 的相對幅度。</span>
+</div>
+<div class="fact"><b>約 15 倍</b><span>多代理系統相對一般聊天的 token 用量；單代理約為 4 倍。</span>
+</div>
+<div class="fact"><b>80%</b><span>其 BrowseComp 分析中，token 用量可解釋的表現變異比例；這不等於因果效果。</span>
+</div>
+<div class="fact"><b>最多減少 90%</b><span>平行代理與平行工具呼叫在複雜查詢中達到的耗時降幅。</span>
+</div>
+</div>
+<p>Token 是模型處理文字的計量單位，不能直接換算成中文字數或固定費用。評估自己的流程時，應量測任務完成品質、實際 token 用量與端到端耗時，並保留相同題目的單代理基準。</p>
+<p class="cred">來源：<a href="https://www.anthropic.com/engineering/multi-agent-research-system">Anthropic：How we built our multi-agent research system</a>。</p>
 </section>
-
 <section>
-  <div class="sec-head"><span class="sec-num">05</span><h2>什麼時候不要組大軍</h2></div>
-
-  <div class="traps">
-    <div class="trap">
-      <h3>大家需要看同一份東西</h3>
-      <p>分頭做的前提是「你做你的、我做我的」。如果每個人都得先讀完同一份完整資料才能動手，那分頭就沒有意義，只是把同一份東西讀了六次。</p>
-    </div>
-    <div class="trap">
-      <h3>寫程式</h3>
-      <p>程式碼前後高度相依，改了 A 檔案常常就要跟著改 B。這種工作<b>切不開</b>，硬要平行只會製造互相打架的改動。</p>
-    </div>
-    <div class="trap">
-      <h3>需要一邊做一邊喬</h3>
-      <p>分身之間沒辦法即時討論，只能各做各的、做完回報。凡是「做到一半要問一下對方」的工作，都不適合。</p>
-    </div>
-    <div class="trap">
-      <h3>一個 AI 已經做得夠好</h3>
-      <p>這是最容易忽略的一條。單一個已經答得不錯的題目，加人進來只會多出協調成本，<b>結果更慢、更貴、還可能更差</b>。</p>
-    </div>
-  </div>
-
-  <h3 style="font-size:17px;margin:28px 0 10px">實際踩過的坑</h3>
-
-  <div class="traps">
-    <div class="trap">
-      <h3>簡單問題派了 50 個分身</h3>
-      <p>沒有告訴主管「這題大概該派幾個」，它就會亂派。要在規則裡直接寫死：簡單查詢一個就好，複雜的最多幾個。</p>
-      <p class="src"><b>前身：</b>《人月神話》（1975）那句名言，往一個已經遲到的軟體專案加人只會更遲。原因是溝通路徑用 n(n-1)/2 成長，3 個人是 3 條線，10 個人 45 條，50 個人 1225 條。慢下來的是對齊，不是 token。</p>
-    </div>
-    <div class="trap">
-      <h3>兩個人做同一件事，有些沒人做</h3>
-      <p>分工講得不夠清楚的結果。派工的時候要把「你負責什麼、不要碰什麼」寫明白，不能只說「你去查一下 A 方面」。</p>
-      <p class="src"><b>前身：</b>顧問業的 MECE（互斥且窮盡）。切問題的時候每一塊不能重疊、加起來要蓋滿全部，就是為了防這件事。派工前把範圍寫成一張表自己對一次，兩分鐘的事。</p>
-    </div>
-    <div class="trap">
-      <h3>只挑搜尋排前面的內容</h3>
-      <p>會自然偏好那種為了衝排名寫出來的文章，跳過真正有料的論文 PDF。要明講「優先看原始來源」。</p>
-      <p class="src"><b>前身：</b>統計學的選樣偏誤（selection bias）。1936 年美國《文學文摘》靠電話簿發問卷預測總統大選，算出 Landon 會贏，結果 Roosevelt 大勝，因為當年裝得起電話的人本來就偏富裕。<b>樣本怎麼來的，比樣本多大更重要。</b></p>
-    </div>
-    <div class="trap">
-      <h3>講太多，前面的被吃掉</h3>
-      <p>每個 AI 能記住的量有上限（大約 20 萬字）。超過之後最前面的內容會被截掉，而且它<b>不會告訴你</b>，只會表現得像忘記了。</p>
-      <p class="src"><b>前身：</b>還有一個更隱形的版本。Ebbinghaus 1885 年拿自己做記憶實驗，發現人背一長串東西會記得開頭跟結尾、中間忘光。2023 年測長 context 的模型，畫出來的曲線幾乎一樣：<b>沒被截掉、但放在中間的資訊一樣常被忽略</b>。教育界的三個對策可以直接搬：分段、重點放頭尾、中途複述一次。</p>
-    </div>
-  </div>
-
-  <h3 style="font-size:17px;margin:28px 0 10px">壞掉的原因，大多不是 AI 不夠聰明</h3>
-  <p class="sec-lede" style="margin-bottom:14px">一份針對 7 個主流框架、1600 多次執行紀錄的研究，整理出 14 種失敗模式，分屬三大類。</p>
-
-  <div class="picks" style="grid-template-columns:repeat(3,1fr)">
-    <div class="pick">
-      <div class="lv">第一類</div>
-      <h3>系統設計沒寫好</h3>
-      <div class="when">還沒開始跑就注定會壞</div>
-      <ul>
-        <li>沒講清楚誰負責什麼</li>
-        <li>沒說「做到什麼程度算做完」</li>
-        <li>沒設上限，簡單題也大陣仗</li>
-      </ul>
-      <div class="eg">這一類最好修，因為改的是規則，不是程式。</div>
-    </div>
-    <div class="pick">
-      <div class="lv">第二類</div>
-      <h3>彼此對不起來</h3>
-      <div class="when">各做各的，話沒接上</div>
-      <ul>
-        <li>抱著錯的假設一路做下去</li>
-        <li>看到同伴給的資訊卻不理它</li>
-        <li>做完的東西別人接不上</li>
-      </ul>
-      <div class="eg">最難抓，因為每一個分身單獨看都很正常。</div>
-    </div>
-    <div class="pick">
-      <div class="lv">第三類</div>
-      <h3>沒人負責驗收</h3>
-      <div class="when">錯的東西一路過關到最後</div>
-      <ul>
-        <li>做完沒有人檢查對不對</li>
-        <li>檢查了但標準太鬆</li>
-        <li>提早收工，事情只做一半</li>
-      </ul>
-      <div class="eg">最容易補：加一關專門驗收的就好，而且要<b>指名</b>某一個 agent 負責。</div>
-    </div>
-  </div>
-
-  <div class="callout ok" style="margin-top:18px">
-    <b>這份研究最重要的結論：</b>大部分失敗<b>換更強的模型也救不回來</b>，因為問題出在分工怎麼設計、誰負責驗收。<br>
-    所以真的要改善，順序是：<b>先把分工跟驗收寫清楚，再考慮換模型</b>。反過來做通常是白花錢。
-  </div>
-
-  <div class="callout warn" style="margin-top:14px">
-    <b>第三類那個「沒人驗收」，心理學有現成的名字跟解法。</b><br>
-    叫責任分散（diffusion of responsibility）。1968 年的實驗發現，路上有人倒下，<b>旁邊的人越多，越沒有人報警</b>，因為每個人都覺得應該已經有別人報警了。<br>
-    急救課到現在還在教的解法可以原封不動搬過來：不要對著一群人喊救命，要指著一個人說「穿藍衣服的先生，你打 119」。
-    所以 prompt 不能寫「大家互相檢查品質」，要指定一個 agent，並且寫成<b>「這是你的工作，最後的結果由你負責」</b>。
-  </div>
+<div class="sec-head"><span class="sec-num">05</span>
+<h2>分工之前先檢查限制</h2>
+</div>
+<div class="traps">
+<div class="trap">
+<h3>共享內容過多</h3>
+<p>若每個代理都必須閱讀相同的大量資料，重複輸入與協調成本可能抵銷平行處理的收益。可先評估單代理能否完成。</p>
+</div>
+<div class="trap">
+<h3>任務彼此依賴</h3>
+<p>共同修改同一組程式或資料時，需要明確邊界與整合流程。獨立檔案審查可以分工，高度相依的修改則未必適合。</p>
+</div>
+<div class="trap">
+<h3>需要頻繁同步</h3>
+<p>代理之間的溝通能力取決於實作。若每一步都要等待其他代理回覆，平行執行可能沒有明顯效益。</p>
+</div>
+<div class="trap">
+<h3>單代理已符合需求</h3>
+<p>若品質與耗時已達標，新增代理應有可量測的改善目標，例如提高資料覆蓋率或縮短特定階段的等待。</p>
+</div>
+</div>
+<h3 style="margin-top:24px">常見問題與改善方式</h3>
+<div class="traps">
+<div class="trap">
+<h3>分派過多子任務</h3>
+<p>依任務難度設定代理數、工具呼叫與 token 預算。記錄追加任務的理由，避免簡單查詢持續擴張。</p>
+</div>
+<div class="trap">
+<h3>範圍重疊或遺漏</h3>
+<p>分派時寫清楚負責範圍、必要來源與輸出格式。整合時逐項對照需求，確認是否仍有缺口。</p>
+</div>
+<div class="trap">
+<h3>來源品質不足</h3>
+<p>要求優先查閱原始文件、官方資料或研究全文。搜尋排名只能協助發現資料，不能代替可信度判斷。</p>
+</div>
+<div class="trap">
+<h3>重要資訊未被保留</h3>
+<p>上下文容量依模型而異，通常以 token 計算。保存中間成果與來源，摘要時保留限制條件，避免後續處理失去依據。</p>
+</div>
+</div>
+<p>論文 <a href="https://arxiv.org/abs/2503.13657">Why Do Multi-Agent LLM Systems Fail?</a> 將失敗整理為系統規格、代理間協調，以及驗證與終止等類別。排查時可分別確認任務是否定義清楚、交接是否完整、驗收是否確實執行。這套分類不代表所有問題都能只靠修改提示解決。</p>
 </section>
-
 <section>
-  <div class="sec-head"><span class="sec-num">06</span><h2>真的要動手，工具挑哪個</h2></div>
-  <p class="sec-lede">先講這四個是什麼性質的東西。它們都是<b>程式套件</b>（library，別人寫好的一包程式碼，裝起來在自己的程式裡呼叫它），比較大的那種也叫框架（framework），主要用 Python 寫。<br>
-  這跟 <a href="skills.html">Claude 技能</a>那頁的 skill、plugin <b>是兩回事</b>。skill 是寫一份 markdown 檔告訴 AI 怎麼做事，全程不用寫程式；這四個是<b>你自己寫程式</b>，在程式裡呼叫 AI，AI 只是其中一個零件。<br>
-  所以下面是給要動手寫程式的人看的。不寫程式的話，知道它們各自擅長哪一種組法就夠了。</p>
-
-  <div class="picks" style="grid-template-columns:repeat(2,1fr)">
-    <div class="pick">
-      <div class="lv">最好上手</div>
-      <h3>CrewAI</h3>
-      <div class="when">寫職掌表</div>
-      <ul>
-        <li>規格：「你是研究員，負責查資料」「你是寫手，負責寫成文章」</li>
-        <li>天生適合<b>接力</b>跟<b>分頭做</b></li>
-        <li>寫到第一個能跑的版本大約 30 到 60 行</li>
-        <li>做原型很快，但正式上線的除錯能力較弱</li>
-      </ul>
-      <div class="eg">適合：先做出一個看得到成果的版本。</div>
-    </div>
-    <div class="pick">
-      <div class="lv">正式環境最多人用</div>
-      <h3>LangGraph</h3>
-      <div class="when">畫流程圖</div>
-      <ul>
-        <li>規格：一個框接一個框，條件不同就走不同的線</li>
-        <li>天生適合<b>主管派工</b>跟<b>寫手加評審</b></li>
-        <li>失敗可以重試、狀態存得住</li>
-        <li>入門較陡，第一版大約要 80 到 150 行</li>
-      </ul>
-      <div class="eg">適合：這套東西要真的上線給別人用。</div>
-    </div>
-    <div class="pick">
-      <div class="lv">辯論最強</div>
-      <h3>AutoGen</h3>
-      <div class="when">開聊天室</div>
-      <ul>
-        <li>規格：誰在群組裡、誰先講、講到什麼時候停</li>
-        <li>天生適合<b>辯論</b>跟<b>互相驗證</b></li>
-        <li>研究單位用得最多，正式上線的採用度相對小</li>
-        <li>微軟已轉為維護模式，只修 bug 不加功能。新專案官方建議改用 Microsoft Agent Framework</li>
-      </ul>
-      <div class="eg">適合：你要的就是讓幾個 AI 辯出結論。</div>
-    </div>
-    <div class="pick">
-      <div class="lv">概念最少</div>
-      <h3>OpenAI Agents SDK</h3>
-      <div class="when">寫轉接規則</div>
-      <ul>
-        <li>規格：「碰到退貨就轉給退貨那個」，官方叫這個 handoff（交接）</li>
-        <li>天生適合<b>分流</b></li>
-        <li>2025 年 3 月推出，取代之前那個叫 Swarm 的實驗品。看到舊教學寫 Swarm 的，直接換成這個</li>
-      </ul>
-      <div class="eg">適合：主要在用 OpenAI 的模型，想從最少的概念開始。</div>
-    </div>
-  </div>
-
-  <div class="callout warn" style="margin-top:20px">
-    不用急著挑工具。Anthropic 自己的說法是，做得好的案例大多<b>沒有用什麼複雜的框架</b>，就是把幾個簡單的做法組起來而已。<br>
-    先用最土的方法把流程跑通，卡住了再去找工具。反過來先挑工具再想要做什麼，通常都會被工具綁住。
-  </div>
+<div class="sec-head"><span class="sec-num">06</span>
+<h2>依流程需求認識工具</h2>
+</div>
+<p class="sec-lede">以下是開發代理系統的程式工具。它們需要在程式中設定流程、狀態與工具呼叫；<a href="skills.html">Claude 技能</a>則著重整理可重複使用的工作指示。兩者可配合使用。</p>
+<div class="picks" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))">
+<div class="pick">
+<div class="lv">角色與任務</div>
+<h3>CrewAI</h3>
+<div class="when">以角色、任務與流程組織工作</div>
+<p>可從需要哪些角色、各自產出什麼開始設計。選用前仍需測試失敗處理與觀測需求。</p><a href="https://docs.crewai.com/">官方文件</a>
+</div>
+<div class="pick">
+<div class="lv">狀態與流程</div>
+<h3>LangGraph</h3>
+<div class="when">以節點、狀態與條件路徑描述執行</div>
+<p>適合需要明確控制流程、保存狀態或加入人工介入的設計。複雜度取決於實際需求。</p><a href="https://docs.langchain.com/oss/python/langgraph/overview">官方文件</a>
+</div>
+<div class="pick">
+<div class="lv">對話協作</div>
+<h3>AutoGen</h3>
+<div class="when">以代理間訊息與協作描述任務</div>
+<p>閱讀既有專案時可用來理解多代理對話。新專案選型應一併查閱 Microsoft Agent Framework 的遷移說明與維護狀態。</p><a href="https://learn.microsoft.com/en-us/agent-framework/migration-guide/from-autogen/">官方遷移指南</a>
+</div>
+<div class="pick">
+<div class="lv">代理與交接</div>
+<h3>OpenAI Agents SDK</h3>
+<div class="when">以代理、工具與交接組織應用</div>
+<p>Handoff 表示將處理工作交給另一個代理。選型時也應確認追蹤、錯誤處理與部署需求。</p><a href="https://openai.github.io/openai-agents-python/">官方文件</a>
+</div>
+</div>
+<div class="callout" style="margin-top:20px">先以小型案例驗證任務流程，再判斷是否需要框架協助管理狀態與執行紀錄。工具的功能與維護狀態會變動，實作時應查閱當前文件。</div>
 </section>
-
 <footer>
-  <p><b>整頁只有一個重點：</b>先問「這題切得開嗎」，再問「值不值得花 15 倍」。<br>
-  兩題都是「是」才組大軍。有一題是「否」，一個 AI 加上把話講清楚，通常更好。</p>
-  <p class="cred">來源：Anthropic 的 <a href="https://www.anthropic.com/engineering/multi-agent-research-system">多代理研究系統工程筆記</a>與 <a href="https://www.anthropic.com/research/building-effective-agents">Building Effective Agents</a>；失敗分類取自論文 <a href="https://arxiv.org/abs/2503.13657">Why Do Multi-Agent LLM Systems Fail?</a>（1600 多筆執行紀錄、7 個框架）；Mixture-of-Agents 數字取自該論文於 ICLR 2025 發表的版本。<br>
-  工具現況以 2026 年 8 月為準（<a href="https://github.com/openai/swarm">openai/swarm</a>、<a href="https://learn.microsoft.com/en-us/agent-framework/migration-guide/from-autogen/">AutoGen 轉移指南</a>）。<br>
-  <a href="./">← 回目錄</a></p>
+<p>選擇協作方式時，先確認工作是否可分、結果如何驗證，以及新增流程能否帶來可量測的改善。</p>
+<p class="cred">延伸閱讀：<a href="https://www.anthropic.com/engineering/building-effective-agents">Building Effective Agents</a>、<a href="https://arxiv.org/abs/2406.04692">Mixture-of-Agents</a>。<br><a href="./">← 返回首頁</a>
+</p>
 </footer>
 
 </div>
 
 <script>
 const WAYS = {
-  chain:{ n:"接力", en:"Prompt Chaining",
-    shape:"A ──▶ B ──▶ C ──▶ 完成\n每個人只做一段，做完交給下一個",
-    how:"把工作切成固定的幾步，一個 AI 做完一步，把結果交給下一個。像工廠生產線。",
-    win:"步驟<b>每次都一樣</b>的工作。例如：先抓資料、再整理格式、再寫成文章。每一步變簡單了，做對的機率就高。",
-    lose:"步驟沒辦法事先講死的時候。另外有個地方會踩到：<b>前面錯了，後面就全部照著錯下去</b>，而且沒人會發現。",
-    cost:"最便宜的一種。人數等於步驟數，不會爆增。",
-    src:"Unix 的 <b>pipe（管線，1973）</b>，一支程式只做一件事，輸出直接接給下一支。另一半來自豐田生產線：他們發現錯誤越晚發現越貴，所以<b>每一站</b>都拉一條可以停線的繩子，不是等最後一站才驗收。<b>可以直接搬：</b>每一段中間放一個很便宜的檢查（筆數對不對、有沒有欄位是空的），不對就停，不要往下送。" },
-
-  route:{ n:"分流", en:"Routing",
-    shape:"        ┌─▶ 專門處理退貨的\n題目 ──▶ 看一下 ─┼─▶ 專門處理技術問題的\n        └─▶ 專門處理帳務的",
-    how:"先有一個 AI 看題目屬於哪一類，再丟給對應的專門處理。像醫院掛號櫃檯。",
-    win:"題目<b>種類明確</b>、而且每一類要用完全不同的處理方式。分對了，每個專門處理的就能寫得很專精。",
-    lose:"類別界線模糊的時候。<b>分錯就整題錯</b>，而且後面那個專家再厲害也救不回來。",
-    cost:"很便宜。只是多一次「看一眼」的成本。",
-    src:"急診室的<b>檢傷分類（triage）</b>，拿破崙的軍醫想出來的，還有機器學習的 Mixture-of-Experts（1991）。醫學研究出一個關鍵結論：<b>分錯的代價不對稱</b>，把重症判成輕症會死人，把輕症判成重症只是浪費資源。<b>可以直接搬：</b>門檻不要抓在正中間，往「寧可判成難題」那邊偏，再把判成簡單題的定期抽一批用貴模型重跑，看漏掉多少。" },
-
-  split:{ n:"分頭做", en:"Parallelization（Sectioning）",
-    shape:"        ┌─▶ 查 A 領域 ─┐\n題目 ──┼─▶ 查 B 領域 ─┼─▶ 拼起來\n        └─▶ 查 C 領域 ─┘",
-    how:"把一個大工作<b>事先</b>切成幾塊互不相干的小工作，同時派出去做，做完拼回來。像分組報告。",
-    win:"要查的方向多、而且<b>彼此不相干</b>。六個同時做就是六倍快，這是速度提升最直接的一種。",
-    lose:"切不乾淨的時候。<b>兩個人做同一件事、有些角落沒人管</b>，拼起來看起來完整，中間卻有洞。",
-    cost:"人數乘上去。六個人就是大約六倍的量，但時間只要六分之一。",
-    src:"顧問業的 <b>MECE</b>（互斥且窮盡，Mutually Exclusive Collectively Exhaustive）。麥肯錫要求切問題的時候，每一塊不能重疊，加起來要蓋滿全部，就是為了防「兩個人做同一件事、有些角落沒人管」。<b>可以直接搬：</b>派出去之前，先把每個人的範圍寫成一張表，自己對一次有沒有重疊、有沒有缺口。這一步花兩分鐘，比事後補救便宜太多。" },
-
-  vote:{ n:"投票", en:"Parallelization（Voting）",
-    shape:"        ┌─▶ 做法 1 ─▶ 答案 A ─┐\n同一題 ─┼─▶ 做法 2 ─▶ 答案 A ─┼─▶ 取多數：A\n        └─▶ 做法 3 ─▶ 答案 B ─┘",
-    how:"<b>同一題</b>讓好幾個各做一次，看哪個答案出現最多次。像不放心去問三家醫院。",
-    win:"答案容易出錯、而且<b>對錯很明確</b>的題目。例如判斷一段程式有沒有漏洞、一則留言算不算違規。",
-    lose:"開放性的問題，因為根本沒有「多數答案」可以數。還有一個風險：<b>大家可能一起錯</b>，畢竟是同一個模型。",
-    cost:"跑幾次就是幾倍。要提高信心通常三到五次，成本很好估。",
-    src:"<b>孔多塞陪審團定理（1785）</b>跟統計學的 <b>bagging</b>（Breiman，1996）。孔多塞算出來：只要每個人答對的機率高於一半，而且<b>各自獨立判斷</b>，人越多整體越準。Breiman 的隨機森林再加一招，每棵樹連能看的欄位都只給一部分，就是刻意逼它們不要犯同一個錯。<b>可以直接搬：</b>三個 agent 如果 prompt、模型、資料來源全一樣，那是同一個人講三次，投票等於白投。要投票有效，就得刻意讓它們不同。",
-    more:"<b>進階版叫 Mixture-of-Agents。</b>它<b>找好幾個不同家的模型</b>各給一份答案，再讓一個負責合併成一份。因為模型不一樣，犯的錯也不一樣，比較不會一起錯。在 AlpacaEval 2.0 這個測驗上，六個開源模型這樣組起來拿到 65.1 分，贏過單獨的 GPT-4 Omni 的 57.5 分，而且每一個開源模型單獨都比 GPT-4 Omni 弱。" },
-
-  boss:{ n:"主管派工", en:"Orchestrator-Workers",
-    shape:"      主管（看完題目才決定）\n         │\n  ┌──────┼──────┐\n查什麼   查什麼   查什麼\n  └──────┼──────┘\n      主管整合",
-    how:"跟「分頭做」很像，差別是<b>子任務不是事先定好的</b>。主管看完題目才當場決定要派幾個人、每個人查什麼。",
-    win:"<b>你事先不知道要查什麼</b>的題目。例如「找出這個產業有哪些沒被注意到的風險」，題目本身就不知道會岔出幾個方向。",
-    lose:"工作內容固定的時候，那用「分頭做」就好，不用讓主管多想一輪。<b>主管也是單點</b>，它想歪，全隊跟著歪。",
-    cost:"最貴的常見做法之一。Anthropic 自己的研究系統用的就是這種，實測吃掉一般聊天的 15 倍。",
-    src:"Google 的 <b>MapReduce（2004）</b>，切下去（map）再收回來（reduce）。他們 2013 年又發現一件事：整批的速度由<b>最慢的那一個</b>決定，不是由平均決定，一千個工作只要一個卡住，使用者就是要等。<b>可以直接搬：</b>一定要設 timeout（超過多久就放棄）；關鍵那一段可以故意派兩個做同一件事，先回來的先用。" },
-
-  debate:{ n:"辯論", en:"Debate / Multi-Agent Debate",
-    shape:"各自先給答案\n     ↓\n互相看對方的答案\n     ↓\n反駁、修正自己的\n     ↓\n收斂成一個結論",
-    how:"每個先獨立給答案，然後<b>互相看對方的</b>，可以反駁、也可以修正自己。來回幾輪之後收斂。",
-    win:"題目<b>有爭議、答案不只一種</b>、而且錯了代價很高。多一道互相檢查，常常比多收一倍資料有用。",
-    lose:"事實很明確的題目，辯論只是浪費。真正陰險的失敗是<b>互相說服到一起錯</b>，最後很有自信地給你一個錯答案。",
-    cost:"最貴。人數乘上輪數，跑三輪就是三倍再乘人數。",
-    src:"蘭德公司的<b>德爾菲法（Delphi method，1950 年代）</b>。當年美軍找專家開會預測戰爭，結論每次都是官階最高、講話最大聲那個人的意見。蘭德的解法是把開會拆掉，改成<b>匿名分輪</b>：每輪各自寫，全部收齊才一起攤開，而且看不到哪句是誰寫的。<b>可以直接搬：</b>不要讓 agent 一個接一個發言，要同時產出、同時揭曉，揭曉時也不要標「這是第幾號說的」。" },
-
-  critic:{ n:"寫手＋評審", en:"Evaluator-Optimizer",
-    shape:"寫手產出 ──▶ 評審挑毛病\n   ▲                │\n   └──── 照著改 ◀───┘\n（改到過關才放行）",
-    how:"一個負責產出，另一個<b>專門挑毛病</b>，把意見丟回去改，來回到過關為止。像編輯台。",
-    win:"<b>好壞標準講得出來</b>的工作：翻譯、寫文案、寫程式。人類自己看過一遍就會想改的東西，通常都適合。",
-    lose:"沒有明確標準的時候，評審會給出模稜兩可的意見，然後<b>無限迴圈改不完</b>。一定要設「最多改幾輪」。",
-    cost:"每多一輪就多一次的量。通常兩到三輪就收斂，算好控制。",
-    src:"控制理論的<b>回饋迴路</b>，Maxwell 1868 年寫蒸汽機調速器就證過。調速器轉太快就自動關小蒸汽，設計上很完美，但很多機器裝了之後開始忽快忽慢停不下來，原因是<b>回饋太強會震盪</b>。<b>可以直接搬：</b>除了設回合上限，還要規定評審每輪最多講三點，而且要講「哪裡不合格」而不是「哪裡可以更好」，不然它永遠有意見，寫手就永遠在改。" },
-
-  tree:{ n:"層級", en:"Hierarchical",
-    shape:"        總負責\n      ┌───┴───┐\n    主管A    主管B\n   ┌─┴─┐    ┌─┴─┐\n  做事 做事  做事 做事",
-    how:"主管上面還有主管。每個主管管一群做事的，上面再有一個總負責統籌。就是一間公司的組織圖。",
-    win:"<b>幾十個以上</b>的分身、而且分成好幾個完全不同的領域時。單一個主管管不動那麼多人。",
-    lose:"人數少的時候完全不需要。<b>一般人做的東西幾乎用不到這種</b>，先當作知道有這回事就好。",
-    cost:"最複雜也最難debug。每多一層，錯誤就多一層可以躲的地方。",
-    src:"軍隊的<b>管理幅度（span of control）</b>。研究出來的數字是，一個人能直接帶的大約五到九個，超過就得多加一層，這也是為什麼班長上面有排長、排長上面有連長。<b>可以直接搬：</b>不要憑感覺決定要不要分層。分身超過大約十個、而且主管開始漏掉事情的時候，才是該加一層的時機。" },
+  "chain": {
+    "n": "循序處理",
+    "en": "Prompt Chaining",
+    "shape": "資料整理 → 分析 → 撰寫 → 檢查",
+    "how": "將工作拆成順序固定的步驟，每一步使用前一步的結果。步驟之間也可加入程式檢查。",
+    "win": "輸入與輸出能明確定義的任務，例如先擷取資料，再依固定格式撰寫摘要。",
+    "lose": "前段錯誤可能傳遞到後段。需要依結果動態改變路徑時，固定流程可能不夠彈性。",
+    "cost": "取決於步驟數、每次輸入長度與重試次數；不一定比單次模型呼叫便宜。",
+    "src": "在階段交接時檢查必要欄位、來源與格式，避免把不完整結果直接交給下一步。"
+  },
+  "route": {
+    "n": "任務分流",
+    "en": "Routing",
+    "shape": "輸入 → 分類 → 技術支援／退貨／帳務",
+    "how": "先辨識任務類型，再交由對應的提示、模型或工具處理。分類可以使用規則，也可以使用模型。",
+    "win": "類別清楚且處理方式差異大的需求，例如客服問題分流。",
+    "lose": "分類不確定或任務同時跨多個類別時，需要澄清、重新分流或人工接手。",
+    "cost": "增加分類步驟的成本，但有機會讓簡單任務使用較少資源。",
+    "src": "為不確定的分類保留後續處理路徑，並分別評估各類誤判的影響。"
+  },
+  "split": {
+    "n": "平行分工",
+    "en": "Parallelization",
+    "shape": "題目 → 子任務 A／B／C → 整合結果",
+    "how": "預先將工作分成可獨立執行的部分，同時處理後再整合。",
+    "win": "可分別查閱多個來源，或互不修改相同檔案的工作。",
+    "lose": "任務彼此依賴、分工重疊或缺少整合規則時，容易產生遺漏與衝突。",
+    "cost": "總用量包含所有子任務與整合步驟；耗時受最慢子任務、限流與整合時間影響。",
+    "src": "列出每項任務的範圍、輸出格式與驗收方式。平行數量增加不代表速度按比例提升。"
+  },
+  "vote": {
+    "n": "多次取樣與投票",
+    "en": "Voting",
+    "shape": "同一題 → 答案 A、A、B → 依規則選 A",
+    "how": "讓模型多次獨立產生答案，再依多數決或預先定義的規則彙整。",
+    "win": "能正規化為選項或明確判定的結果，例如分類任務。",
+    "lose": "各次回答可能共享偏誤。多數一致仍可能出錯，開放式文章也需先定義比較方式。",
+    "cost": "主要隨取樣次數增加，另外需要答案解析與彙整。",
+    "src": "測試不同提示、資料來源或模型是否真的減少共同錯誤，不能只看回答是否一致。",
+    "more": "Mixture-of-Agents（多代理整合）會讓後續模型參考多份回答再生成內容。它與直接計算票數的流程不同；整合時仍需核對來源與相互矛盾的內容。"
+  },
+  "boss": {
+    "n": "動態任務協調",
+    "en": "Orchestrator-Workers",
+    "shape": "協調代理 → 動態分派子任務 → 回收與整合",
+    "how": "由協調代理分析需求，決定子任務與執行方式，並依中途結果調整。",
+    "win": "難以預先列出完整步驟的研究與探索，例如追查產業變化的多個原因。",
+    "lose": "規劃錯誤會影響後續工作。若任務固定，額外規劃可能只增加成本。",
+    "cost": "包含規劃、所有子任務與整合；應設定預算、逾時與重試上限。",
+    "src": "每次分派都明確提供目的、資料範圍與完成條件；也要處理部分子任務失敗的情況。"
+  },
+  "debate": {
+    "n": "多代理辯論",
+    "en": "Multi-Agent Debate",
+    "shape": "獨立回答 → 交換依據 → 檢查與修訂 → 彙整",
+    "how": "代理先各自回答，再閱讀其他回答並提出檢查意見，於限定輪次內修訂結果。",
+    "win": "希望檢查推理與不同假設的任務；是否改善結果需透過測試確認。",
+    "lose": "代理可能接受缺乏證據的說法，逐漸形成共同錯誤。共識不能代替外部驗證。",
+    "cost": "隨代理數、回合數與累積上下文增加，須設定停止條件。",
+    "src": "保留第一輪獨立回答與引用來源，讓最後的判斷可回溯到證據。"
+  },
+  "critic": {
+    "n": "產出與評估",
+    "en": "Evaluator-Optimizer",
+    "shape": "產出 → 評估 → 修訂 → 達標或到達回合上限",
+    "how": "一個步驟產生內容，另一個步驟依規則提出意見，再由產出端修訂。",
+    "win": "有可檢查要求的內容，例如格式、引用完整度或測試結果。",
+    "lose": "評估標準模糊時，可能反覆修改卻沒有實質改善。評估模型也可能判斷錯誤。",
+    "cost": "每輪包含評估與修訂。除了回合上限，還應追蹤品質是否持續改善。",
+    "src": "讓評估意見指出具體不符合的條件；能以程式或測試檢查的項目，優先自動驗證。"
+  },
+  "tree": {
+    "n": "階層式協作",
+    "en": "Hierarchical",
+    "shape": "總協調 → 領域協調 A／B → 各領域子任務",
+    "how": "將協調工作分層，每個中間層負責一組任務，再向上彙整結果。",
+    "win": "任務跨多個領域，且單一協調步驟難以管理全部資訊時。",
+    "lose": "任務規模小時，多層交接可能增加資訊遺失與除錯難度。",
+    "cost": "除了子任務，還需支付各層摘要、規劃與協調成本。",
+    "src": "依實際協調瓶頸決定是否分層，不以固定代理人數作為唯一門檻。"
+  }
 };
 
 const card = document.getElementById("card");
@@ -593,10 +472,10 @@ document.querySelectorAll(".part").forEach(btn=>{
       <p class="d-lede">${w.how}</p>
       <div class="d-grid">
         <div class="d-cell"><dt>適合什麼題目</dt><dd>${w.win}</dd></div>
-        <div class="d-cell"><dt>什麼情況不要用</dt><dd>${w.lose}</dd></div>
-        <div class="d-cell"><dt>成本怎麼算</dt><dd>${w.cost}</dd></div>
+        <div class="d-cell"><dt>限制與風險</dt><dd>${w.lose}</dd></div>
+        <div class="d-cell"><dt>成本考量</dt><dd>${w.cost}</dd></div>
       </div>
-      ${w.src ? `<div class="origin"><dt>這個想法從哪來</dt><dd>${w.src}</dd></div>` : ""}
+      ${w.src ? `<div class="origin"><dt>實作要點</dt><dd>${w.src}</dd></div>` : ""}
       ${w.more ? `<div class="callout ok" style="margin-top:14px">${w.more}</div>` : ""}`;
     if(window.matchMedia("(max-width:860px)").matches)
       card.scrollIntoView({block:"nearest", behavior:"smooth"});
